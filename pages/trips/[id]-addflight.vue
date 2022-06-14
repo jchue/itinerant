@@ -2,6 +2,10 @@
 const route = useRoute();
 
 const tripId = route.params.id;
+
+useHead({
+  title: 'New Flight',
+});
 </script>
 
 <template>

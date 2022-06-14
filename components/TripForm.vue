@@ -37,7 +37,7 @@ async function updateTrip() {
 
   loading.value = false;
 
-  navigateTo({
+  await navigateTo({
     path: nextPath,
   });
 }

@@ -1,7 +1,15 @@
+<script setup>
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - Itinerant` : 'Itinerant';
+  },
+});
+</script>
+
 <template>
   <div>
     <header class="flex items-center p-4 shadow-md sticky">
-      <NuxtLink to="/trips" class="flex-1 font-bold text-lg">Itinerant</NuxtLink>
+      <NuxtLink to="/" class="flex-1 font-bold text-lg">Itinerant</NuxtLink>
     </header>
     <main class="p-4">
       <NuxtPage/>

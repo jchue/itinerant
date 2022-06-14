@@ -46,7 +46,7 @@ export default {
 
 <template>
   <div class="inline">
-    <button v-bind:class="'material-icons pr-2 !text-xl text-gray-500 ' + addClass " v-on:click="showConfirm = true">delete</button>
+    <button v-bind:class="'material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ' + addClass " v-on:click="showConfirm = true">delete</button>
 
     <div v-if="showConfirm" class="bg-white fixed overflow-hidden rounded-lg shadow-xl">
       <div class="mb-2 px-4 py-3">

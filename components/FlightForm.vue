@@ -94,7 +94,7 @@ async function updateFlight() {
 
   loading.value = false;
 
-  navigateTo({
+  await navigateTo({
     path: nextPath,
   });
 }

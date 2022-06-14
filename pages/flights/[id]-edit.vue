@@ -1,38 +1,62 @@
 <script lang="ts" setup>
 const route = useRoute();
 
-const { data: { value: flight }} = await useFetch(`/api/flights/${route.params.id}`);
+let tripId,
+    airline,
+    flightNumber,
+    departureAirport,
+    departureTimestamp,
+    departureTimezoneName,
+    arrivalAirport,
+    arrivalTimestamp,
+    arrivalTimezoneName = null;
 
-const {
-  tripId,
-  airline,
-  flightNumber,
-  departureAirport,
-  departureTimestamp,
-  departureTimezoneName,
-  arrivalAirport,
-  arrivalTimestamp,
-  arrivalTimezoneName
-} = flight;
+const { data: flight, pending, refresh, error }  = await useFetch(`/api/flights/${route.params.id}`);
+
+if (!error.value) {
+  ({
+    tripId,
+    airline,
+    flightNumber,
+    departureAirport,
+    departureTimestamp,
+    departureTimezoneName,
+    arrivalAirport,
+    arrivalTimestamp,
+    arrivalTimezoneName
+  } = flight.value);
+
+  useHead({
+    title: `Edit ${flight.value.airline.name} ${flight.value.airline.code} ${flight.value.flightNumber}`,
+  });
+}
 </script>
 
 <template>
   <div>
-    <NuxtLink v-bind:to="'/flights/' + route.params.id" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
+    <div v-if="pending">
+      <Loader />
+    </div>
+    <div v-else-if="error">
+      <NotFound />
+    </div>
+    <div v-else>
+      <NuxtLink v-bind:to="'/flights/' + route.params.id" class="text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Back</NuxtLink>
 
-    <PageTitle>Edit Flight</PageTitle>
+      <PageTitle>Edit Flight</PageTitle>
 
-    <FlightForm
-    v-bind:flightId="route.params.id"
-    v-bind:tripId="tripId"
-    v-bind:initialAirline="airline"
-    v-bind:initialFlightNumber="flightNumber"
-    v-bind:initialDepartureAirport="departureAirport"
-    v-bind:initialDepartureTimestamp="departureTimestamp"
-    v-bind:initialDepartureTimezoneName="departureTimezoneName"
-    v-bind:initialArrivalAirport="arrivalAirport"
-    v-bind:initialArrivalTimestamp="arrivalTimestamp"
-    v-bind:initialArrivalTimezoneName="arrivalTimezoneName" />
+      <FlightForm
+      v-bind:flightId="route.params.id"
+      v-bind:tripId="tripId"
+      v-bind:initialAirline="airline"
+      v-bind:initialFlightNumber="flightNumber"
+      v-bind:initialDepartureAirport="departureAirport"
+      v-bind:initialDepartureTimestamp="departureTimestamp"
+      v-bind:initialDepartureTimezoneName="departureTimezoneName"
+      v-bind:initialArrivalAirport="arrivalAirport"
+      v-bind:initialArrivalTimestamp="arrivalTimestamp"
+      v-bind:initialArrivalTimezoneName="arrivalTimezoneName" />
+    </div>
   </div>
 </template>
 

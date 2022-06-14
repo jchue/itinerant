@@ -80,7 +80,7 @@ async function updateStay() {
 
   loading.value = false;
 
-  navigateTo({
+  await navigateTo({
     path: nextPath,
   });
 }
