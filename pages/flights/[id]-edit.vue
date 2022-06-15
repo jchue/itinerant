@@ -9,7 +9,8 @@ let tripId,
     departureTimezoneName,
     arrivalAirport,
     arrivalTimestamp,
-    arrivalTimezoneName = null;
+    arrivalTimezoneName,
+    confirmationNumber = null;
 
 const { data: flight, pending, refresh, error }  = await useFetch(`/api/flights/${route.params.id}`);
 
@@ -23,7 +24,8 @@ if (!error.value) {
     departureTimezoneName,
     arrivalAirport,
     arrivalTimestamp,
-    arrivalTimezoneName
+    arrivalTimezoneName,
+    confirmationNumber,
   } = flight.value);
 
   useHead({
@@ -33,7 +35,7 @@ if (!error.value) {
 </script>
 
 <template>
-  <div>
+  <Transition mode="out-in">
     <div v-if="pending">
       <Loader />
     </div>
@@ -55,9 +57,10 @@ if (!error.value) {
       v-bind:initialDepartureTimezoneName="departureTimezoneName"
       v-bind:initialArrivalAirport="arrivalAirport"
       v-bind:initialArrivalTimestamp="arrivalTimestamp"
-      v-bind:initialArrivalTimezoneName="arrivalTimezoneName" />
+      v-bind:initialArrivalTimezoneName="arrivalTimezoneName"
+      v-bind:initialConfirmationNumber="confirmationNumber" />
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

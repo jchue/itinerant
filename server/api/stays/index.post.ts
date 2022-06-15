@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { createError, sendError } from "h3";
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient;
@@ -14,7 +15,23 @@ export default defineEventHandler(async (event) => {
     timezoneName
   } = body;
 
-  const flight = await prisma.stay.create({
+  /* Check required fields */
+  if (
+    !tripId
+    || !name
+    || !checkinTimestamp
+    || !checkoutTimestamp
+    || !timezoneName
+  ) {
+    sendError(event, createError({
+      statusCode: 400,
+      statusMessage: 'tripId, name, checkinTimestamp, checkoutTimestamp, and timezoneName are required.',
+    }));
+
+    return;
+  }
+
+  const stay = await prisma.stay.create({
     data: {
       tripId,
       name,
@@ -26,5 +43,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return flight;
+  return stay;
 });

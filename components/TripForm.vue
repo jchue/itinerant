@@ -9,9 +9,18 @@ const name = ref(props.initialName || null);
 
 let loading = ref(false);
 let success = ref(false);
+let error = ref(false);
 
 async function updateTrip() {
   loading.value = true;
+
+  /* Check required fields */
+  if (!name.value) {
+    loading.value = false;
+    error.value = 'Name is required.';
+
+    return;
+  }
 
   const body = {
     name: name.value,
@@ -30,9 +39,9 @@ async function updateTrip() {
       nextPath = `/trips/${response.id}`;
     }
 
-    success.value = true;
+    success.value = 'The trip has been updated!';
   } catch (error) {
-    success.value = false;
+    error.value = 'Uh oh, something went wrong. Please try again later.';
   }
 
   loading.value = false;
@@ -47,21 +56,20 @@ async function updateTrip() {
   <div>
     <form v-on:submit.prevent="updateTrip">
       <div class="mb-6">
-        <Input label="Name" type="text" add-class="w-full" v-model="name" />
+        <Input label="Name" type="text" add-class="w-full" v-model="name" required />
       </div>
 
       <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
 
-      <span v-if="loading">Loading...</span>
-      <div v-else-if="success" class="bg-green-50 p-4 rounded">
-        <div class="inline-block align-top">
-          <span class="material-icons pr-2 !text-xl text-green-300">check_circle</span>
-        </div>
-        <div class="inline-block">
-          <span class="block text-green-900 text-sm">Success</span>
-          <span class="block text-green-700 text-sm">The trip has been updated!</span>
-        </div>
-      </div>
+      <Loader v-if="loading" />
+
+      <Alert v-else-if="success" type="success">
+        {{ success }}
+      </Alert>
+
+      <Alert v-else-if="error" type="error">
+        {{ error }}
+      </Alert>
     </form>
   </div>
 </template>

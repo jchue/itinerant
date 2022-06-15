@@ -3,26 +3,26 @@ import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import 'material-icons/iconfont/material-icons.css';
 
-/* Refresh data in case just edited */
-refreshNuxtData();
-
 const route = useRoute();
 
-let showAddMenu = null;
+const showAddMenu = ref(false);
+const name = ref(null);
 
 const { data: trip, pending, refresh, error } = await useFetch(`/api/trips/${route.params.id}`);
 
-if (!error.value) {
-  showAddMenu = ref(false);
+watch(trip, () => {
+  name.value = trip.value.name;
 
   useHead({
     title: trip.value.name,
   });
-}
+});
+
+refresh();
 </script>
 
 <template>
-  <div>
+  <Transition mode="out-in">
     <div v-if="pending">
       <Loader />
     </div>
@@ -33,7 +33,7 @@ if (!error.value) {
       <header>
         <NuxtLink to="/trips" class="float-left text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trips</NuxtLink>
 
-        <PageTitle add-class="clear-left float-left mr-2">{{ trip.name }}</PageTitle>
+        <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
 
         <DeleteButton itemType="trip" v-bind:itemId="route.params.id" add-class="float-left" />
         <NuxtLink v-bind:to="'/trips/' + route.params.id + '-edit'" class="float-left">
@@ -46,20 +46,22 @@ if (!error.value) {
               <span class="float-right material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">add</span>
             </NuxtLink>
 
-            <ul v-if="showAddMenu" class="inline-block bg-white py-2 absolute rounded shadow-md top-11 right-0 z-10">
-              <li>
-                <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addflight'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
-                  <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
-                  <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addstay'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
-                  <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
-                  <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>
-                </NuxtLink>
-              </li>
-            </ul>
+            <Transition>
+              <ul v-if="showAddMenu" class="inline-block bg-white py-2 absolute rounded shadow-md top-11 right-0 z-10">
+                <li>
+                  <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addflight'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
+                    <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
+                    <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addstay'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
+                    <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
+                    <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>
+                  </NuxtLink>
+                </li>
+              </ul>
+            </Transition>
           </div>
 
           <div v-if="showAddMenu" v-on:click="showAddMenu = !showAddMenu" class="absolute top-0 right-0 bottom-0 left-0"></div>
@@ -106,7 +108,7 @@ if (!error.value) {
         </ul>
       </main>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

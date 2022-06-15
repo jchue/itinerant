@@ -3,40 +3,52 @@ import { format, intervalToDuration } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import 'material-icons/iconfont/material-icons.css';
 
-/* Refresh data in case just edited */
-refreshNuxtData();
-
 const route = useRoute();
 
-let tripId, airlineName, flightDesignator, departureAirportCode, departureDate, departureTime, departureTimezoneName, arrivalAirportCode, arrivalDate, arrivalTime, arrivalTimezoneName, duration = null;
+const tripId = ref(null);
+const airlineName = ref(null);
+const flightDesignator = ref(null);
+const departureAirportCode = ref(null);
+const departureDate = ref(null);
+const departureTime = ref(null);
+const departureTimezoneName = ref(null);
+const arrivalAirportCode = ref(null);
+const arrivalDate = ref(null);
+const arrivalTime = ref(null);
+const arrivalTimezoneName = ref(null);
+const duration = ref(null);
+const confirmationNumber = ref(null);
 
 const { data: flight, pending, refresh, error } = await useFetch(`/api/flights/${route.params.id}`);
 
-if (!error.value) {
-  tripId = flight.value.tripId;
-  airlineName = flight.value.airline ? flight.value.airline.name : null;
-  flightDesignator = flight.value.airline ? `${flight.value.airline.code} ${flight.value.flightNumber}` : null;
-  departureAirportCode = flight.value.departureAirport? flight.value.departureAirport.code : null;
-  departureDate = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'EEE, MMM d, yyyy');
-  departureTime = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'p');
-  departureTimezoneName = flight.value.departureTimezoneName;
-  arrivalAirportCode = flight.value.arrivalAirport ? flight.value.arrivalAirport.code : null;
-  arrivalDate = format(utcToZonedTime(flight.value.arrivalTimestamp, flight.value.arrivalTimezoneName), 'EEE, MMM d, yyyy');
-  arrivalTime = format(utcToZonedTime(flight.value.arrivalTimestamp, flight.value.arrivalTimezoneName), 'p');
-  arrivalTimezoneName = flight.value.arrivalTimezoneName;
-  duration = intervalToDuration({
+watch(flight, () => {
+  tripId.value = flight.value.tripId;
+  airlineName.value = flight.value.airline ? flight.value.airline.name : null;
+  flightDesignator.value = flight.value.airline ? `${flight.value.airline.code} ${flight.value.flightNumber}` : null;
+  departureAirportCode.value = flight.value.departureAirport? flight.value.departureAirport.code : null;
+  departureDate.value = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'EEE, MMM d, yyyy');
+  departureTime.value = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'p');
+  departureTimezoneName.value = flight.value.departureTimezoneName;
+  arrivalAirportCode.value = flight.value.arrivalAirport ? flight.value.arrivalAirport.code : null;
+  arrivalDate.value = format(utcToZonedTime(flight.value.arrivalTimestamp, flight.value.arrivalTimezoneName), 'EEE, MMM d, yyyy');
+  arrivalTime.value = format(utcToZonedTime(flight.value.arrivalTimestamp, flight.value.arrivalTimezoneName), 'p');
+  arrivalTimezoneName.value = flight.value.arrivalTimezoneName;
+  duration.value = intervalToDuration({
     start: new Date(flight.value.departureTimestamp),
     end: new Date(flight.value.arrivalTimestamp),
   });
+  confirmationNumber.value = flight.value.confirmationNumber;
 
   useHead({
     title: `${flight.value.airline.name} ${flight.value.airline.code} ${flight.value.flightNumber}`,
   });
-}
+});
+
+refresh();
 </script>
 
 <template>
-  <div>
+  <Transition mode="out-in">
     <div v-if="pending">
       <Loader />
     </div>
@@ -57,6 +69,8 @@ if (!error.value) {
       </header>
 
       <main class="clear-both">
+        <span class="block mb-2">Confirmation Number: {{ confirmationNumber }}</span>
+
         <div class="flex items-center">
           <div class="flex-1">
             <span class="block text-sm">{{ departureDate }}</span>
@@ -76,7 +90,7 @@ if (!error.value) {
         </div>
       </main>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

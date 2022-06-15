@@ -33,7 +33,7 @@ if (!error.value) {
 </script>
 
 <template>
-  <div>
+  <Transition mode="out-in">
     <div v-if="pending">
       <Loader />
     </div>
@@ -56,7 +56,7 @@ if (!error.value) {
       v-bind:initialTimezoneName="timezoneName"
       />
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

@@ -1,0 +1,37 @@
+<script lang="ts">
+export default {
+  props: ['type', 'message', 'add-class'],
+}
+</script>
+
+<template>
+  <div v-if="type === 'success'" v-bind:class="'bg-green-50 flex px-5 py-4 rounded-md ' + addClass">
+    <div class="pr-4">
+      <span class="material-icons !text-xl text-green-300">check_circle</span>
+    </div>
+    <div class="py-1">
+      <div class="text-green-900 mb-2 text-sm">
+        Success
+      </div>
+      <div class="text-green-700 text-xs">
+        <slot />
+      </div>
+    </div>
+  </div>
+
+  <div v-else-if="type === 'error'" v-bind:class="'bg-red-50 flex px-5 py-4 rounded-md ' + addClass">
+    <div class="pr-4">
+      <span class="material-icons !text-xl text-red-300">error</span>
+    </div>
+    <div class="py-1">
+      <div class="text-red-900 mb-2 text-sm">
+        Error
+      </div>
+      <div class="text-red-700 text-xs">
+        <slot />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped></style>

@@ -2,34 +2,41 @@
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 
-/* Refresh data in case just edited */
-refreshNuxtData();
-
 const route = useRoute();
 
-let tripId, name, address, confirmationNumber, checkinDate, checkinTime, checkoutDate, checkoutTime, timezoneName = null;
+const tripId = ref(null);
+const name = ref(null);
+const address = ref(null);
+const confirmationNumber = ref(null);
+const checkinDate = ref(null);
+const checkinTime = ref(null);
+const checkoutDate = ref(null);
+const checkoutTime = ref(null);
+const timezoneName = ref(null);
 
 const { data: stay, pending, refresh, error } = await useFetch(`/api/stays/${route.params.id}`);
 
-if (!error.value) {
-  tripId = stay.value.tripId;
-  name = stay.value.name;
-  address = stay.value.address;
-  confirmationNumber = stay.value.confirmationNumber;
-  checkinDate = format(utcToZonedTime(stay.value.checkinTimestamp, stay.value.timezoneName), 'EEE, MMM d, yyyy');
-  checkinTime = format(utcToZonedTime(stay.value.checkinTimestamp, stay.value.timezoneName), 'p');
-  checkoutDate = format(utcToZonedTime(stay.value.checkoutTimestamp, stay.value.timezoneName), 'EEE, MMM d, yyyy');
-  checkoutTime = format(utcToZonedTime(stay.value.checkoutTimestamp, stay.value.timezoneName), 'p');
-  timezoneName = stay.value.timezoneName;
+watch(stay, () => {
+  tripId.value = stay.value.tripId;
+  name.value = stay.value.name;
+  address.value = stay.value.address;
+  confirmationNumber.value = stay.value.confirmationNumber;
+  checkinDate.value = format(utcToZonedTime(stay.value.checkinTimestamp, stay.value.timezoneName), 'EEE, MMM d, yyyy');
+  checkinTime.value = format(utcToZonedTime(stay.value.checkinTimestamp, stay.value.timezoneName), 'p');
+  checkoutDate.value = format(utcToZonedTime(stay.value.checkoutTimestamp, stay.value.timezoneName), 'EEE, MMM d, yyyy');
+  checkoutTime.value = format(utcToZonedTime(stay.value.checkoutTimestamp, stay.value.timezoneName), 'p');
+  timezoneName.value = stay.value.timezoneName;
 
   useHead({
     title: stay.value.name,
   });
-}
+});
+
+refresh();
 </script>
 
 <template>
-  <div>
+  <Transition mode="out-in">
     <div v-if="pending">
       <Loader />
     </div>
@@ -70,7 +77,7 @@ if (!error.value) {
         <span class="block text-gray-500 text-xs">{{ timezoneName }}</span>
       </main>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped></style>

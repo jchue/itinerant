@@ -28,6 +28,7 @@ const props = defineProps([
   'initialArrivalAirport',
   'initialArrivalTimestamp',
   'initialArrivalTimezoneName',
+  'initialConfirmationNumber',
 ]);
 
 const tripId = ref(props.tripId || null);
@@ -39,6 +40,7 @@ const departureTimezoneName = ref(props.initialDepartureTimezoneName || null);
 const arrivalAirport = ref(props.initialArrivalAirport || null);
 const arrivalTimestamp = ref(props.initialArrivalTimestamp || null);
 const arrivalTimezoneName = ref(props.initialArrivalTimezoneName || null);
+const confirmationNumber = ref(props.initialConfirmationNumber || null);
 
 /* Calculate dates and times */
 
@@ -52,9 +54,30 @@ const arrivalTime = arrivalTimestamp.value ? ref(format(utcToZonedTime(arrivalTi
 
 let loading = ref(false);
 let success = ref(false);
+let error = ref(false);
 
 async function updateFlight() {
   loading.value = true;
+
+  /* Check required fields */
+  if (
+    !tripId.value
+    || !airline.value
+    || !flightNumber.value
+    || !departureAirport.value
+    || !departureDate.value
+    || !departureTime.value
+    || !departureTimezoneName.value
+    || !arrivalAirport.value
+    || !arrivalDate.value
+    || !arrivalTime.value
+    || !arrivalTimezoneName.value
+  ) {
+    loading.value = false;
+    error.value = 'Assigned Trip, Airline, Flight Number, Departure Airport, Departure Date, Departure Time, Departure Timezone, Arrival Airport, Arrival Date, Arrival Time, and Arrival Timezone are required.';
+
+    return;
+  }
 
   const body = {
     tripId: parseInt(tripId.value),
@@ -72,6 +95,7 @@ async function updateFlight() {
     },
     arrivalTimestamp: zonedTimeToUtc(`${arrivalDate.value} ${arrivalTime.value}`, arrivalTimezoneName.value),
     arrivalTimezoneName: arrivalTimezoneName.value,
+    confirmationNumber: confirmationNumber.value,
   };
 
   let response = null;
@@ -87,9 +111,9 @@ async function updateFlight() {
       nextPath = `/flights/${response.id}`;
     }
 
-    success.value = true;
+    success.value = 'The flight has been updated!';
   } catch (error) {
-    success.value = false;
+    error.value = 'Uh oh, something went wrong. Please try again later.';
   }
 
   loading.value = false;
@@ -105,7 +129,7 @@ async function updateFlight() {
     <form v-on:submit.prevent="updateFlight">
       <div class="mb-6">
         <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
-        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full">
+        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
           <option v-for="trip in trips" v-bind:value="trip.id">
           {{ trip.name }} ({{ trip.start ? format(utcToZonedTime(trip.start.timestamp, trip.start.timezoneName), 'MMM do') : null }} - {{ trip.end ? format(utcToZonedTime(trip.end.timestamp, trip.end.timezoneName), 'MMM do') : null }})</option>
         </select>
@@ -114,12 +138,12 @@ async function updateFlight() {
       <div class="flex gap-4 mb-6">
         <div>
           <label class="block font-medium mb-1 text-sm">Airline</label>
-          <select v-model="airline" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full">
+          <select v-model="airline" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
             <option v-for="airline in airlines" v-bind:value="airline">{{ airline.name }} ({{ airline.code }})</option>
           </select>
         </div>
 
-        <Input label="Flight Number" type="text" size="4" add-class="w-auto" v-model="flightNumber" />
+        <Input label="Flight Number" type="text" size="4" add-class="w-auto" v-model="flightNumber" required />
       </div>
 
       <fieldset class="mb-6">
@@ -127,19 +151,19 @@ async function updateFlight() {
 
         <div class="mb-4">
           <label class="block font-medium mb-1 text-sm">Airport</label>
-          <select v-model="departureAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm">
+          <select v-model="departureAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
             <option v-for="airport in airports" v-bind:value="airport">{{ airport.code }} - {{ airport.name }}</option>
           </select>
         </div>
 
         <div class="flex gap-4">
-          <Input label="Date" type="date" v-model="departureDate" />
+          <Input label="Date" type="date" v-model="departureDate" required />
 
-          <Input label="Time" type="time" v-model="departureTime" />
+          <Input label="Time" type="time" v-model="departureTime" required />
 
           <div>
             <label class="block font-medium mb-1 text-sm">Timezone</label>
-            <select v-model="departureTimezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full">
+            <select v-model="departureTimezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
               <option v-for="timezone in timezones" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
             </select>
           </div>
@@ -151,37 +175,38 @@ async function updateFlight() {
 
         <div class="mb-4">
           <label class="block font-medium mb-1 text-sm">Airport</label>
-          <select v-model="arrivalAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm">
+          <select v-model="arrivalAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
             <option v-for="airport in airports" v-bind:value="airport">{{ airport.code }} - {{ airport.name }}</option>
         </select>
         </div>
 
         <div class="flex gap-4">
-          <Input label="Date" type="date" v-model="arrivalDate" />
+          <Input label="Date" type="date" v-model="arrivalDate" required />
 
-          <Input label="Time" type="time" v-model="arrivalTime" />
+          <Input label="Time" type="time" v-model="arrivalTime" required />
 
           <div>
             <label class="block font-medium mb-1 text-sm">Timezone</label>
-            <select v-model="arrivalTimezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full">
+            <select v-model="arrivalTimezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
               <option v-for="timezone in timezones" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
             </select>
           </div>
         </div>
       </fieldset>
 
+      <Input label="Confirmation Number" type="text" size="6" add-class="mb-6" v-model="confirmationNumber" />
+
       <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
 
-      <span v-if="loading">Loading...</span>
-      <div v-else-if="success" class="bg-green-50 p-4 rounded">
-        <div class="inline-block align-top">
-          <span class="material-icons pr-2 !text-xl text-green-300">check_circle</span>
-        </div>
-        <div class="inline-block">
-          <span class="block text-green-900 text-sm">Success</span>
-          <span class="block text-green-700 text-sm">The flight has been updated!</span>
-        </div>
-      </div>
+      <Loader v-if="loading" />
+
+      <Alert v-else-if="success" type="success">
+        {{ success }}
+      </Alert>
+
+      <Alert v-else-if="error" type="error">
+        {{ error }}
+      </Alert>
     </form>
   </div>
 </template>

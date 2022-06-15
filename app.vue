@@ -12,7 +12,9 @@ useHead({
       <NuxtLink to="/" class="flex-1 font-bold text-lg">Itinerant</NuxtLink>
     </header>
     <main class="p-4">
-      <NuxtPage/>
+      <Transition>
+        <NuxtPage/>
+      </Transition>
     </main>
     <footer
     ></footer>

@@ -46,9 +46,26 @@ const checkoutTime = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkou
 
 let loading = ref(false);
 let success = ref(false);
+let error = ref(false);
 
 async function updateStay() {
   loading.value = true;
+
+  /* Check required fields */
+  if (
+    !tripId.value
+    || !name.value
+    || !checkinDate.value
+    || !checkinTime.value
+    || !checkoutDate.value
+    || !checkoutTime.value
+    || !timezoneName.value
+  ) {
+    loading.value = false;
+    error.value = 'Assigned Trip, Name, Check-In Date, Check-In Time, Check-Out Date, Check-Out Time, and Timezone are required.';
+
+    return;
+  }
 
   const body = {
     tripId: parseInt(tripId.value),
@@ -73,9 +90,9 @@ async function updateStay() {
       nextPath = `/stays/${response.id}`;
     }
 
-    success.value = true;
+    success.value = 'The stay has been updated!';
   } catch (error) {
-    success.value = false;
+    error.value = 'Uh oh, something went wrong. Please try again later.';
   }
 
   loading.value = false;
@@ -91,14 +108,14 @@ async function updateStay() {
     <form v-on:submit.prevent="updateStay">
       <div class="mb-6">
         <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
-        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full">
+        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
           <option v-for="trip in trips" v-bind:value="trip.id">
           {{ trip.name }} ({{ trip.start ? format(utcToZonedTime(trip.start.timestamp, trip.start.timezoneName), 'MMM do') : null }} - {{ trip.end ? format(utcToZonedTime(trip.end.timestamp, trip.end.timezoneName), 'MMM do') : null }})</option>
         </select>
       </div>
 
       <div class="mb-4">
-        <Input label="Name" type="text" add-class="w-full" v-model="name" />
+        <Input label="Name" type="text" add-class="w-full" v-model="name" required />
       </div>
 
       <div class="mb-4">
@@ -110,36 +127,35 @@ async function updateStay() {
       </div>
 
       <div class="flex gap-4 mb-6">
-        <Input label="Check-In Date" type="date" v-model="checkinDate" />
+        <Input label="Check-In Date" type="date" v-model="checkinDate" required />
 
-        <Input label="Check-In Time" type="time" v-model="checkinTime" />
+        <Input label="Check-In Time" type="time" v-model="checkinTime" required />
       </div>
 
       <div class="flex gap-4 mb-6">
-        <Input label="Check-Out Date" type="date" v-model="checkoutDate" />
+        <Input label="Check-Out Date" type="date" v-model="checkoutDate" required />
 
-        <Input label="Check-Out Time" type="time" add-class="w-full" v-model="checkoutTime" />
+        <Input label="Check-Out Time" type="time" add-class="w-full" v-model="checkoutTime" required />
       </div>
 
       <div class="mb-6">
         <label class="block font-medium mb-1 text-sm">Timezone</label>
-        <select v-model="timezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm">
+        <select v-model="timezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
           <option v-for="timezone in timezones" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
         </select>
       </div>
 
       <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
 
-      <span v-if="loading">Loading...</span>
-      <div v-else-if="success" class="bg-green-50 p-4 rounded">
-        <div class="inline-block align-top">
-          <span class="material-icons pr-2 !text-xl text-green-300">check_circle</span>
-        </div>
-        <div class="inline-block">
-          <span class="block text-green-900 text-sm">Success</span>
-          <span class="block text-green-700 text-sm">The stay has been updated!</span>
-        </div>
-      </div>
+      <Loader v-if="loading" />
+
+      <Alert v-else-if="success" type="success">
+        {{ success }}
+      </Alert>
+
+      <Alert v-else-if="error" type="error">
+        {{ error }}
+      </Alert>
     </form>
   </div>
 </template>

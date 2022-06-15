@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
             name: true,
           },
         },
+        confirmationNumber: true,
       },
     });
 

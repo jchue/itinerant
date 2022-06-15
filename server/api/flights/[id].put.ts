@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { createError, sendError} from "h3";
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient;
@@ -13,8 +14,29 @@ export default defineEventHandler(async (event) => {
     departureTimezoneName,
     arrivalAirport,
     arrivalTimestamp,
-    arrivalTimezoneName
+    arrivalTimezoneName,
+    confirmationNumber,
   } = body;
+
+  /* Check required fields */
+  if (
+    !tripId
+    || !airline
+    || !flightNumber
+    || !departureAirport
+    || !departureTimestamp
+    || !departureTimezoneName
+    || !arrivalAirport
+    || !arrivalTimestamp
+    || !arrivalTimezoneName
+  ) {
+    sendError(event, createError({
+      statusCode: 400,
+      statusMessage: 'tripId, airline, flightNumber, departureAirport, departureTimestamp, departureTimezoneName, arrivalAirport, arrivaltimestamp, and arrivalTimezoneName are required.',
+    }));
+
+    return;
+  }
 
   const flight = await prisma.flight.update({
     where: {
@@ -30,6 +52,7 @@ export default defineEventHandler(async (event) => {
       arrivalAirportCode: arrivalAirport.code,
       arrivalTimestamp,
       arrivalTimezoneName,
+      confirmationNumber,
     },
   });
 
