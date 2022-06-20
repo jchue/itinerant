@@ -24,6 +24,16 @@ export default {
         end: new Date(this.arrivalTimestamp),
       });
     },
+    delimiter() {
+      if (
+        (this.airline || this.flightNumber)
+        && (this.duration.years || this.duration.months || this.duration.days || this.duration.minutes || this.duration.seconds)
+      ) {
+        return '|';
+      }
+
+      return null;
+    }
   },
 }
 </script>
@@ -35,7 +45,7 @@ export default {
     </div>
     <div class="flex-1">
       <div class="text-slate-500 text-sm">
-        {{ airline ? airline.name : '' }} {{ flightNumber }} | {{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}
+        {{ airline ? airline.name : '' }} {{ flightNumber }} {{ delimiter }} {{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}
       </div>
       <div class="flex">
         <div class="flex-1">

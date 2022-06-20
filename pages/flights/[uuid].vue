@@ -5,7 +5,7 @@ import 'material-icons/iconfont/material-icons.css';
 
 const route = useRoute();
 
-const tripId = ref(null);
+const tripUuid = ref(null);
 const airlineName = ref(null);
 const flightDesignator = ref(null);
 const departureAirportCode = ref(null);
@@ -19,10 +19,10 @@ const arrivalTimezoneName = ref(null);
 const duration = ref(null);
 const confirmationNumber = ref(null);
 
-const { data: flight, pending, refresh, error } = await useFetch(`/api/flights/${route.params.id}`);
+const { data: flight, pending, refresh, error } = await useFetch(`/api/flights/${route.params.uuid}`);
 
 watch(flight, () => {
-  tripId.value = flight.value.tripId;
+  tripUuid.value = flight.value.tripUuid;
   airlineName.value = flight.value.airline ? flight.value.airline.name : null;
   flightDesignator.value = flight.value.airline ? `${flight.value.airline.code} ${flight.value.flightNumber}` : null;
   departureAirportCode.value = flight.value.departureAirport? flight.value.departureAirport.code : null;
@@ -57,13 +57,13 @@ refresh();
     </div>
     <div v-else>
       <header>
-        <NuxtLink v-bind:to="/trips/ + tripId" class="float-left first:text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
+        <NuxtLink v-bind:to="/trips/ + tripUuid" class="float-left first:text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
 
         <PageTitle add-class="clear-left float-left mr-2">{{ airlineName }} {{ flightDesignator }}</PageTitle>
 
-        <DeleteButton itemType="flight" v-bind:itemId="route.params.id" add-class="float-left" />
+        <DeleteButton itemType="flight" v-bind:itemUuid="route.params.uuid" v-bind:tripUuid="tripUuid" add-class="float-left" />
 
-        <NuxtLink v-bind:to="'/flights/' + route.params.id + '-edit'" class="float-left">
+        <NuxtLink v-bind:to="'/flights/' + route.params.uuid + '-edit'" class="float-left">
           <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
         </NuxtLink>
       </header>

@@ -8,7 +8,7 @@ const route = useRoute();
 const showAddMenu = ref(false);
 const name = ref(null);
 
-const { data: trip, pending, refresh, error } = await useFetch(`/api/trips/${route.params.id}`);
+const { data: trip, pending, refresh, error } = await useFetch(`/api/trips/${route.params.uuid}`);
 
 watch(trip, () => {
   name.value = trip.value.name;
@@ -35,8 +35,8 @@ refresh();
 
         <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
 
-        <DeleteButton itemType="trip" v-bind:itemId="route.params.id" add-class="float-left" />
-        <NuxtLink v-bind:to="'/trips/' + route.params.id + '-edit'" class="float-left">
+        <DeleteButton itemType="trip" v-bind:itemUuid="route.params.uuid" add-class="float-left" />
+        <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-edit'" class="float-left">
           <span class="material-icons !text-xl text-gray-500 hover:text-gray-600">edit</span>
         </NuxtLink>
 
@@ -49,13 +49,13 @@ refresh();
             <Transition>
               <ul v-if="showAddMenu" class="inline-block bg-white py-2 absolute rounded shadow-md top-11 right-0 z-10">
                 <li>
-                  <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addflight'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
+                  <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addflight'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
                     <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
                     <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addstay'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
+                  <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addstay'" class="block pl-4 pr-6 py-1 hover:bg-gray-50">
                     <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
                     <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>
                   </NuxtLink>
@@ -75,14 +75,14 @@ refresh();
 
           <p class="mb-4">What a boring trip. Why don't you add a flight or stay?</p>
 
-          <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addflight'">
+          <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addflight'">
               <button type="button" class="inline-flex justify-center mr-2 py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <span class="material-icons pr-2 !text-xl text-white">flight</span>
               <span class="mt-0.5">Flight</span>
             </button>
           </NuxtLink>
           
-          <NuxtLink v-bind:to="'/trips/' + route.params.id + '-addstay'">
+          <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addstay'">
             <button type="button" class="inline-flex justify-center ml-2 py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <span class="material-icons pr-2 !text-xl text-white">bed</span>
               <span class="mt-0.5">Stay</span>
@@ -96,10 +96,10 @@ refresh();
 
             <ul>
               <li v-for="event in group">
-                <NuxtLink v-if="event.type === 'flight'" v-bind:to="/flights/ + event.id">
+                <NuxtLink v-if="event.type === 'flight'" v-bind:to="/flights/ + event.uuid">
                   <FlightCard v-bind:airline="event.airline" v-bind:flightNumber="event.flightNumber" v-bind:departureAirport="event.departureAirport.code" v-bind:departureTimestamp="event.departureTimestamp" v-bind:departureTimezoneName="event.departureTimezoneName" v-bind:arrivalAirport="event.arrivalAirport.code" v-bind:arrivalTimestamp="event.arrivalTimestamp" v-bind:arrivalTimezoneName="event.arrivalTimezoneName" />
                 </NuxtLink>
-                <NuxtLink v-if="event.type === 'checkin' || event.type === 'checkout'" v-bind:to="/stays/ + event.id">
+                <NuxtLink v-if="event.type === 'checkin' || event.type === 'checkout'" v-bind:to="/stays/ + event.uuid">
                   <StayCard v-bind:type="event.type" v-bind:name="event.name" v-bind:address="event.address" v-bind:timestamp="event.indexTimestamp" v-bind:timezoneName="event.indexTimezoneName" />
                 </NuxtLink>
               </li>

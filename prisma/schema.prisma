@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,51 +15,49 @@ model airline {
 
 model flight {
   id                    Int       @id @default(autoincrement())
+  uuid                  String    @unique(map: "flight_uuid") @db.Uuid
   tripId                Int       @map("trip_id")
   airlineCode           String?   @map("airline_code") @db.VarChar(2)
   flightNumber          Int?      @map("flight_number")
   departureAirportCode  String?   @map("departure_airport_code") @db.VarChar(3)
-  departureTimestamp    DateTime? @map("departure_timestamp") @db.DateTime(0)
+  departureTimestamp    DateTime? @map("departure_timestamp") @db.Timestamp(6)
   arrivalAirportCode    String?   @map("arrival_airport_code") @db.VarChar(3)
-  arrivalTimestamp      DateTime? @map("arrival_timestamp") @db.DateTime(0)
+  arrivalTimestamp      DateTime? @map("arrival_timestamp") @db.Timestamp(6)
   departureTimezoneName String?   @default("Etc/UTC") @map("departure_timezone_name") @db.VarChar(64)
   arrivalTimezoneName   String?   @default("Etc/UTC") @map("arrival_timezone_name") @db.VarChar(64)
-  confirmationNumber   String?   @db.VarChar(6) @map("confirmation_number")
+  confirmationNumber    String?   @map("confirmation_number") @db.VarChar(6)
   airline               airline?  @relation(fields: [airlineCode], references: [code], onDelete: NoAction, map: "fk_flight_airline")
   arrivalAirport        airport?  @relation("airportToflight_arrival_airport_code", fields: [arrivalAirportCode], references: [code], onDelete: NoAction, map: "fk_flight_arrival_airport")
   departureAirport      airport?  @relation("airportToflight_departure_airport_code", fields: [departureAirportCode], references: [code], onDelete: NoAction, map: "fk_flight_departure_airport")
   trip                  trip      @relation(fields: [tripId], references: [id], onDelete: Cascade, map: "fk_flight_trip")
-
-  @@index([airlineCode], map: "fk_flight_airline")
-  @@index([tripId], map: "fk_flight_trip")
-  @@index([arrivalAirportCode], map: "fk_flight_arrival_airport")
-  @@index([departureAirportCode], map: "fk_flight_departure_airport")
 }
 
 model trip {
   id     Int      @id @default(autoincrement())
+  uuid   String   @unique(map: "trip_uuid") @db.Uuid
   name   String   @db.VarChar(255)
   flight flight[]
   stay   stay[]
 }
 
 model stay {
-  id                 Int       @id @default(autoincrement()) @db.UnsignedInt
+  id                 Int       @id @default(autoincrement())
+  uuid               String    @unique(map: "stay_uuid") @db.Uuid
   tripId             Int       @map("trip_id")
-  checkinTimestamp   DateTime? @map("checkin_timestamp") @db.DateTime(0)
-  checkoutTimestamp  DateTime? @map("checkout_timestamp") @db.DateTime(0)
+  checkinTimestamp   DateTime? @map("checkin_timestamp") @db.Timestamp(6)
+  checkoutTimestamp  DateTime? @map("checkout_timestamp") @db.Timestamp(6)
   name               String?   @db.VarChar(255)
   address            String?   @db.VarChar(255)
   confirmationNumber String?   @map("confirmation_number") @db.VarChar(255)
   timezoneName       String?   @map("timezone_name") @db.VarChar(64)
   trip               trip      @relation(fields: [tripId], references: [id], onDelete: Cascade, map: "fk_stay_trip")
-
-  @@index([tripId], map: "fk_stay_trip")
 }
 
 model airport {
   code             String   @id @db.VarChar(3)
   name             String   @db.VarChar(255)
+  latitude         Decimal? @db.Decimal(6, 4)
+  longitude        Decimal? @db.Decimal(7, 4)
   arrivalAirport   flight[] @relation("airportToflight_arrival_airport_code")
   departureAirpirt flight[] @relation("airportToflight_departure_airport_code")
 }

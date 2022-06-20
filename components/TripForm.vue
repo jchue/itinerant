@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 /* Get any initialized props */
 
-const props = defineProps(['tripId', 'initialName']);
+const props = defineProps(['tripUuid', 'initialName']);
 
 const name = ref(props.initialName || null);
 
@@ -31,12 +31,12 @@ async function updateTrip() {
 
   try {
     /* If id exists, update; otherwise, create new */
-    if (props.tripId) {
-      response = await $fetch(`/api/trips/${props.tripId}`, { method: 'put', body });
-      nextPath = `/trips/${props.tripId}`;
+    if (props.tripUuid) {
+      response = await $fetch(`/api/trips/${props.tripUuid}`, { method: 'put', body });
+      nextPath = `/trips/${props.tripUuid}`;
     } else {
       response = await $fetch(`/api/trips`, { method: 'post', body });
-      nextPath = `/trips/${response.id}`;
+      nextPath = `/trips/${response.uuid}`;
     }
 
     success.value = 'The trip has been updated!';

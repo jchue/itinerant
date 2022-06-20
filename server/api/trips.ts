@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient();
@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   try {
     const tripsData = await prisma.trip.findMany({
       select: {
-        id: true,
+        uuid: true,
         name: true,
         flight: {
           select: {
@@ -52,10 +52,8 @@ export default defineEventHandler(async (event) => {
       })
       timestamps.sort((a, b) => a.timestamp - b.timestamp);
 
-      /* TODO: Cconditional for trips w/o any */
-
       return {
-        id: trip.id,
+        uuid: trip.uuid,
         name: trip.name,
         start: timestamps[0],
         end: timestamps[timestamps.length - 1],

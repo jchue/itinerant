@@ -2,7 +2,7 @@
 import 'material-icons/iconfont/material-icons.css';
 
 export default {
-  props: ['itemType', 'itemId', 'addClass'],
+  props: ['itemType', 'itemUuid', 'tripUuid', 'addClass'],
   data() {
     return {
       showConfirm: false,
@@ -18,16 +18,16 @@ export default {
 
         switch (this.itemType) {
           case 'trip':
-            response = await $fetch(`/api/trips/${this.itemId}`, { method: 'delete' });
+            response = await $fetch(`/api/trips/${this.itemUuid}`, { method: 'delete' });
             nextPath = `/trips`;
             break;
           case 'flight':
-            response = await $fetch(`/api/flights/${this.itemId}`, { method: 'delete' });
-            nextPath = `/trips/${response.tripId}`;
+            response = await $fetch(`/api/flights/${this.itemUuid}`, { method: 'delete' });
+            nextPath = `/trips/${this.tripUuid}`;
             break;
           case 'stay':
-            response = await $fetch(`/api/stays/${this.itemId}`, { method: 'delete' });
-            nextPath = `/trips/${response.tripId}`;
+            response = await $fetch(`/api/stays/${this.itemUuid}`, { method: 'delete' });
+            nextPath = `/trips/${this.tripUuid}`;
             break;
           default:
             break;

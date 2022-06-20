@@ -1,13 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { createError, sendError, send } from 'h3';
-import { v4 as uuidv4 } from 'uuid';
+import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient();
   const body = await useBody(event);
-
-  // Uniqueness currently enforced by DB
-  const uuid = uuidv4();
 
   const { name } = body;
 
@@ -23,11 +19,13 @@ export default defineEventHandler(async (event) => {
 
   let trip = null;
   try {
-    trip = await prisma.trip.create({
+    trip = await prisma.trip.update({
+      where: {
+        uuid: event.context.params.uuid,
+      },
       data: {
-        uuid,
         name,
-      }
+      },
     });
   } catch (error) {
     sendError(event, createError({
@@ -37,8 +35,6 @@ export default defineEventHandler(async (event) => {
 
     return;
   }
-
-  event.res.statusCode = 201;
 
   return {
     uuid: trip.uuid,

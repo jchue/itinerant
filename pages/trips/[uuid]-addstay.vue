@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const route = useRoute();
 
-const tripId = route.params.id;
+const tripUuid = route.params.uuid;
 
 useHead({
   title: 'New Stay',
@@ -10,11 +10,11 @@ useHead({
 
 <template>
   <div>
-    <NuxtLink v-bind:to="'/trips/' + route.params.id" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
+    <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
 
     <PageTitle>New Stay</PageTitle>
 
-    <StayForm v-bind:tripId="tripId" />
+    <StayForm v-bind:tripUuid="tripUuid" />
   </div>
 </template>
 

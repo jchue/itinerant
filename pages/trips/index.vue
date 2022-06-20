@@ -44,14 +44,11 @@ refresh();
 
         <ul>
           <li v-for="trip in trips">
-            <NuxtLink v-bind:to="/trips/ + trip.id">
+            <NuxtLink v-bind:to="/trips/ + trip.uuid">
               <TripCard
-              v-bind:id="trip.id"
               v-bind:name="trip.name"
-              v-bind:startTimestamp="trip.start ? trip.start.timestamp : ''"
-              v-bind:startTimezoneName="trip.start ? trip.start.timezoneName : ''"
-              v-bind:endTimestamp="trip.end ? trip.end.timestamp : ''"
-              v-bind:endTimezoneName="trip.end ? trip.end.timezoneName : ''" />
+              v-bind:start="trip.start"
+              v-bind:end="trip.end" />
             </NuxtLink>
           </li>
         </ul>

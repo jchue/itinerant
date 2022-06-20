@@ -4,7 +4,7 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 
 const route = useRoute();
 
-const tripId = ref(null);
+const tripUuid = ref(null);
 const name = ref(null);
 const address = ref(null);
 const confirmationNumber = ref(null);
@@ -14,10 +14,10 @@ const checkoutDate = ref(null);
 const checkoutTime = ref(null);
 const timezoneName = ref(null);
 
-const { data: stay, pending, refresh, error } = await useFetch(`/api/stays/${route.params.id}`);
+const { data: stay, pending, refresh, error } = await useFetch(`/api/stays/${route.params.uuid}`);
 
 watch(stay, () => {
-  tripId.value = stay.value.tripId;
+  tripUuid.value = stay.value.tripUuid;
   name.value = stay.value.name;
   address.value = stay.value.address;
   confirmationNumber.value = stay.value.confirmationNumber;
@@ -45,13 +45,13 @@ refresh();
     </div>
     <div v-else>
       <header>
-        <NuxtLink v-bind:to="/trips/ + tripId" class="float-left text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
+        <NuxtLink v-bind:to="/trips/ + tripUuid" class="float-left text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
 
         <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
 
-        <DeleteButton itemType="stay" v-bind:itemId="route.params.id" add-class="float-left" />
+        <DeleteButton itemType="stay" v-bind:itemUuid="route.params.uuid" v-bind:tripUuid="tripUuid" add-class="float-left" />
 
-        <NuxtLink v-bind:to="'/stays/' + route.params.id + '-edit'" class="float-left">
+        <NuxtLink v-bind:to="'/stays/' + route.params.uuid + '-edit'" class="float-left">
           <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
         </NuxtLink>
       </header>

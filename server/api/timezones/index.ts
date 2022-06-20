@@ -1,4 +1,5 @@
 export default defineEventHandler((event) => {
+  /* No need for database yet because strings; may revisit in the future */
   const timezones = [
     'Africa/Abidjan',
     'Africa/Algiers',

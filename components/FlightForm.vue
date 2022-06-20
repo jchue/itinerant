@@ -6,20 +6,47 @@ import 'material-icons/iconfont/material-icons.css';
 
 const route = useRoute();
 
-/* Get lookups */
+/**
+ * Get lookups
+ */
 
 const { data: airlines } = await useFetch('/api/airlines');
 const { data: airports } = await useFetch('/api/airports');
 const { $timezones } = useNuxtApp();
 const timezones = $timezones();
 
+/**
+ * Get and format trip list
+ */
+
 const { data: trips } = await useFetch('/api/trips');
 
-/* Get any initialized props */
+function date(timestamp, timezoneName) {
+  return format(utcToZonedTime(timestamp, timezoneName), 'MMM do');
+}
+
+function range(startDate, endDate) {
+  if (this.startDate && this.endDate) {
+    if (this.startDate === this.endDate) {
+      // If both dates are the same, only return one
+      return this.startDate;
+    } else {
+      // If dates are different, return range
+      return `${this.startDate} - ${this.endDate}`;
+    }
+  } else {
+    // If return one date or none at all
+    return this.startDate || this.endDate || null;
+  }
+}
+
+/**
+ * Get any initialized props
+ */
 
 const props = defineProps([
-  'flightId',
-  'tripId',
+  'flightUuid',
+  'tripUuid',
   'initialAirline',
   'initialFlightNumber',
   'initialDepartureAirport',
@@ -31,18 +58,20 @@ const props = defineProps([
   'initialConfirmationNumber',
 ]);
 
-const tripId = ref(props.tripId || null);
+const tripUuid = ref(props.tripUuid || null);
 const airline = ref(props.initialAirline || null);
 const flightNumber  = ref(props.initialFlightNumber || null);
-const departureAirport = ref(props.initialDepartureAirport || null);
+const departureAirport = ref(props.initialDepartureAirport || {});
 const departureTimestamp = ref(props.initialDepartureTimestamp || null);
 const departureTimezoneName = ref(props.initialDepartureTimezoneName || null);
-const arrivalAirport = ref(props.initialArrivalAirport || null);
+const arrivalAirport = ref(props.initialArrivalAirport || {});
 const arrivalTimestamp = ref(props.initialArrivalTimestamp || null);
 const arrivalTimezoneName = ref(props.initialArrivalTimezoneName || null);
 const confirmationNumber = ref(props.initialConfirmationNumber || null);
 
-/* Calculate dates and times */
+/**
+ * Calculate dates and times
+ */
 
 const departureDate = departureTimestamp.value ? ref(format(utcToZonedTime(departureTimestamp.value, departureTimezoneName.value), 'yyyy-MM-dd')) : ref(null);
 const departureTime = departureTimestamp.value ? ref(format(utcToZonedTime(departureTimestamp.value, departureTimezoneName.value), 'HH:mm')) : ref(null);
@@ -50,7 +79,9 @@ const departureTime = departureTimestamp.value ? ref(format(utcToZonedTime(depar
 const arrivalDate = arrivalTimestamp.value ? ref(format(utcToZonedTime(arrivalTimestamp.value, arrivalTimezoneName.value), 'yyyy-MM-dd')) : ref(null);
 const arrivalTime = arrivalTimestamp.value ? ref(format(utcToZonedTime(arrivalTimestamp.value, arrivalTimezoneName.value), 'HH:mm')) : ref(null);
 
-/* Handle form */
+/**
+ * Handle form
+ */
 
 let loading = ref(false);
 let success = ref(false);
@@ -59,9 +90,9 @@ let error = ref(false);
 async function updateFlight() {
   loading.value = true;
 
-  /* Check required fields */
+  // Check required fields
   if (
-    !tripId.value
+    !tripUuid.value
     || !airline.value
     || !flightNumber.value
     || !departureAirport.value
@@ -80,7 +111,7 @@ async function updateFlight() {
   }
 
   const body = {
-    tripId: parseInt(tripId.value),
+    tripUuid: tripUuid.value,
     airline: {
       code: airline.value.code,
     },
@@ -102,13 +133,13 @@ async function updateFlight() {
   let nextPath = null;
 
   try {
-    /* If id exists, update; otherwise, create new */
-    if (props.flightId) {
-      response = await $fetch(`/api/flights/${props.flightId}`, { method: 'put', body });
-      nextPath = `/flights/${props.flightId}`;
+    // If id exists, update; otherwise, create new
+    if (props.flightUuid) {
+      response = await $fetch(`/api/flights/${props.flightUuid}`, { method: 'put', body });
+      nextPath = `/flights/${props.flightUuid}`;
     } else {
       response = await $fetch(`/api/flights`, { method: 'post', body });
-      nextPath = `/flights/${response.id}`;
+      nextPath = `/flights/${response.uuid}`;
     }
 
     success.value = 'The flight has been updated!';
@@ -129,10 +160,7 @@ async function updateFlight() {
     <form v-on:submit.prevent="updateFlight">
       <div class="mb-6">
         <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
-        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
-          <option v-for="trip in trips" v-bind:value="trip.id">
-          {{ trip.name }} ({{ trip.start ? format(utcToZonedTime(trip.start.timestamp, trip.start.timezoneName), 'MMM do') : null }} - {{ trip.end ? format(utcToZonedTime(trip.end.timestamp, trip.end.timezoneName), 'MMM do') : null }})</option>
-        </select>
+        <TripSelect v-model="tripUuid" />
       </div>
 
       <div class="flex gap-4 mb-6">
@@ -143,7 +171,7 @@ async function updateFlight() {
           </select>
         </div>
 
-        <Input label="Flight Number" type="text" size="4" add-class="w-auto" v-model="flightNumber" required />
+        <Input label="Flight Number" type="text" size="6" add-class="w-auto" v-model="flightNumber" required />
       </div>
 
       <fieldset class="mb-6">
@@ -151,8 +179,8 @@ async function updateFlight() {
 
         <div class="mb-4">
           <label class="block font-medium mb-1 text-sm">Airport</label>
-          <select v-model="departureAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
-            <option v-for="airport in airports" v-bind:value="airport">{{ airport.code }} - {{ airport.name }}</option>
+          <select v-model="departureAirport.code" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
+            <option v-for="airport in airports" v-bind:value="airport.code">{{ airport.code }} - {{ airport.name }}</option>
           </select>
         </div>
 
@@ -175,8 +203,8 @@ async function updateFlight() {
 
         <div class="mb-4">
           <label class="block font-medium mb-1 text-sm">Airport</label>
-          <select v-model="arrivalAirport" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
-            <option v-for="airport in airports" v-bind:value="airport">{{ airport.code }} - {{ airport.name }}</option>
+          <select v-model="arrivalAirport.code" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
+            <option v-for="airport in airports" v-bind:value="airport.code">{{ airport.code }} - {{ airport.name }}</option>
         </select>
         </div>
 

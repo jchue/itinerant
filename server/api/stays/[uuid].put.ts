@@ -1,13 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
-import { v4 as uuidv4 } from 'uuid';
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient;
   const body = await useBody(event);
-
-  // Uniqueness currently enforced by DB
-  const uuid = uuidv4();
 
   const {
     tripUuid,
@@ -67,9 +63,11 @@ export default defineEventHandler(async (event) => {
 
   let stay = null;
   try {
-    stay = await prisma.stay.create({
+    stay = await prisma.stay.update({
+      where: {
+        uuid: event.context.params.uuid,
+      },
       data: {
-        uuid: uuid,
         tripId: trip.id,
         name,
         address,
@@ -88,11 +86,9 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  event.res.statusCode = 201;
-
   return {
     uuid: stay.uuid,
-    tripUuid,
+    tripUuid: tripUuid,
     name: stay.name,
     address: stay.address,
     confirmationNumber: stay.confirmationNumber,
@@ -100,4 +96,4 @@ export default defineEventHandler(async (event) => {
     checkoutTimestamp: stay.checkoutTimestamp,
     timezoneName: stay.timezoneName,
   };
-});
+})

@@ -6,18 +6,22 @@ import 'material-icons/iconfont/material-icons.css';
 
 const route = useRoute();
 
-/* Get lookups */
+/**
+ * Get lookups
+ */
 
 const { $timezones } = useNuxtApp();
 const timezones = $timezones();
 
 const { data: trips } = await useFetch('/api/trips');
 
-/* Get any initialized props */
+/**
+ * Get any initialized props
+ */
 
 const props = defineProps([
-  'stayId',
-  'tripId',
+  'stayUuid',
+  'tripUuid',
   'initialName',
   'initialAddress',
   'initialConfirmationNumber',
@@ -26,7 +30,7 @@ const props = defineProps([
   'initialTimezoneName',
 ]);
 
-const tripId = ref(props.tripId || null);
+const tripUuid = ref(props.tripUuid || null);
 const name = ref(props.initialName || null);
 const address = ref(props.initialAddress || null);
 const confirmationNumber = ref(props.initialConfirmationNumber || null);
@@ -34,7 +38,9 @@ const checkinTimestamp = ref(props.initialCheckinTimestamp || null);
 const checkoutTimestamp = ref(props.initialCheckoutTimestamp || null);
 const timezoneName = ref(props.initialTimezoneName) || null;
 
-/* Calculate dates and times */
+/**
+ * Calculate dates and times
+ */
 
 const checkinDate = checkinTimestamp.value ? ref(format(utcToZonedTime(checkinTimestamp.value, timezoneName.value), 'yyyy-MM-dd')) : ref(null);
 const checkinTime = checkinTimestamp.value ? ref(format(utcToZonedTime(checkinTimestamp.value, timezoneName.value), 'HH:mm')) : ref(null);
@@ -42,7 +48,9 @@ const checkinTime = checkinTimestamp.value ? ref(format(utcToZonedTime(checkinTi
 const checkoutDate = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkoutTimestamp.value, timezoneName.value), 'yyyy-MM-dd')) : ref(null);
 const checkoutTime = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkoutTimestamp.value, timezoneName.value), 'HH:mm')) : ref(null);
 
-/* Handle form */
+/**
+ * Handle form
+ */
 
 let loading = ref(false);
 let success = ref(false);
@@ -53,7 +61,7 @@ async function updateStay() {
 
   /* Check required fields */
   if (
-    !tripId.value
+    !tripUuid.value
     || !name.value
     || !checkinDate.value
     || !checkinTime.value
@@ -68,7 +76,7 @@ async function updateStay() {
   }
 
   const body = {
-    tripId: parseInt(tripId.value),
+    tripUuid: tripUuid.value,
     name: name.value,
     address: address.value,
     confirmationNumber: confirmationNumber.value,
@@ -81,14 +89,16 @@ async function updateStay() {
   let nextPath = null;
 
   try {
-    /* If id exists, update; otherwise, create new */
-    if (props.stayId) {
-      response = await $fetch(`/api/stays/${props.stayId}`, { method: 'put', body });
-      nextPath = `/stays/${props.stayId}`;
+    // If id exists, update; otherwise, create new
+    if (props.stayUuid) {
+      response = await $fetch(`/api/stays/${props.stayUuid}`, { method: 'put', body });
+      nextPath = `/stays/${props.stayUuid}`;
     } else {
       response = await $fetch(`/api/stays`, { method: 'post', body });
-      nextPath = `/stays/${response.id}`;
+      nextPath = `/stays/${response.uuid}`;
     }
+
+    console.log(nextPath);
 
     success.value = 'The stay has been updated!';
   } catch (error) {
@@ -108,10 +118,7 @@ async function updateStay() {
     <form v-on:submit.prevent="updateStay">
       <div class="mb-6">
         <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
-        <select v-model="tripId" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full" required>
-          <option v-for="trip in trips" v-bind:value="trip.id">
-          {{ trip.name }} ({{ trip.start ? format(utcToZonedTime(trip.start.timestamp, trip.start.timezoneName), 'MMM do') : null }} - {{ trip.end ? format(utcToZonedTime(trip.end.timestamp, trip.end.timezoneName), 'MMM do') : null }})</option>
-        </select>
+        <TripSelect v-model="tripUuid" />
       </div>
 
       <div class="mb-4">

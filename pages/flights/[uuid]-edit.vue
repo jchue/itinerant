@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const route = useRoute();
 
-let tripId,
+let tripUuid,
     airline,
     flightNumber,
     departureAirport,
@@ -12,11 +12,11 @@ let tripId,
     arrivalTimezoneName,
     confirmationNumber = null;
 
-const { data: flight, pending, refresh, error }  = await useFetch(`/api/flights/${route.params.id}`);
+const { data: flight, pending, refresh, error }  = await useFetch(`/api/flights/${route.params.uuid}`);
 
 if (!error.value) {
   ({
-    tripId,
+    tripUuid,
     airline,
     flightNumber,
     departureAirport,
@@ -43,13 +43,13 @@ if (!error.value) {
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink v-bind:to="'/flights/' + route.params.id" class="text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Back</NuxtLink>
+      <NuxtLink v-bind:to="'/flights/' + route.params.uuid" class="text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Back</NuxtLink>
 
       <PageTitle>Edit Flight</PageTitle>
 
       <FlightForm
-      v-bind:flightId="route.params.id"
-      v-bind:tripId="tripId"
+      v-bind:flightUuid="route.params.uuid"
+      v-bind:tripUuid="tripUuid"
       v-bind:initialAirline="airline"
       v-bind:initialFlightNumber="flightNumber"
       v-bind:initialDepartureAirport="departureAirport"
