@@ -50,6 +50,8 @@ model stay {
   address            String?   @db.VarChar(255)
   confirmationNumber String?   @map("confirmation_number") @db.VarChar(255)
   timezoneName       String?   @map("timezone_name") @db.VarChar(64)
+  latitude           Decimal?  @db.Decimal(6, 4)
+  longitude          Decimal?  @db.Decimal(7, 4)
   trip               trip      @relation(fields: [tripId], references: [id], onDelete: Cascade, map: "fk_stay_trip")
 }
 

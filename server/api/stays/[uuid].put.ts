@@ -9,6 +9,8 @@ export default defineEventHandler(async (event) => {
     tripUuid,
     name,
     address,
+    latitude,
+    longitude,
     confirmationNumber,
     checkinTimestamp,
     checkoutTimestamp,
@@ -59,6 +61,8 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
     }));
+
+    return;
   }
 
   let stay = null;
@@ -71,6 +75,8 @@ export default defineEventHandler(async (event) => {
         tripId: trip.id,
         name,
         address,
+        latitude,
+        longitude,
         confirmationNumber,
         checkinTimestamp,
         checkoutTimestamp,
@@ -91,6 +97,8 @@ export default defineEventHandler(async (event) => {
     tripUuid: tripUuid,
     name: stay.name,
     address: stay.address,
+    latitude: stay.latitude,
+    longitude: stay.longitude,
     confirmationNumber: stay.confirmationNumber,
     checkinTimestamp: stay.checkinTimestamp,
     checkoutTimestamp: stay.checkoutTimestamp,

@@ -8,6 +8,8 @@ const route = useRoute();
 let tripUuid,
   name,
   address,
+  latitude,
+  longitude,
   confirmationNumber,
   checkinTimestamp,
   checkoutTimestamp,
@@ -20,6 +22,8 @@ if (!error.value) {
     tripUuid,
     name,
     address,
+    latitude,
+    longitude,
     confirmationNumber,
     checkinTimestamp,
     checkoutTimestamp,
@@ -50,6 +54,8 @@ if (!error.value) {
       v-bind:tripUuid="tripUuid"
       v-bind:initialName="name"
       v-bind:initialAddress="address"
+      v-bind:initialLatitude="latitude"
+      v-bind:initialLongitude="longitude"
       v-bind:initialConfirmationNumber="confirmationNumber"
       v-bind:initialCheckinTimestamp="checkinTimestamp"
       v-bind:initialCheckoutTimestamp="checkoutTimestamp"

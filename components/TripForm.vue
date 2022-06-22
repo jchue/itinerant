@@ -34,21 +34,22 @@ async function updateTrip() {
     if (props.tripUuid) {
       response = await $fetch(`/api/trips/${props.tripUuid}`, { method: 'put', body });
       nextPath = `/trips/${props.tripUuid}`;
+      success.value = 'The trip has been updated!';
     } else {
       response = await $fetch(`/api/trips`, { method: 'post', body });
       nextPath = `/trips/${response.uuid}`;
+      success.value = 'The trip has been created!';
     }
 
-    success.value = 'The trip has been updated!';
-  } catch (error) {
+    loading.value = false;
+
+    await navigateTo({
+      path: nextPath,
+    });
+  } catch (e) {
+    loading.value = false;
     error.value = 'Uh oh, something went wrong. Please try again later.';
   }
-
-  loading.value = false;
-
-  await navigateTo({
-    path: nextPath,
-  });
 }
 </script>
 

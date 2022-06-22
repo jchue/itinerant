@@ -24,6 +24,8 @@ const props = defineProps([
   'tripUuid',
   'initialName',
   'initialAddress',
+  'initialLatitude',
+  'initialLongitude',
   'initialConfirmationNumber',
   'initialCheckinTimestamp',
   'initialCheckoutTimestamp',
@@ -31,12 +33,54 @@ const props = defineProps([
 ]);
 
 const tripUuid = ref(props.tripUuid || null);
-const name = ref(props.initialName || null);
-const address = ref(props.initialAddress || null);
 const confirmationNumber = ref(props.initialConfirmationNumber || null);
 const checkinTimestamp = ref(props.initialCheckinTimestamp || null);
 const checkoutTimestamp = ref(props.initialCheckoutTimestamp || null);
-const timezoneName = ref(props.initialTimezoneName) || null;
+const timezoneName = ref(props.initialTimezoneName || null);
+const location = ref(null);
+const name = computed(() => {
+  if (location.value) {
+    return location.value.properties.name;
+  } else if (props.initialName) {
+    return props.initialName;
+  } else {
+    return null;
+  }
+});
+const address = computed(() => {
+  if (location.value) {
+    const houseNumber = location.value.properties.housenumber ? `${location.value.properties.housenumber} ` : '';
+    const street = location.value.properties.street ? `${location.value.properties.street}, ` : '';
+    const city = location.value.properties.city ? `${location.value.properties.city}, ` : '';
+    const state = location.value.properties.state ? `${location.value.properties.state}` : '';
+    const postCode = location.value.properties.postcode ? ` ${location.value.properties.postcode}` : '';
+    const country = location.value.properties.country ? `, ${location.value.properties.country}` : '';
+
+    return houseNumber + street + city + state + postCode + country;
+  } else if (props.initialAddress) {
+    return props.initialAddress;
+  } else {
+    return null;
+  }
+});
+const latitude = computed(() => {
+  if (location.value) {
+    return location.value.geometry.coordinates[1];
+  } else if (props.initialLatitude) {
+    return props.initialLatitude;
+  } else {
+    return null;
+  }
+});
+const longitude = computed(() => {
+  if (location.value) {
+    return location.value.geometry.coordinates[0];
+  } else if (props.initialLongitude) {
+    return props.initialLongitude;
+  } else {
+    return null;
+  }
+});
 
 /**
  * Calculate dates and times
@@ -79,6 +123,8 @@ async function updateStay() {
     tripUuid: tripUuid.value,
     name: name.value,
     address: address.value,
+    latitude: latitude.value,
+    longitude: longitude.value,
     confirmationNumber: confirmationNumber.value,
     checkinTimestamp: zonedTimeToUtc(`${checkinDate.value} ${checkinTime.value}`, timezoneName.value),
     checkoutTimestamp: zonedTimeToUtc(`${checkoutDate.value} ${checkoutTime.value}`, timezoneName.value),
@@ -93,23 +139,22 @@ async function updateStay() {
     if (props.stayUuid) {
       response = await $fetch(`/api/stays/${props.stayUuid}`, { method: 'put', body });
       nextPath = `/stays/${props.stayUuid}`;
+      success.value = 'The stay has been updated!';
     } else {
       response = await $fetch(`/api/stays`, { method: 'post', body });
       nextPath = `/stays/${response.uuid}`;
+      success.value = 'The stay has been created!';
     }
 
-    console.log(nextPath);
+    loading.value = false;
 
-    success.value = 'The stay has been updated!';
-  } catch (error) {
+    await navigateTo({
+      path: nextPath,
+    });
+  } catch (e) {
+    loading.value = false;
     error.value = 'Uh oh, something went wrong. Please try again later.';
   }
-
-  loading.value = false;
-
-  await navigateTo({
-    path: nextPath,
-  });
 }
 </script>
 
@@ -122,11 +167,12 @@ async function updateStay() {
       </div>
 
       <div class="mb-4">
-        <Input label="Name" type="text" add-class="w-full" v-model="name" required />
+        <label class="block font-medium mb-1 text-sm">Name</label>
+        <LocationSearch v-model="location" v-bind:initialValue="name" add-class="w-full" />
       </div>
 
       <div class="mb-4">
-        <Input label="Address" type="text" add-class="w-full" v-model="address" />
+        <Input label="Address" type="text" add-class="w-full" v-model="address" disabled />
       </div>
 
       <div class="mb-6">

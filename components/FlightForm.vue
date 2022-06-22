@@ -110,6 +110,14 @@ async function updateFlight() {
     return;
   }
 
+  // Check flight number format
+  if (isNaN(flightNumber.value)) {
+    loading.value = false;
+    error.value = 'Invalid Flight Number';
+
+    return;
+  }
+
   const body = {
     tripUuid: tripUuid.value,
     airline: {
@@ -137,21 +145,22 @@ async function updateFlight() {
     if (props.flightUuid) {
       response = await $fetch(`/api/flights/${props.flightUuid}`, { method: 'put', body });
       nextPath = `/flights/${props.flightUuid}`;
+      success.value = 'The flight has been updated!';
     } else {
       response = await $fetch(`/api/flights`, { method: 'post', body });
       nextPath = `/flights/${response.uuid}`;
+      success.value = 'The flight has been created!';
     }
 
-    success.value = 'The flight has been updated!';
-  } catch (error) {
+    loading.value = false;
+
+    await navigateTo({
+      path: nextPath,
+    });
+  } catch (e) {
+    loading.value = false;
     error.value = 'Uh oh, something went wrong. Please try again later.';
   }
-
-  loading.value = false;
-
-  await navigateTo({
-    path: nextPath,
-  });
 }
 </script>
 

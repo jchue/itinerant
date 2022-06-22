@@ -19,6 +19,8 @@ export default defineEventHandler(async (event) => {
         tripId: true,
         name: true,
         address: true,
+        latitude: true,
+        longitude: true,
         confirmationNumber: true,
         checkinTimestamp: true,
         checkoutTimestamp: true,
@@ -26,12 +28,7 @@ export default defineEventHandler(async (event) => {
       },
     });
   } catch (error) {
-    sendError(event, createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
-    }));
-
-    return;
+    return error;
   }
 
   // Retrieve trip for UUID
@@ -62,6 +59,8 @@ export default defineEventHandler(async (event) => {
     tripUuid: trip.uuid,
     name: stay.name,
     address: stay.address,
+    latitude: stay.latitude,
+    longitude: stay.longitude,
     confirmationNumber: stay.confirmationNumber,
     checkinTimestamp: stay.checkinTimestamp,
     checkoutTimestamp: stay.checkoutTimestamp,

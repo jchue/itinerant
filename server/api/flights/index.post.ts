@@ -42,6 +42,16 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
+  // Check flight number format
+  if (isNaN(flightNumber)) {
+    sendError(event, createError({
+      statusCode: 400,
+      statusMessage: 'Invalid flightNumber',
+    }));
+
+    return;
+  }
+
   // Validate timezones
   try {
     await $fetch(`/api/timezones/${departureTimezoneName}`);
@@ -71,6 +81,8 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
     }));
+
+    return;
   }
 
   let flight = null;
