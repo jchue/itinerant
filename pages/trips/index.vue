@@ -40,7 +40,9 @@ refresh();
         <span class="text-slate-300 text-sm uppercase">Trips</span>
 
         <NuxtLink to="/addtrip">
-          <span class="float-right material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">add</span>
+          <span class="float-right material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">
+            add
+          </span>
         </NuxtLink>
       </header>
 
@@ -52,20 +54,21 @@ refresh();
           <p class="mb-4">Nothing to see here yet.</p>
 
           <NuxtLink to="/addtrip">
-              <button type="button" class="inline-flex justify-center mr-2 py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <Button type="button">
               <span class="material-icons pr-2 !text-xl text-white">add</span>
               <span class="mt-1">New Trip</span>
-            </button>
+            </Button>
           </NuxtLink>
         </div>
 
         <ul>
-          <li v-for="trip in trips">
+          <li v-for="trip in trips" v-bind:key="trip.uuid">
             <NuxtLink v-bind:to="/trips/ + trip.uuid">
               <TripCard
-              v-bind:name="trip.name"
-              v-bind:start="trip.start"
-              v-bind:end="trip.end" />
+                v-bind:name="trip.name"
+                v-bind:start="trip.start"
+                v-bind:end="trip.end"
+              />
             </NuxtLink>
           </li>
         </ul>

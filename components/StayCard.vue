@@ -7,7 +7,15 @@ export default {
   props: ['type', 'name', 'address', 'timestamp', 'timezoneName'],
   computed: {
     prefix() {
-      return (this.type === 'checkin') ? 'Check-In' : (this.type === 'checkout') ? 'Check-Out' : '';
+      let prefix = '';
+
+      if (this.type === 'checkin') {
+        prefix = 'Check-In';
+      } else if (this.type === 'checkout') {
+        prefix = 'Check-Out';
+      }
+
+      return prefix;
     },
     time() {
       return format(utcToZonedTime(this.timestamp, this.timezoneName), 'p');

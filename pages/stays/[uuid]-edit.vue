@@ -57,21 +57,26 @@ definePageMeta({
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink v-bind:to="'/stays/' + route.params.uuid" class="text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Back</NuxtLink>
+      <NuxtLink
+        v-bind:to="'/stays/' + route.params.uuid"
+        class="text-gray-300 text-sm uppercase hover:text-gray-400"
+      >
+        &larr; Back
+      </NuxtLink>
 
       <PageTitle>Edit Stay</PageTitle>
 
       <StayForm
-      v-bind:stayUuid="route.params.uuid"
-      v-bind:tripUuid="tripUuid"
-      v-bind:initialName="name"
-      v-bind:initialAddress="address"
-      v-bind:initialLatitude="latitude"
-      v-bind:initialLongitude="longitude"
-      v-bind:initialConfirmationNumber="confirmationNumber"
-      v-bind:initialCheckinTimestamp="checkinTimestamp"
-      v-bind:initialCheckoutTimestamp="checkoutTimestamp"
-      v-bind:initialTimezoneName="timezoneName"
+        v-bind:stayUuid="route.params.uuid"
+        v-bind:tripUuid="tripUuid"
+        v-bind:initialName="name"
+        v-bind:initialAddress="address"
+        v-bind:initialLatitude="latitude"
+        v-bind:initialLongitude="longitude"
+        v-bind:initialConfirmationNumber="confirmationNumber"
+        v-bind:initialCheckinTimestamp="checkinTimestamp"
+        v-bind:initialCheckoutTimestamp="checkoutTimestamp"
+        v-bind:initialTimezoneName="timezoneName"
       />
     </div>
   </Transition>

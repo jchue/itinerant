@@ -15,7 +15,9 @@ definePageMeta({
 
 <template>
   <div>
-    <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
+    <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">
+      &larr; Back
+    </NuxtLink>
 
     <PageTitle>New Stay</PageTitle>
 

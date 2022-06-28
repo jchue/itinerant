@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
           timestamp: stay.checkoutTimestamp,
           timezoneName: stay.timezoneName || 'Etc/UTC',
         });
-      })
+      });
       timestamps.sort((a, b) => a.timestamp - b.timestamp);
 
       return {
@@ -83,11 +83,16 @@ export default defineEventHandler(async (event) => {
         end: timestamps[timestamps.length - 1],
       };
     });
-  } catch(error) {
-    throw(error);
+  } catch (error) {
+    sendError(event, createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+    }));
+
+    return;
   } finally {
     await prisma.$disconnect();
   }
 
   return trips;
-})
+});

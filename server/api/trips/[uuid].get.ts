@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const userId = event.context.auth.user.id;
 
-  const prisma = new PrismaClient;
+  const prisma = new PrismaClient();
 
   let tripData = null;
   try {
@@ -188,13 +188,13 @@ export default defineEventHandler(async (event) => {
   const groupedEvents = events.reduce((acc, obj) => {
     /**
      * Need to localize date before grouping
-     * 
+     *
      * TODO: Reconsider datetime strategy;
      * inconsistent that we need to localize the date in this instance
      * as opposed to everywhere else
      */
     const localTimestamp = utcToZonedTime(obj['indexTimestamp'], obj['indexTimezoneName']);
-    let key = format(localTimestamp, 'yyyy-MM-dd');
+    const key = format(localTimestamp, 'yyyy-MM-dd');
 
     if (!acc[key]) {
       acc[key] = [];

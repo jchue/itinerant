@@ -59,22 +59,28 @@ definePageMeta({
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink v-bind:to="'/flights/' + route.params.uuid" class="text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Back</NuxtLink>
+      <NuxtLink
+        v-bind:to="'/flights/' + route.params.uuid"
+        class="text-gray-300 text-sm uppercase hover:text-gray-400"
+      >
+        &larr; Back
+      </NuxtLink>
 
       <PageTitle>Edit Flight</PageTitle>
 
       <FlightForm
-      v-bind:flightUuid="route.params.uuid"
-      v-bind:tripUuid="tripUuid"
-      v-bind:initialAirline="airline"
-      v-bind:initialFlightNumber="flightNumber"
-      v-bind:initialDepartureAirport="departureAirport"
-      v-bind:initialDepartureTimestamp="departureTimestamp"
-      v-bind:initialDepartureTimezoneName="departureTimezoneName"
-      v-bind:initialArrivalAirport="arrivalAirport"
-      v-bind:initialArrivalTimestamp="arrivalTimestamp"
-      v-bind:initialArrivalTimezoneName="arrivalTimezoneName"
-      v-bind:initialConfirmationNumber="confirmationNumber" />
+        v-bind:flightUuid="route.params.uuid"
+        v-bind:tripUuid="tripUuid"
+        v-bind:initialAirline="airline"
+        v-bind:initialFlightNumber="flightNumber"
+        v-bind:initialDepartureAirport="departureAirport"
+        v-bind:initialDepartureTimestamp="departureTimestamp"
+        v-bind:initialDepartureTimezoneName="departureTimezoneName"
+        v-bind:initialArrivalAirport="arrivalAirport"
+        v-bind:initialArrivalTimestamp="arrivalTimestamp"
+        v-bind:initialArrivalTimezoneName="arrivalTimezoneName"
+        v-bind:initialConfirmationNumber="confirmationNumber"
+      />
     </div>
   </Transition>
 </template>

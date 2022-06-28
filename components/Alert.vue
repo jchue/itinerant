@@ -32,7 +32,11 @@ export default {
 </script>
 
 <template>
-  <div v-if="type === 'success'" v-bind:class="'bg-green-50 flex px-5 py-4 rounded-md ' + addClass" v-bind:style="visibility">
+  <div
+    v-if="type === 'success'"
+    v-bind:class="'bg-green-50 flex px-5 py-4 rounded-md ' + addClass"
+    v-bind:style="visibility"
+  >
     <div class="pr-4">
       <span class="material-icons !text-xl text-green-300">check_circle</span>
     </div>
@@ -46,7 +50,11 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="type === 'error'" v-bind:class="'bg-red-50 flex px-5 py-4 rounded-md ' + addClass" v-bind:style="visibility">
+  <div
+    v-else-if="type === 'error'"
+    v-bind:class="'bg-red-50 flex px-5 py-4 rounded-md ' + addClass"
+    v-bind:style="visibility"
+  >
     <div class="pr-4">
       <span class="material-icons !text-xl text-red-300">error</span>
     </div>
@@ -60,7 +68,11 @@ export default {
     </div>
   </div>
 
-  <div v-else-if="type === 'info'" v-bind:class="'bg-blue-50 flex px-5 py-4 rounded-md transition-all duration-1000 ' + addClass" v-bind:style="visibility">
+  <div
+    v-else-if="type === 'info'"
+    v-bind:class="'bg-blue-50 flex px-5 py-4 rounded-md transition-all duration-1000 ' + addClass"
+    v-bind:style="visibility"
+  >
     <div class="pr-4">
       <span class="material-icons !text-xl text-blue-300">info</span>
     </div>

@@ -82,7 +82,9 @@ async function login() {
         <Input type="email" label="Email" add-class="mb-4" v-model="email" required />
         <Input type="password" label="Password" add-class="mb-6" v-model="password" required />
 
-        <NuxtLink to="/reset" class="mr-4 text-gray-500 text-xs hover:text-gray-600">Forgot password?</NuxtLink>
+        <NuxtLink to="/reset" class="mr-4 text-gray-500 text-xs hover:text-gray-600">
+          Forgot password?
+        </NuxtLink>
         <Button type="submit">Log In</Button>
       </form>
     </div>

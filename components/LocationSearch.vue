@@ -27,7 +27,7 @@ export default {
         this.idle--;
 
         if (this.idle <= 0) {
-          clearInterval(timeout); 
+          clearInterval(timeout);
 
           if (this.query) {
             this.suggest();
@@ -53,17 +53,40 @@ export default {
       return word[0].toUpperCase() + word.substring(1);
     },
   },
-}
+};
 </script>
 
 <template>
   <div class="relative">
-    <input v-model="query" v-on:input="triggerSearch" v-on:focus="focused = true" v-on:blur="loseFocus" type="text" v-bind:class="'bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm ' + addClass" />
-    <ul v-show="focused" class="absolute z-10 mt-1 bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-      <li v-if="loading" class="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 text-sm">Loading...</li>
-      <li v-for="suggestion in suggestions" v-on:click="select(suggestion)" class="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 text-sm hover:bg-gray-100">
+    <input
+      v-model="query"
+      v-on:input="triggerSearch"
+      v-on:focus="focused = true"
+      v-on:blur="loseFocus"
+      type="text"
+      v-bind:class="'bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm ' + addClass"
+    />
+    <ul
+      v-show="focused"
+      class="absolute z-10 mt-1 bg-white shadow-lg max-h-56 rounded-md py-1 text-base
+      ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+    >
+      <li
+        v-if="loading"
+        class="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 text-sm">
+        Loading...
+      </li>
+      <li
+        v-for="suggestion in suggestions"
+        v-bind:key="suggestion.properties.osm_id"
+        v-on:click="select(suggestion)"
+        class="text-gray-900 cursor-pointer select-none relative
+        py-2 pl-3 pr-9 text-sm hover:bg-gray-100"
+      >
         <span class="block">{{ suggestion.properties.name }}</span>
-        <span class="block text-gray-400 text-xs">({{ capitalize(suggestion.properties.osm_value) }}) {{ suggestion.properties.city ? suggestion.properties.city + ',' : '' }} {{ suggestion.properties.state ? suggestion.properties.state + ',' : '' }} {{ suggestion.properties.country }}</span>
+        <span class="block text-gray-400 text-xs">
+          ({{ capitalize(suggestion.properties.osm_value) }}) {{ suggestion.properties.city ? suggestion.properties.city + ',' : '' }} {{ suggestion.properties.state ? suggestion.properties.state + ',' : '' }} {{ suggestion.properties.country }}
+        </span>
       </li>
     </ul>
   </div>

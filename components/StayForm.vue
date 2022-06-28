@@ -38,9 +38,9 @@ const name = computed(() => {
     return location.value.properties.name;
   } else if (props.initialName) {
     return props.initialName;
-  } else {
-    return null;
   }
+
+  return null;
 });
 const address = computed(() => {
   if (location.value) {
@@ -54,27 +54,27 @@ const address = computed(() => {
     return houseNumber + street + city + state + postCode + country;
   } else if (props.initialAddress) {
     return props.initialAddress;
-  } else {
-    return null;
   }
+
+  return null;
 });
 const latitude = computed(() => {
   if (location.value) {
     return location.value.geometry.coordinates[1];
   } else if (props.initialLatitude) {
     return props.initialLatitude;
-  } else {
-    return null;
   }
+
+  return null;
 });
 const longitude = computed(() => {
   if (location.value) {
     return location.value.geometry.coordinates[0];
   } else if (props.initialLongitude) {
     return props.initialLongitude;
-  } else {
-    return null;
   }
+
+  return null;
 });
 
 /**
@@ -197,13 +197,29 @@ async function updateStay() {
         <div class="flex gap-4 mb-6">
           <Input label="Check-Out Date" type="date" v-model="checkoutDate" required />
 
-          <Input label="Check-Out Time" type="time" add-class="w-full" v-model="checkoutTime" required />
+          <Input
+            label="Check-Out Time"
+            type="time"
+            add-class="w-full"
+            v-model="checkoutTime"
+            required
+          />
         </div>
 
         <div class="mb-6">
           <label class="block font-medium mb-1 text-sm">Timezone</label>
-          <select v-model="timezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
-            <option v-for="timezone in $timezones()" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
+          <select
+            v-model="timezoneName"
+            class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm"
+            required
+          >
+            <option
+              v-for="timezone in $timezones()"
+              v-bind:key="timezone.name"
+              v-bind:value="timezone.name"
+            >
+              GMT {{ timezone.offset }} {{ timezone.name }}
+            </option>
           </select>
         </div>
 

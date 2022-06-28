@@ -21,19 +21,17 @@ function createMap() {
 
     // Add a layer showing the places
     map.value.addLayer({
-      'id': 'places',
-      'type': 'symbol',
-      'source': 'places',
-      'layout': {
+      id: 'places',
+      type: 'symbol',
+      source: 'places',
+      layout: {
         'icon-image': '{icon}',
         'icon-allow-overlap': true,
       },
     });
 
     // Center map to include all features
-    const coordinates = props.geojson.features.map((feature) => {
-      return feature.geometry.coordinates;
-    });
+    const coordinates = props.geojson.features.map((feature) => feature.geometry.coordinates);
 
     map.value.fitBounds(coordinates, {
       padding: 32,
@@ -44,7 +42,7 @@ function createMap() {
      * open a popup at the location of the feature
      * with description HTML from its properties.
      */
-    map.value.on('click', 'places', function (e) {
+    map.value.on('click', 'places', (e) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
       const { title, description } = e.features[0].properties;
 
@@ -56,24 +54,24 @@ function createMap() {
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
-      
+
       new maplibregl.Popup()
         .setLngLat(coordinates)
         .setHTML(`<span class="block font-bold">${title}</span><span class="bold">${description}</span>`)
         .addTo(map.value);
     });
-    
+
     // Change cursor to pointer on places layer mouseover
-    map.value.on('mouseenter', 'places', function () {
+    map.value.on('mouseenter', 'places', () => {
       map.value.getCanvas().style.cursor = 'pointer';
     });
-    
+
     // Change back to pointer on exit
-    map.value.on('mouseleave', 'places', function () {
+    map.value.on('mouseleave', 'places', () => {
       map.value.getCanvas().style.cursor = '';
     });
   });
-};
+}
 
 onMounted(() => {
   createMap();

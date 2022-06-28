@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const userId = event.context.auth.user.id;
 
-  const prisma = new PrismaClient;
+  const prisma = new PrismaClient();
   const body = await useBody(event);
 
   const {
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     confirmationNumber,
     checkinTimestamp,
     checkoutTimestamp,
-    timezoneName
+    timezoneName,
   } = body;
 
   // Check required fields

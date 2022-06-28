@@ -182,4 +182,4 @@ export default defineEventHandler((event) => {
   ];
 
   return timezones;
-})
+});

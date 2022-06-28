@@ -61,11 +61,21 @@ refresh();
     </div>
     <div v-else>
       <header>
-        <NuxtLink v-bind:to="/trips/ + tripUuid" class="float-left text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
+        <NuxtLink
+          v-bind:to="/trips/ + tripUuid"
+          class="float-left text-gray-300 text-sm uppercase hover:text-gray-400"
+        >
+          &larr; Trip
+        </NuxtLink>
 
         <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
 
-        <DeleteButton itemType="stay" v-bind:itemUuid="route.params.uuid" v-bind:tripUuid="tripUuid" add-class="float-left" />
+        <DeleteButton
+          itemType="stay"
+          v-bind:itemUuid="route.params.uuid"
+          v-bind:tripUuid="tripUuid"
+          add-class="float-left"
+        />
 
         <NuxtLink v-bind:to="'/stays/' + route.params.uuid + '-edit'" class="float-left">
           <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>

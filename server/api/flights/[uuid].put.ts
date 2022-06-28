@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const userId = event.context.auth.user.id;
 
-  const prisma = new PrismaClient;
+  const prisma = new PrismaClient();
   const body = await useBody(event);
 
   const {
@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check flight number format
-  if (isNaN(flightNumber)) {
+  if (!Number.isInteger(flightNumber)) {
     sendError(event, createError({
       statusCode: 400,
       statusMessage: 'Invalid flightNumber',
@@ -110,7 +110,7 @@ export default defineEventHandler(async (event) => {
       data: {
         tripId: trip.id,
         airlineCode: airline.code,
-        flightNumber: parseInt(flightNumber) || undefined,
+        flightNumber: parseInt(flightNumber, 10) || undefined,
         departureAirportCode: departureAirport.code,
         departureTimestamp,
         departureTimezoneName,

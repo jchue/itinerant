@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const userId = event.context.auth.user.id;
 
-  const prisma = new PrismaClient;
+  const prisma = new PrismaClient();
   const body = await useBody(event);
 
   // Uniqueness currently enforced by DB
@@ -92,7 +92,7 @@ export default defineEventHandler(async (event) => {
   try {
     stay = await prisma.stay.create({
       data: {
-        uuid: uuid,
+        uuid,
         tripId: trip.id,
         userId,
         name,

@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check flight number format
-  if (isNaN(flightNumber)) {
+  if (!Number.isInteger(flightNumber)) {
     sendError(event, createError({
       statusCode: 400,
       statusMessage: 'Invalid flightNumber',
@@ -108,11 +108,11 @@ export default defineEventHandler(async (event) => {
   try {
     flight = await prisma.flight.create({
       data: {
-        uuid: uuid,
+        uuid,
         tripId: trip.id,
         userId,
         airlineCode: airline.code,
-        flightNumber: parseInt(flightNumber) || undefined,
+        flightNumber: parseInt(flightNumber, 10) || undefined,
         departureAirportCode: departureAirport.code,
         departureTimestamp,
         departureTimezoneName,

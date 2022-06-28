@@ -36,7 +36,7 @@ watch(flight, () => {
   tripUuid.value = flight.value.tripUuid;
   airlineName.value = flight.value.airline ? flight.value.airline.name : null;
   flightDesignator.value = flight.value.airline ? `${flight.value.airline.code} ${flight.value.flightNumber}` : null;
-  departureAirportCode.value = flight.value.departureAirport? flight.value.departureAirport.code : null;
+  departureAirportCode.value = flight.value.departureAirport ? flight.value.departureAirport.code : null;
   departureDate.value = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'EEE, MMM d, yyyy');
   departureTime.value = format(utcToZonedTime(flight.value.departureTimestamp, flight.value.departureTimezoneName), 'p');
   departureTimezoneName.value = flight.value.departureTimezoneName;
@@ -73,11 +73,22 @@ refresh();
     </div>
     <div v-else>
       <header>
-        <NuxtLink v-bind:to="/trips/ + tripUuid" class="float-left first:text-gray-300 text-sm uppercase hover:text-gray-400">&larr; Trip</NuxtLink>
+        <NuxtLink
+          v-bind:to="/trips/ + tripUuid"
+          class="float-left first:text-gray-300 text-sm uppercase hover:text-gray-400"
+        >
+          &larr; Trip
+        </NuxtLink>
 
-        <PageTitle add-class="clear-left float-left mr-2">{{ airlineName }} {{ flightDesignator }}</PageTitle>
+        <PageTitle add-class="clear-left float-left mr-2">
+          {{ airlineName }} {{ flightDesignator }}
+        </PageTitle>
 
-        <DeleteButton itemType="flight" v-bind:itemUuid="route.params.uuid" v-bind:tripUuid="tripUuid" add-class="float-left" />
+        <DeleteButton
+          itemType="flight"
+          v-bind:itemUuid="route.params.uuid"
+          v-bind:tripUuid="tripUuid" add-class="float-left"
+        />
 
         <NuxtLink v-bind:to="'/flights/' + route.params.uuid + '-edit'" class="float-left">
           <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
@@ -95,7 +106,9 @@ refresh();
             <span class="block text-2xl">{{ departureAirportCode }}</span>
           </div>
           <div>
-            <span class="text-gray-500 text-sm">{{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}</span>
+            <span class="text-gray-500 text-sm">
+              {{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}
+            </span>
           </div>
           <div class="flex-1 text-right">
             <span class="block text-sm">{{ arrivalDate }}</span>

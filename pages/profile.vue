@@ -105,10 +105,28 @@ async function changePassword() {
       </form>
 
        <form v-on:submit.prevent="changePassword" class="mb-4">
-        <Input label="Current Password" type="password" add-class="mb-4" v-model="currentPassword" required />
+        <Input
+          label="Current Password"
+          type="password"
+          add-class="mb-4"
+          v-model="currentPassword"
+          required
+        />
 
-        <Input label="New Password" type="password" add-class="mb-4" v-model="newPassword" required />
-        <Input label="Confirm New Password" type="password" add-class="mb-4" v-model="newPasswordConfirm" required />
+        <Input
+          label="New Password"
+          type="password"
+          add-class="mb-4"
+          v-model="newPassword"
+          required
+        />
+        <Input
+          label="Confirm New Password"
+          type="password"
+          add-class="mb-4"
+          v-model="newPasswordConfirm"
+          required
+        />
 
         <Button type="submit">Change Password</Button>
       </form>

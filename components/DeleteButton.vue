@@ -28,26 +28,25 @@ export default {
 
       const headers = { Authorization: `Bearer ${session.access_token}` };
 
-      let response = null;
       let nextPath = null;
 
       try {
         switch (this.itemType) {
           case 'trip':
-            response = await $fetch(`/api/trips/${this.itemUuid}`, { method: 'delete', headers });
-            nextPath = `/trips`;
+            await $fetch(`/api/trips/${this.itemUuid}`, { method: 'delete', headers });
+            nextPath = '/trips';
             break;
           case 'flight':
-            response = await $fetch(`/api/flights/${this.itemUuid}`, { method: 'delete', headers });
+            await $fetch(`/api/flights/${this.itemUuid}`, { method: 'delete', headers });
             nextPath = `/trips/${this.tripUuid}`;
             break;
           case 'stay':
-            response = await $fetch(`/api/stays/${this.itemUuid}`, { method: 'delete', headers });
+            await $fetch(`/api/stays/${this.itemUuid}`, { method: 'delete', headers });
             nextPath = `/trips/${this.tripUuid}`;
             break;
           case 'user':
             await $supabase.auth.signOut();
-            response = await $fetch(`/api/users/${user.id}`, { method: 'delete', headers });
+            await $fetch(`/api/users/${user.id}`, { method: 'delete', headers });
             nextPath = '/login';
             break;
           default:
@@ -68,14 +67,29 @@ export default {
 <template>
   <div class="inline">
     <div class="relative">
-      <button v-if="type === 'button'" v-bind:class="'inline-flex justify-center mb-6 py-2 px-4 border border-gray-300 shadow-sm text-sm rounded-md text-gray-600 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 ' + addClass" v-on:click="showConfirm = true">
+      <!-- button -->
+      <button
+        v-if="type === 'button'"
+        v-bind:class="'inline-flex justify-center mb-6 py-2 px-4 border border-gray-300 shadow-sm text-sm rounded-md text-gray-600 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 ' + addClass"
+        v-on:click="showConfirm = true"
+      >
         <slot />
       </button>
 
-      <button v-else v-bind:class="'material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ' + addClass " v-on:click="showConfirm = true">delete</button>
+      <!-- icon -->
+      <button
+        v-else
+        v-bind:class="'material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ' + addClass "
+        v-on:click="showConfirm = true"
+      >
+        delete
+      </button>
 
       <Transition>
-        <div v-if="showConfirm" class="absolute bg-white overflow-hidden rounded-lg shadow-xl top-12 z-10">
+        <div
+          v-if="showConfirm"
+          class="absolute bg-white overflow-hidden rounded-lg shadow-xl top-12 z-10"
+        >
           <div class="mb-2 px-4 py-3">
             <div class="inline-block align-top pr-2">
               <span class="material-icons pr-2 !text-2xl text-red-500">error</span>
@@ -87,15 +101,34 @@ export default {
             </div>
           </div>
           <div class="bg-gray-50 px-4 py-3 text-right">
-            <button v-on:click="deleteItem" class="rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-sm font-medium mr-2 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Yes</button>
-            <button v-on:click="showConfirm = false" class="rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">No</button>
+            <button
+              v-on:click="deleteItem"
+              class="rounded-md border border-transparent shadow-sm px-4 py-2
+              bg-red-600 text-sm font-medium mr-2 text-white hover:bg-red-700
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Yes
+            </button>
+            <button
+              v-on:click="showConfirm = false"
+              class="rounded-md border border-gray-300 shadow-sm px-4 py-2
+              bg-white text-sm font-medium text-gray-700 hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              No
+            </button>
           </div>
         </div>
       </Transition>
     </div>
 
     <!-- scrim -->
-    <div v-if="showConfirm" v-on:click="showConfirm = !showConfirm" class="absolute top-0 right-0 bottom-0 left-0"></div>
+    <div
+      v-if="showConfirm"
+      v-on:click="showConfirm = !showConfirm"
+      class="absolute top-0 right-0 bottom-0 left-0"
+    >
+    </div>
   </div>
 </template>
 

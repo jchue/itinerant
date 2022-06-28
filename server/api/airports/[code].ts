@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { createError, sendError } from "h3";
+import { PrismaClient } from '@prisma/client';
+import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
   const prisma = new PrismaClient();

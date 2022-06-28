@@ -27,15 +27,16 @@ export default {
     delimiter() {
       if (
         (this.airline || this.flightNumber)
-        && (this.duration.years || this.duration.months || this.duration.days || this.duration.minutes || this.duration.seconds)
+        && (this.duration.years || this.duration.months || this.duration.days
+        || this.duration.minutes || this.duration.seconds)
       ) {
         return '|';
       }
 
       return null;
-    }
+    },
   },
-}
+};
 </script>
 
 <template>

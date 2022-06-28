@@ -1,42 +1,33 @@
-# Nuxt 3 Minimal Starter
+# Itinerant
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+An open-source trip planner built using [Nuxt 3](https://v3.nuxtjs.org) for the framework, [Prisma](https://www.prisma.io) for the ORM, and [Supabase](https://supabase.com) for auth.
 
-## Setup
+## Development
 
-Make sure to install the dependencies:
+**Prerequisites**
+
+- Postgres database
+- Supabase account
+- Map style (get one from [MapTiler](https://www.maptiler.com))
+
+**Environment Variables**
+
+Name|Description|Example
+-|-|-
+DATABASE_URL|Postgres connection URL|postgresql://user:password@localhost:5432/database?schema=public
+NUXT_PUBLIC_SUPABASE_URL|Supabase project URL|https://abcdefghijklmnop.supabase.co
+NUXT_PUBLIC_SUPABASE_ANON_KEY|Supabase public project key|(JWT)
+NUXT_SUPABASE_SERVICE_ROLE_KEY|Supabase secret project key|(JWT)
+NUXT_PUBLIC_MAP_STYLE|Map style JSON URL|https://api.maptiler.com/maps/abcdefgh-1234-abcd-5678-ijklmnopqrst/style.json?key=abcdefghijklmnop
+
+**Install Dependencies**
 
 ```bash
-# yarn
-yarn install
-
-# npm
 npm install
-
-# pnpm
-pnpm install --shamefully-hoist
 ```
 
-## Development Server
-
-Start the development server on http://localhost:3000
+**Start Development Server**
 
 ```bash
 npm run dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.

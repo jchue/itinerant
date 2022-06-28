@@ -39,7 +39,9 @@ definePageMeta({
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
+      <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">
+        &larr; Back
+      </NuxtLink>
 
       <PageTitle>Edit Trip</PageTitle>
 
