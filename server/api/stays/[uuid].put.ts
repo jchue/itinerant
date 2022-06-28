@@ -2,6 +2,18 @@ import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient;
   const body = await useBody(event);
 
@@ -45,17 +57,24 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  // Retrieve trip for ID
+  /**
+   * Retrieve trip for ID
+   * Using findFirst() to be able to enforce user ID
+   */
   let trip = null;
   try {
-    trip = await prisma.trip.findUnique({
-      where:{
+    trip = await prisma.trip.findFirst({
+      where: {
         uuid: tripUuid,
+        userId,
       },
       select: {
         id: true,
       },
     });
+
+    // If null, most likely invalid params
+    if (!trip) throw new Error();
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -65,11 +84,12 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  let stay = null;
   try {
-    stay = await prisma.stay.update({
+    // Using updateMany() to be able to enforce user ID
+    const response = await prisma.stay.updateMany({
       where: {
         uuid: event.context.params.uuid,
+        userId,
       },
       data: {
         tripId: trip.id,
@@ -83,6 +103,9 @@ export default defineEventHandler(async (event) => {
         timezoneName,
       },
     });
+
+    // If no records updated, most likely invalid params
+    if (!response.count) throw new Error();
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -92,16 +115,5 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  return {
-    uuid: stay.uuid,
-    tripUuid: tripUuid,
-    name: stay.name,
-    address: stay.address,
-    latitude: stay.latitude,
-    longitude: stay.longitude,
-    confirmationNumber: stay.confirmationNumber,
-    checkinTimestamp: stay.checkinTimestamp,
-    checkoutTimestamp: stay.checkoutTimestamp,
-    timezoneName: stay.timezoneName,
-  };
-})
+  return event.res.statusCode = 204;
+});

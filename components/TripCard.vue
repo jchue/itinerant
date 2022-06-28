@@ -1,7 +1,4 @@
 <script lang="ts">
-import { format } from 'date-fns';
-import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-
 export default {
   props: ['name', 'start', 'end'],
 };

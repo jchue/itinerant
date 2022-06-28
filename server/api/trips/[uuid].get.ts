@@ -4,22 +4,40 @@ import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient;
 
   let tripData = null;
   try {
     /**
-     * findUnique() requires UNIQUE constraint in DB
-     * Consider changing to findFirst() if performance becomes detrimental
+     * Using findFirst() to be able to enforce user ID,
+     * enforced on trip and event levels
+     * UUID currently has UNIQUE constraint in DB,
+     * so can change if performance becomes detrimental
      */
-    tripData = await prisma.trip.findUnique({
+    tripData = await prisma.trip.findFirst({
       where: {
         uuid: event.context.params.uuid,
+        userId,
       },
       select: {
         uuid: true,
         name: true,
         flight: {
+          where: {
+            userId,
+          },
           select: {
             uuid: true,
             airline: {
@@ -52,6 +70,9 @@ export default defineEventHandler(async (event) => {
           },
         },
         stay: {
+          where: {
+            userId,
+          },
           select: {
             uuid: true,
             name: true,
@@ -68,6 +89,15 @@ export default defineEventHandler(async (event) => {
     sendError(event, createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+    }));
+
+    return;
+  }
+
+  if (!tripData) {
+    sendError(event, createError({
+      statusCode: 404,
+      statusMessage: 'Not Found',
     }));
 
     return;
@@ -154,7 +184,7 @@ export default defineEventHandler(async (event) => {
     });
   });
   events.sort((a, b) => a.indexTimestamp - b.indexTimestamp);
-  
+
   const groupedEvents = events.reduce((acc, obj) => {
     /**
      * Need to localize date before grouping

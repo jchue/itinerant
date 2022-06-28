@@ -4,16 +4,11 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import 'material-icons/iconfont/material-icons.css';
 
+const { $supabase, $timezones } = useNuxtApp();
 const route = useRoute();
 
-/**
- * Get lookups
- */
-
-const { $timezones } = useNuxtApp();
-const timezones = $timezones();
-
-const { data: trips } = await useFetch('/api/trips');
+// Get current session
+const session = $supabase.auth.session();
 
 /**
  * Get any initialized props
@@ -96,9 +91,9 @@ const checkoutTime = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkou
  * Handle form
  */
 
-let loading = ref(false);
-let success = ref(false);
-let error = ref(false);
+const loading = ref(false);
+const successMessage = ref(null);
+const errorMessage = ref(null);
 
 async function updateStay() {
   loading.value = true;
@@ -114,7 +109,7 @@ async function updateStay() {
     || !timezoneName.value
   ) {
     loading.value = false;
-    error.value = 'Assigned Trip, Name, Check-In Date, Check-In Time, Check-Out Date, Check-Out Time, and Timezone are required.';
+    errorMessage.value = 'Assigned Trip, Name, Check-In Date, Check-In Time, Check-Out Date, Check-Out Time, and Timezone are required.';
 
     return;
   }
@@ -131,85 +126,90 @@ async function updateStay() {
     timezoneName: timezoneName.value,
   };
 
+  const headers = { Authorization: `Bearer ${session.access_token}` };
+
   let response = null;
   let nextPath = null;
 
   try {
     // If id exists, update; otherwise, create new
     if (props.stayUuid) {
-      response = await $fetch(`/api/stays/${props.stayUuid}`, { method: 'put', body });
+      response = await $fetch(`/api/stays/${props.stayUuid}`, { method: 'put', body, headers });
       nextPath = `/stays/${props.stayUuid}`;
-      success.value = 'The stay has been updated!';
+      successMessage.value = 'The stay has been updated!';
     } else {
-      response = await $fetch(`/api/stays`, { method: 'post', body });
+      response = await $fetch('/api/stays', { method: 'post', body, headers });
       nextPath = `/stays/${response.uuid}`;
-      success.value = 'The stay has been created!';
+      successMessage.value = 'The stay has been created!';
     }
-
-    loading.value = false;
 
     await navigateTo({
       path: nextPath,
     });
-  } catch (e) {
+  } catch (error) {
+    errorMessage.value = 'Uh oh, something went wrong. Please try again later.';
+  } finally {
     loading.value = false;
-    error.value = 'Uh oh, something went wrong. Please try again later.';
   }
 }
 </script>
 
 <template>
   <div>
-    <form v-on:submit.prevent="updateStay">
-      <div class="mb-6">
-        <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
-        <TripSelect v-model="tripUuid" />
-      </div>
-
-      <div class="mb-4">
-        <label class="block font-medium mb-1 text-sm">Name</label>
-        <LocationSearch v-model="location" v-bind:initialValue="name" add-class="w-full" />
-      </div>
-
-      <div class="mb-4">
-        <Input label="Address" type="text" add-class="w-full" v-model="address" disabled />
-      </div>
-
-      <div class="mb-6">
-        <Input label="Confirmation Number" type="text"  v-model="confirmationNumber" />
-      </div>
-
-      <div class="flex gap-4 mb-6">
-        <Input label="Check-In Date" type="date" v-model="checkinDate" required />
-
-        <Input label="Check-In Time" type="time" v-model="checkinTime" required />
-      </div>
-
-      <div class="flex gap-4 mb-6">
-        <Input label="Check-Out Date" type="date" v-model="checkoutDate" required />
-
-        <Input label="Check-Out Time" type="time" add-class="w-full" v-model="checkoutTime" required />
-      </div>
-
-      <div class="mb-6">
-        <label class="block font-medium mb-1 text-sm">Timezone</label>
-        <select v-model="timezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
-          <option v-for="timezone in timezones" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
-        </select>
-      </div>
-
-      <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
-
-      <Loader v-if="loading" />
-
-      <Alert v-else-if="success" type="success">
-        {{ success }}
+    <div v-if="loading">
+      <Loader />
+    </div>
+    <div v-else-if="successMessage">
+      <Alert type="success">
+        {{ successMessage }}
+      </Alert>
+    </div>
+    <div v-else>
+      <Alert v-if="errorMessage" type="error">
+        {{ errorMessage }}
       </Alert>
 
-      <Alert v-else-if="error" type="error">
-        {{ error }}
-      </Alert>
-    </form>
+      <form v-on:submit.prevent="updateStay">
+        <div class="mb-6">
+          <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
+          <TripSelect v-model="tripUuid" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-1 text-sm">Name</label>
+          <LocationSearch v-model="location" v-bind:initialValue="name" add-class="w-full" />
+        </div>
+
+        <div class="mb-4">
+          <Input label="Address" type="text" add-class="w-full" v-model="address" disabled />
+        </div>
+
+        <div class="mb-6">
+          <Input label="Confirmation Number" type="text"  v-model="confirmationNumber" />
+        </div>
+
+        <div class="flex gap-4 mb-6">
+          <Input label="Check-In Date" type="date" v-model="checkinDate" required />
+
+          <Input label="Check-In Time" type="time" v-model="checkinTime" required />
+        </div>
+
+        <div class="flex gap-4 mb-6">
+          <Input label="Check-Out Date" type="date" v-model="checkoutDate" required />
+
+          <Input label="Check-Out Time" type="time" add-class="w-full" v-model="checkoutTime" required />
+        </div>
+
+        <div class="mb-6">
+          <label class="block font-medium mb-1 text-sm">Timezone</label>
+          <select v-model="timezoneName" class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm" required>
+            <option v-for="timezone in $timezones()" v-bind:value="timezone.name">GMT {{ timezone.offset }} {{ timezone.name }}</option>
+          </select>
+        </div>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </div>
   </div>
 </template>
 

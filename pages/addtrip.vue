@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
+});
+</script>
 
 <template>
   <div>

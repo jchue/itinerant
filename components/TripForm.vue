@@ -1,15 +1,24 @@
 <script lang="ts" setup>
-/* Get any initialized props */
+const { $supabase } = useNuxtApp();
+
+// Get current session
+const session = $supabase.auth.session();
+
+/**
+ * Get any initialized props
+ * */
 
 const props = defineProps(['tripUuid', 'initialName']);
 
 const name = ref(props.initialName || null);
 
-/* Handle form */
+/**
+ * Handle form
+ */
 
-let loading = ref(false);
-let success = ref(false);
-let error = ref(false);
+const loading = ref(false);
+const successMessage = ref(null);
+const errorMessage = ref(null);
 
 async function updateTrip() {
   loading.value = true;
@@ -17,7 +26,7 @@ async function updateTrip() {
   /* Check required fields */
   if (!name.value) {
     loading.value = false;
-    error.value = 'Name is required.';
+    errorMessage.value = 'Name is required.';
 
     return;
   }
@@ -26,52 +35,57 @@ async function updateTrip() {
     name: name.value,
   };
 
+  const headers = { Authorization: `Bearer ${session.access_token}` };
+
   let response = null;
   let nextPath = null;
 
   try {
     /* If id exists, update; otherwise, create new */
     if (props.tripUuid) {
-      response = await $fetch(`/api/trips/${props.tripUuid}`, { method: 'put', body });
+      response = await $fetch(`/api/trips/${props.tripUuid}`, { method: 'put', body, headers });
       nextPath = `/trips/${props.tripUuid}`;
-      success.value = 'The trip has been updated!';
+      successMessage.value = 'The trip has been updated!';
     } else {
-      response = await $fetch(`/api/trips`, { method: 'post', body });
+      response = await $fetch('/api/trips', { method: 'post', body, headers });
       nextPath = `/trips/${response.uuid}`;
-      success.value = 'The trip has been created!';
+      successMessage.value = 'The trip has been created!';
     }
-
-    loading.value = false;
 
     await navigateTo({
       path: nextPath,
     });
-  } catch (e) {
+  } catch (error) {
+    errorMessage.value = 'Uh oh, something went wrong. Please try again later.';
+  } finally {
     loading.value = false;
-    error.value = 'Uh oh, something went wrong. Please try again later.';
   }
 }
 </script>
 
 <template>
   <div>
-    <form v-on:submit.prevent="updateTrip">
-      <div class="mb-6">
-        <Input label="Name" type="text" add-class="w-full" v-model="name" required />
-      </div>
-
-      <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit</button>
-
-      <Loader v-if="loading" />
-
-      <Alert v-else-if="success" type="success">
-        {{ success }}
+    <div v-if="loading">
+      <Loader />
+    </div>
+    <div v-else-if="successMessage">
+      <Alert type="success">
+        {{ successMessage }}
+      </Alert>
+    </div>
+    <div v-else>
+      <Alert v-if="errorMessage" type="error">
+        {{ errorMessage }}
       </Alert>
 
-      <Alert v-else-if="error" type="error">
-        {{ error }}
-      </Alert>
-    </form>
+      <form v-on:submit.prevent="updateTrip">
+        <div class="mb-6">
+          <Input label="Name" type="text" add-class="w-full" v-model="name" required />
+        </div>
+
+        <Button type="submit">Submit</Button>
+      </form>
+    </div>
   </div>
 </template>
 

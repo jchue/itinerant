@@ -26,6 +26,7 @@ model flight {
   departureTimezoneName String?   @default("Etc/UTC") @map("departure_timezone_name") @db.VarChar(64)
   arrivalTimezoneName   String?   @default("Etc/UTC") @map("arrival_timezone_name") @db.VarChar(64)
   confirmationNumber    String?   @map("confirmation_number") @db.VarChar(6)
+  userId                String    @map("user_id") @db.Uuid
   airline               airline?  @relation(fields: [airlineCode], references: [code], onDelete: NoAction, map: "fk_flight_airline")
   arrivalAirport        airport?  @relation("airportToflight_arrival_airport_code", fields: [arrivalAirportCode], references: [code], onDelete: NoAction, map: "fk_flight_arrival_airport")
   departureAirport      airport?  @relation("airportToflight_departure_airport_code", fields: [departureAirportCode], references: [code], onDelete: NoAction, map: "fk_flight_departure_airport")
@@ -36,6 +37,7 @@ model trip {
   id     Int      @id @default(autoincrement())
   uuid   String   @unique(map: "trip_uuid") @db.Uuid
   name   String   @db.VarChar(255)
+  userId String   @map("user_id") @db.Uuid
   flight flight[]
   stay   stay[]
 }
@@ -52,6 +54,7 @@ model stay {
   timezoneName       String?   @map("timezone_name") @db.VarChar(64)
   latitude           Decimal?  @db.Decimal(6, 4)
   longitude          Decimal?  @db.Decimal(7, 4)
+  userId             String    @map("user_id") @db.Uuid
   trip               trip      @relation(fields: [tripId], references: [id], onDelete: Cascade, map: "fk_stay_trip")
 }
 

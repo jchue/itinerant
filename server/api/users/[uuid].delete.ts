@@ -13,20 +13,34 @@ export default defineEventHandler(async (event) => {
   }
 
   const userId = event.context.auth.user.id;
+  const requestedId = event.context.params.uuid;
 
-  const prisma = new PrismaClient();
+  // Requesting user must be requested user
+  if (userId !== requestedId) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Not Authorized',
+    }));
+
+    return;
+  }
 
   try {
-    // Using deleteMany() to be able to enforce user ID
-    const response = await prisma.flight.deleteMany({
+    const { error } = await event.context.auth
+      .supabase.auth.api.deleteUser(requestedId);
+
+    if (error) throw error;
+
+    // Delete associated trips
+    const prisma = new PrismaClient();
+
+    await prisma.trip.deleteMany({
       where: {
-        uuid: event.context.params.uuid,
         userId,
       },
     });
 
-    // If no records updated, most likely invalid params
-    if (!response.count) throw new Error();
+    return event.res.statusCode = 204;
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -35,6 +49,4 @@ export default defineEventHandler(async (event) => {
 
     return;
   }
-
-  return event.res.statusCode = 204;
 });

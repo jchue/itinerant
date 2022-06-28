@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from 'nuxt'
+import { defineNuxtConfig } from 'nuxt';
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -7,7 +7,7 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'stylesheet',
-          href: 'https://rsms.me/inter/inter.css'
+          href: 'https://rsms.me/inter/inter.css',
         },
       ],
     },
@@ -26,8 +26,11 @@ export default defineNuxtConfig({
     '@/assets/css/main.css',
   ],
   runtimeConfig: {
+    supabaseServiceRoleKey: '',
     public: {
       mapStyle: '',
-    }
-  }
-})
+      supabaseAnonKey: '',
+      supabaseUrl: '',
+    },
+  },
+});

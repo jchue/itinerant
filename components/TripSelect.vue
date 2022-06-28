@@ -8,14 +8,21 @@ export default {
     };
   },
   async mounted() {
-    this.trips = (await useFetch('/api/trips')).data;
+    const { $supabase } = useNuxtApp();
+
+    // Get current session
+    const session = $supabase.auth.session();
+
+    this.trips = (await useFetch('/api/trips', {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })).data;
   },
   methods: {
     displayRange(dateRange) {
       return dateRange ? `(${dateRange})` : '';
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>

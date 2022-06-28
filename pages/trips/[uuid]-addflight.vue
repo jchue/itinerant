@@ -6,6 +6,11 @@ const tripUuid = route.params.uuid;
 useHead({
   title: 'New Flight',
 });
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
+});
 </script>
 
 <template>

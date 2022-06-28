@@ -1,21 +1,28 @@
 <script lang="ts" setup>
-import { format } from 'date-fns';
-import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
-
+const { $supabase } = useNuxtApp();
 const route = useRoute();
 
-let tripUuid,
-  name,
-  address,
-  latitude,
-  longitude,
-  confirmationNumber,
-  checkinTimestamp,
-  checkoutTimestamp,
-  timezoneName = null;
+// Get current session
+const session = $supabase.auth.session();
 
-const { data: stay, pending, refresh, error } = await useFetch(`/api/stays/${route.params.uuid}`);
+let tripUuid = null;
+let name = null;
+let address = null;
+let latitude = null;
+let longitude = null;
+let confirmationNumber = null;
+let checkinTimestamp = null;
+let checkoutTimestamp = null;
+let timezoneName = null;
+
+const {
+  data: stay,
+  pending,
+  refresh,
+  error,
+} = await useFetch(`/api/stays/${route.params.uuid}`, {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 if (!error.value) {
   ({
@@ -34,6 +41,11 @@ if (!error.value) {
     title: `Edit ${stay.value.name}`,
   });
 }
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
+});
 </script>
 
 <template>

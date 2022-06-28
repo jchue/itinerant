@@ -2,6 +2,18 @@ import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient;
   const body = await useBody(event);
 
@@ -61,17 +73,24 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  // Retrieve trip for ID
+  /**
+   * Retrieve trip for ID
+   * Using findFirst() to be able to enforce user ID
+   */
   let trip = null;
   try {
-    trip = await prisma.trip.findUnique({
-      where:{
+    trip = await prisma.trip.findFirst({
+      where: {
         uuid: tripUuid,
+        userId,
       },
       select: {
         id: true,
       },
     });
+
+    // If null, most likely invalid params
+    if (!trip) throw new Error();
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -81,11 +100,12 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  let flight = null;
   try {
-    flight = await prisma.flight.update({
+    // Using updateMany() to be able to enforce user ID
+    const response = await prisma.flight.updateMany({
       where: {
         uuid: event.context.params.uuid,
+        userId,
       },
       data: {
         tripId: trip.id,
@@ -100,6 +120,9 @@ export default defineEventHandler(async (event) => {
         confirmationNumber,
       },
     });
+
+    // If no records updated, most likely invalid params
+    if (!response.count) throw new Error();
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -109,17 +132,5 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  return {
-    uuid: flight.uuid,
-    tripUuid: tripUuid,
-    flightNumber: flight.flightNumber,
-    departureAirport: flight.departureAirport,
-    departureTimestamp: flight.departureTimestamp,
-    departureTimezoneName: flight.departureTimezoneName,
-    arrivalAirport: flight.arrivalAirport,
-    arrivalTimestamp: flight.arrivalTimestamp,
-    arrivalTimezoneName: flight.arrivalTimezoneName,
-    airline: flight.airline,
-    confirmationNumber: flight.confirmationNumber,
-  };
-})
+  return event.res.statusCode = 204;
+});

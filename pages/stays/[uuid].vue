@@ -2,7 +2,11 @@
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 
+const { $supabase } = useNuxtApp();
 const route = useRoute();
+
+// Get current session
+const session = $supabase.auth.session();
 
 const tripUuid = ref(null);
 const name = ref(null);
@@ -14,7 +18,14 @@ const checkoutDate = ref(null);
 const checkoutTime = ref(null);
 const timezoneName = ref(null);
 
-const { data: stay, pending, refresh, error } = await useFetch(`/api/stays/${route.params.uuid}`);
+const {
+  data: stay,
+  pending,
+  refresh,
+  error,
+} = await useFetch(`/api/stays/${route.params.uuid}`, {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 watch(stay, () => {
   tripUuid.value = stay.value.tripUuid;
@@ -30,6 +41,11 @@ watch(stay, () => {
   useHead({
     title: stay.value.name,
   });
+});
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
 });
 
 refresh();

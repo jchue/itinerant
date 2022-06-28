@@ -1,9 +1,20 @@
 <script lang="ts" setup>
+const { $supabase } = useNuxtApp();
 const route = useRoute();
+
+// Get current session
+const session = $supabase.auth.session();
 
 let name = null;
 
-const { data: trip, pending, refresh, error } = await useFetch(`/api/trips/${route.params.uuid}`);
+const {
+  data: trip,
+  pending,
+  refresh,
+  error,
+} = await useFetch(`/api/trips/${route.params.uuid}`, {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 if (!error.value) {
   ({ name } = trip.value);
@@ -12,6 +23,11 @@ if (!error.value) {
     title: `Edit ${trip.value.name}`,
   });
 }
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
+});
 </script>
 
 <template>

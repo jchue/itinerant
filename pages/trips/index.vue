@@ -1,10 +1,27 @@
 <script lang="ts" setup>
 import 'material-icons/iconfont/material-icons.css';
 
-const { data: trips, pending, refresh, error } = await useFetch('/api/trips');
+const { $supabase } = useNuxtApp();
+
+// Get current session
+const session = $supabase.auth.session();
+
+const {
+  data: trips,
+  pending,
+  refresh,
+  error,
+} = await useFetch('/api/trips', {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 useHead({
   title: 'Trips',
+});
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
 });
 
 refresh();

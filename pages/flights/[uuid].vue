@@ -3,7 +3,11 @@ import { format, intervalToDuration } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import 'material-icons/iconfont/material-icons.css';
 
+const { $supabase } = useNuxtApp();
 const route = useRoute();
+
+// Get current session
+const session = $supabase.auth.session();
 
 const tripUuid = ref(null);
 const airlineName = ref(null);
@@ -19,7 +23,14 @@ const arrivalTimezoneName = ref(null);
 const duration = ref(null);
 const confirmationNumber = ref(null);
 
-const { data: flight, pending, refresh, error } = await useFetch(`/api/flights/${route.params.uuid}`);
+const {
+  data: flight,
+  pending,
+  refresh,
+  error
+} = await useFetch(`/api/flights/${route.params.uuid}`, {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 watch(flight, () => {
   tripUuid.value = flight.value.tripUuid;
@@ -42,6 +53,11 @@ watch(flight, () => {
   useHead({
     title: `${flight.value.airline.name} ${flight.value.airline.code} ${flight.value.flightNumber}`,
   });
+});
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
 });
 
 refresh();

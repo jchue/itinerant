@@ -3,15 +3,25 @@ import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import 'material-icons/iconfont/material-icons.css';
 
+const { $supabase } = useNuxtApp();
 const route = useRoute();
+
+// Get current session
+const session = $supabase.auth.session();
 
 const addMenuVisible = ref(false);
 const mapLoaded = ref(false);
 const mapVisible = ref(false);
 const name = ref(null);
-const location = ref(null);
 
-const { data: trip, pending, refresh, error } = await useFetch(`/api/trips/${route.params.uuid}`);
+const {
+  data: trip,
+  pending,
+  refresh,
+  error,
+} = await useFetch(`/api/trips/${route.params.uuid}`, {
+  headers: { Authorization: `Bearer ${session.access_token}` },
+});
 
 /**
  * Keep track of whether map has been already loaded to reduce render count
@@ -20,7 +30,7 @@ function toggleMap() {
   if (!mapLoaded.value) {
     mapLoaded.value = true;
   }
-  
+
   mapVisible.value = !mapVisible.value;
 }
 
@@ -30,6 +40,11 @@ watch(trip, () => {
   useHead({
     title: trip.value.name,
   });
+});
+
+// Require auth
+definePageMeta({
+  middleware: ['auth'],
 });
 
 refresh();

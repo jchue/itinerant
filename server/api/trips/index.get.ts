@@ -1,15 +1,36 @@
 import { PrismaClient } from '@prisma/client';
+import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient();
+
   let trips = [];
 
   try {
+    // User ID enforced on both trip and feature levels
     const tripsData = await prisma.trip.findMany({
+      where: {
+        userId,
+      },
       select: {
         uuid: true,
         name: true,
         flight: {
+          where: {
+            userId,
+          },
           select: {
             departureTimestamp: true,
             departureTimezoneName: true,
@@ -18,6 +39,9 @@ export default defineEventHandler(async (event) => {
           },
         },
         stay: {
+          where: {
+            userId,
+          },
           select: {
             checkinTimestamp: true,
             checkoutTimestamp: true,

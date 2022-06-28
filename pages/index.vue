@@ -6,7 +6,6 @@ await navigateTo({
 
 <template>
   <div>
-    Page: foo
   </div>
 </template>
 

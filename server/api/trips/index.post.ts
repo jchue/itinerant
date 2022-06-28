@@ -3,6 +3,18 @@ import { createError, sendError, send } from 'h3';
 import { v4 as uuidv4 } from 'uuid';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient();
   const body = await useBody(event);
 
@@ -26,8 +38,9 @@ export default defineEventHandler(async (event) => {
     trip = await prisma.trip.create({
       data: {
         uuid,
+        userId,
         name,
-      }
+      },
     });
   } catch (error) {
     sendError(event, createError({

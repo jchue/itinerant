@@ -2,17 +2,32 @@ import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
+  // Require auth
+  if (event.context.auth.error) {
+    sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Invalid token',
+    }));
+
+    return;
+  }
+
+  const userId = event.context.auth.user.id;
+
   const prisma = new PrismaClient();
 
   let stay = null;
   try {
     /**
-     * findUnique() requires UNIQUE constraint in DB
-     * Consider changing to findFirst() if performance becomes detrimental
+     * Using findFirst() to be able to enforce user ID,
+     * enforced on trip and event levels
+     * UUID currently has UNIQUE constraint in DB,
+     * so can change if performance becomes detrimental
      */
-    stay = await prisma.stay.findUnique({
+    stay = await prisma.stay.findFirst({
       where: {
         uuid: event.context.params.uuid,
+        userId,
       },
       select: {
         uuid: true,
@@ -27,21 +42,39 @@ export default defineEventHandler(async (event) => {
         timezoneName: true,
       },
     });
+
+    // If null, most likely invalid params
+    if (!stay) throw new Error();
   } catch (error) {
-    return error;
+    sendError(event, createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+    }));
+
+    return;
   }
 
-  // Retrieve trip for UUID
+  /**
+   * Retrieve trip for UUID
+   * Using findFirst() to be able to enforce user ID
+   */
   let trip = null;
   try {
-    trip = await prisma.trip.findUnique({
-      where:{
+    trip = await prisma.trip.findFirst({
+      where: {
         id: stay.tripId,
+        userId,
       },
       select: {
         uuid: true,
       },
     });
+
+    /**
+     * If null, most likely mismatched user ID
+     * between trip and stay
+     */
+    if (!trip) throw new Error();
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
