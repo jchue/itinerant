@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
+import prisma from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -13,8 +13,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const userId = event.context.auth.user.id;
-
-  const prisma = new PrismaClient();
 
   let stay = null;
   try {

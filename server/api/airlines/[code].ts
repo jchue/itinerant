@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
+import prisma from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   try {
-    const prisma = new PrismaClient();
-
     const airline = await prisma.airline.findUnique({
       where: {
         code: event.context.params.code,

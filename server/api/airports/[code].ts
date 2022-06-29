@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import { createError, sendError } from 'h3';
+import prisma from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  const prisma = new PrismaClient();
-
   let airport = null;
   try {
     airport = await prisma.airport.findUnique({

@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  const prisma = new PrismaClient();
-
   const airlines = await prisma.airline.findMany();
 
   return airlines.sort((a, b) => {
