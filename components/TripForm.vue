@@ -21,9 +21,10 @@ const successMessage = ref(null);
 const errorMessage = ref(null);
 
 async function updateTrip() {
+  errorMessage.value = null;
   loading.value = true;
 
-  /* Check required fields */
+  // Check required fields
   if (!name.value) {
     loading.value = false;
     errorMessage.value = 'Name is required.';
@@ -41,7 +42,7 @@ async function updateTrip() {
   let nextPath = null;
 
   try {
-    /* If id exists, update; otherwise, create new */
+    // If id exists, update; otherwise, create new
     if (props.tripUuid) {
       response = await $fetch(`/api/trips/${props.tripUuid}`, { method: 'put', body, headers });
       nextPath = `/trips/${props.tripUuid}`;

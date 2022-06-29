@@ -137,14 +137,14 @@ refresh();
 
             <p class="mb-4">What a boring trip. Why don't you add a flight or stay?</p>
 
-            <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addflight'">
+            <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addflight'" class="mr-2">
               <Button type="button">
                 <span class="material-icons pr-2 !text-xl text-white">flight</span>
                 <span class="mt-0.5">Flight</span>
               </Button>
             </NuxtLink>
 
-            <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addstay'">
+            <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-addstay'" class="ml-2">
               <Button type="button">
                 <span class="material-icons pr-2 !text-xl text-white">bed</span>
                 <span class="mt-0.5">Stay</span>

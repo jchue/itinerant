@@ -13,9 +13,14 @@ export default {
     // Get current session
     const session = $supabase.auth.session();
 
-    this.trips = (await useFetch('/api/trips', {
+    const { data, refresh } = await useFetch('/api/trips', {
       headers: { Authorization: `Bearer ${session.access_token}` },
-    })).data;
+    });
+
+    this.trips = data;
+
+    // Need to refresh in case trip was just created
+    refresh();
   },
   methods: {
     displayRange(dateRange) {

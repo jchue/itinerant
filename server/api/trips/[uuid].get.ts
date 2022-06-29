@@ -113,12 +113,12 @@ export default defineEventHandler(async (event) => {
       flightNumber: flight.flightNumber,
       departureAirport: flight.departureAirport,
       departureTimestamp: flight.departureTimestamp,
-      departureTimezoneName: flight.departureTimezoneName  || 'Etc/UTC',
+      departureTimezoneName: flight.departureTimezoneName || 'Etc/UTC',
       arrivalAirport: flight.arrivalAirport,
       arrivalTimestamp: flight.arrivalTimestamp,
       arrivalTimezoneName: flight.arrivalTimezoneName || 'Etc/UTC',
       indexTimestamp: flight.departureTimestamp,
-      indexTimezoneName: flight.departureTimezoneName  || 'Etc/UTC',
+      indexTimezoneName: flight.departureTimezoneName || 'Etc/UTC',
       type: 'flight',
     });
 

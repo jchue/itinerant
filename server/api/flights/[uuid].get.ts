@@ -37,6 +37,8 @@ export default defineEventHandler(async (event) => {
           select: {
             code: true,
             name: true,
+            latitude: true,
+            longitude: true,
           },
         },
         departureTimestamp: true,
@@ -45,6 +47,8 @@ export default defineEventHandler(async (event) => {
           select: {
             code: true,
             name: true,
+            latitude: true,
+            longitude: true,
           },
         },
         arrivalTimestamp: true,

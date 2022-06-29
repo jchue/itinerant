@@ -29,6 +29,17 @@ async function updateProfile() {
   try {
     loading.value = true;
 
+    // Check required fields
+    if (!email.value) {
+      throw new Error('Email and Password are required.');
+    }
+
+    // Simple email format check
+    const regex = /.+@.+\..+/g;
+    if (!regex.test(email.value)) {
+      throw new Error('Invalid Email');
+    }
+
     const { error } = await $supabase.auth.update({
       email: email.value,
     });
@@ -62,6 +73,16 @@ async function changePassword() {
   try {
     errorMessage.value = null;
     loading.value = true;
+
+    // Check required fields
+    if (!currentPassword.value || !newPassword.value || !newPasswordConfirm.value) {
+      throw new Error('All password fields are required.');
+    }
+
+    // Enforce password length
+    if (newPassword.value.length < 6 || newPasswordConfirm.value.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
+    }
 
     await validateCurrentPassword();
     confirmNewPassword();

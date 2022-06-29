@@ -5,7 +5,6 @@ import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import 'material-icons/iconfont/material-icons.css';
 
 const { $supabase, $timezones } = useNuxtApp();
-const route = useRoute();
 
 // Get current session
 const session = $supabase.auth.session();
@@ -88,6 +87,15 @@ const checkoutDate = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkou
 const checkoutTime = checkoutTimestamp.value ? ref(format(utcToZonedTime(checkoutTimestamp.value, timezoneName.value), 'HH:mm')) : ref(null);
 
 /**
+ * Automatically set timezone
+ */
+
+watch(location, async () => {
+  const { data } = await useFetch(`/api/timezones?lat=${latitude.value}&lon=${longitude.value}`);
+  timezoneName.value = data.value[0];
+});
+
+/**
  * Handle form
  */
 
@@ -96,9 +104,10 @@ const successMessage = ref(null);
 const errorMessage = ref(null);
 
 async function updateStay() {
+  errorMessage.value = null;
   loading.value = true;
 
-  /* Check required fields */
+  // Check required fields
   if (
     !tripUuid.value
     || !name.value
@@ -180,8 +189,29 @@ async function updateStay() {
           <LocationSearch v-model="location" v-bind:initialValue="name" add-class="w-full" />
         </div>
 
-        <div class="mb-4">
-          <Input label="Address" type="text" add-class="w-full" v-model="address" disabled />
+        <div class="flex gap-4 mb-6">
+          <div class="grow shrink-0">
+            <Input label="Address" type="text" add-class="w-full" v-model="address" disabled />
+          </div>
+
+          <div class="grow-0 shrink">
+            <label class="block font-medium mb-1 text-sm">Timezone</label>
+            <select
+              v-model="timezoneName"
+              class="bg-white border border-gray-300 p-2 rounded-md shadow-sm
+              text-gray-700 text-sm w-full disabled:bg-gray-100 disabled:text-gray-400"
+              required
+              disabled
+            >
+              <option
+                v-for="timezone in $timezones()"
+                v-bind:key="timezone.name"
+                v-bind:value="timezone.name"
+              >
+                GMT {{ timezone.offset }} {{ timezone.name }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <div class="mb-6">
@@ -204,23 +234,6 @@ async function updateStay() {
             v-model="checkoutTime"
             required
           />
-        </div>
-
-        <div class="mb-6">
-          <label class="block font-medium mb-1 text-sm">Timezone</label>
-          <select
-            v-model="timezoneName"
-            class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm"
-            required
-          >
-            <option
-              v-for="timezone in $timezones()"
-              v-bind:key="timezone.name"
-              v-bind:value="timezone.name"
-            >
-              GMT {{ timezone.offset }} {{ timezone.name }}
-            </option>
-          </select>
         </div>
 
         <Button type="submit">Submit</Button>

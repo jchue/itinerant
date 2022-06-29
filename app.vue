@@ -52,12 +52,19 @@ export default {
 <template>
   <div>
     <header class="flex items-center p-4 shadow-md sticky">
-      <NuxtLink to="/" class="flex-1 font-bold text-lg">Itinerant</NuxtLink>
+      <div class="flex-1">
+        <NuxtLink to="/" class="font-bold text-lg">Itinerant</NuxtLink>
+      </div>
 
       <User />
     </header>
     <main class="p-4">
-      <Alert v-if="alert.message" v-bind:type="alert.type" transient="true" add-class="mb-6">
+      <Alert
+        v-if="alert.message"
+        v-bind:type="alert.type"
+        transient="true"
+        add-class="mb-6 overflow-hidden"
+      >
         {{ alert.message }}
       </Alert>
 

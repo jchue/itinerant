@@ -10,7 +10,24 @@ const errorMessage = ref(null);
 
 async function register() {
   try {
+    errorMessage.value = null;
     loading.value = true;
+
+    // Check required fields
+    if (!email.value || !password.value) {
+      throw new Error('Email and Password are required.');
+    }
+
+    // Simple email format check
+    const regex = /.+@.+\..+/g;
+    if (!regex.test(email.value)) {
+      throw new Error('Invalid Email');
+    }
+
+    // Enforce password length
+    if (password.value.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
+    }
 
     const { error } = await $supabase.auth.signUp({
       email: email.value,
