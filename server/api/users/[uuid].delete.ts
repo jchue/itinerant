@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Not Authorized',
     }));
 
-    return;
+    return null;
   }
 
   try {
@@ -37,14 +37,14 @@ export default defineEventHandler(async (event) => {
         userId,
       },
     });
-
-    return event.res.statusCode = 204;
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
+
+  return event.res.statusCode = 204;
 });

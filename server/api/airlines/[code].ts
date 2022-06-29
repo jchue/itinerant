@@ -2,8 +2,9 @@ import { createError, sendError } from 'h3';
 import prisma from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
+  let airline = null;
   try {
-    const airline = await prisma.airline.findUnique({
+    airline = await prisma.airline.findUnique({
       where: {
         code: event.context.params.code,
       },
@@ -13,14 +14,14 @@ export default defineEventHandler(async (event) => {
       },
       rejectOnNotFound: true,
     });
-
-    return airline;
   } catch (error) {
     sendError(event, createError({
       statusCode: 404,
       statusMessage: 'Not Found',
     }));
 
-    return;
+    return null;
   }
+
+  return airline;
 });

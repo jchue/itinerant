@@ -1,5 +1,5 @@
 export default defineNuxtPlugin((nuxtApp) => {
-  function hashParam(name) {
+  function hashParam() {
     const route = useRoute();
     const query = route.hash.replace('#', '');
 

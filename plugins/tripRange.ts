@@ -25,7 +25,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       const startDate = formatDate(start.timestamp, start.timezoneName);
 
       return `${startDate}`;
-    } else if (end) {
+    }
+
+    if (end) {
       const endDate = formatDate(end.timestamp, end.timezoneName);
 
       return `${endDate}`;

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'tripUuid, airline, flightNumber, departureAirport, departureTimestamp, departureTimezoneName, arrivalAirport, arrivaltimestamp, and arrivalTimezoneName are required.',
     }));
 
-    return;
+    return null;
   }
 
   // Check flight number format
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid flightNumber',
     }));
 
-    return;
+    return null;
   }
 
   // Validate timezones
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid timezone.',
     }));
 
-    return;
+    return null;
   }
 
   /**
@@ -100,7 +100,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   let flight = null;
@@ -127,7 +127,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   event.res.statusCode = 201;

@@ -27,7 +27,7 @@ const {
   data: flight,
   pending,
   refresh,
-  error
+  error,
 } = await useFetch(`/api/flights/${route.params.uuid}`, {
   headers: { Authorization: `Bearer ${session.access_token}` },
 });

@@ -15,8 +15,8 @@ function createMap() {
 
   map.value.on('load', () => {
     map.value.addSource('places', {
-      'type': 'geojson',
-      'data': props.geojson,
+      type: 'geojson',
+      data: props.geojson,
     });
 
     // Add a layer showing the places

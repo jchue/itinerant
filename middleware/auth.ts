@@ -8,5 +8,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo(`/login?redirect=${route.fullPath}${route.hash}`);
   }
 
-  return;
+  return null;
 });

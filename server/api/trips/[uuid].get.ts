@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -89,7 +89,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   if (!tripData) {
@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Not Found',
     }));
 
-    return;
+    return null;
   }
 
   // Arrange trip items into distinct events and GeoJSON features

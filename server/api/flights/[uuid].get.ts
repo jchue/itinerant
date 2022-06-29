@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   /**
@@ -99,7 +99,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   // Default to UTC to prevent errors with date functions

@@ -9,6 +9,8 @@ const user = ref($supabase.auth.user());
 $supabase.auth.onAuthStateChange((event) => {
   if (event === 'SIGNED_IN') {
     user.value = $supabase.auth.user();
+
+    return null;
   }
 
   if (event === 'SIGNED_OUT') {
@@ -16,6 +18,8 @@ $supabase.auth.onAuthStateChange((event) => {
 
     return navigateTo('/login');
   }
+
+  return null;
 });
 
 async function logout() {

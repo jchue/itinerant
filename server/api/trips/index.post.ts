@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'name is required.',
     }));
 
-    return;
+    return null;
   }
 
   let trip = null;
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   event.res.statusCode = 201;

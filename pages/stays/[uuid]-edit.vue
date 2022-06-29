@@ -18,7 +18,6 @@ let timezoneName = null;
 const {
   data: stay,
   pending,
-  refresh,
   error,
 } = await useFetch(`/api/stays/${route.params.uuid}`, {
   headers: { Authorization: `Bearer ${session.access_token}` },

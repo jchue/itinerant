@@ -9,8 +9,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     function leadingZeroes(number) {
       if (number === 0) {
         return '00';
-      } else if (number < 10) {
-        return String('0' + number);
+      }
+
+      if (number < 10) {
+        return String(`0${number}`);
       }
 
       return number;

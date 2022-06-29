@@ -35,7 +35,9 @@ const location = ref(null);
 const name = computed(() => {
   if (location.value) {
     return location.value.properties.name;
-  } else if (props.initialName) {
+  }
+
+  if (props.initialName) {
     return props.initialName;
   }
 
@@ -51,7 +53,9 @@ const address = computed(() => {
     const country = location.value.properties.country ? `, ${location.value.properties.country}` : '';
 
     return houseNumber + street + city + state + postCode + country;
-  } else if (props.initialAddress) {
+  }
+
+  if (props.initialAddress) {
     return props.initialAddress;
   }
 
@@ -60,7 +64,9 @@ const address = computed(() => {
 const latitude = computed(() => {
   if (location.value) {
     return location.value.geometry.coordinates[1];
-  } else if (props.initialLatitude) {
+  }
+
+  if (props.initialLatitude) {
     return props.initialLatitude;
   }
 
@@ -69,7 +75,9 @@ const latitude = computed(() => {
 const longitude = computed(() => {
   if (location.value) {
     return location.value.geometry.coordinates[0];
-  } else if (props.initialLongitude) {
+  }
+
+  if (props.initialLongitude) {
     return props.initialLongitude;
   }
 

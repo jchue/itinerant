@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid token',
     }));
 
-    return;
+    return null;
   }
 
   const userId = event.context.auth.user.id;
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'tripUuid, name, checkinTimestamp, checkoutTimestamp, and timezoneName are required.',
     }));
 
-    return;
+    return null;
   }
 
   // Validate timezones
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Invalid timezone.',
     }));
 
-    return;
+    return null;
   }
 
   /**
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   try {
@@ -111,7 +111,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Internal Server Error',
     }));
 
-    return;
+    return null;
   }
 
   return event.res.statusCode = 204;

@@ -21,12 +21,16 @@ onMounted(() => {
   useHead({
     title: 'Log In',
   });
+
+  return null;
 });
 
 watch(session, () => {
   if (session.value) {
     return navigateTo(route.query.redirect + route.hash);
   }
+
+  return null;
 });
 
 /**
@@ -55,6 +59,8 @@ async function login() {
     return navigateTo(route.query.redirect);
   } catch (error) {
     errorMessage.value = error.message;
+
+    return null;
   } finally {
     loading.value = false;
   }

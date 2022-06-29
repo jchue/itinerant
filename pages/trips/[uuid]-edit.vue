@@ -10,7 +10,6 @@ let name = null;
 const {
   data: trip,
   pending,
-  refresh,
   error,
 } = await useFetch(`/api/trips/${route.params.uuid}`, {
   headers: { Authorization: `Bearer ${session.access_token}` },

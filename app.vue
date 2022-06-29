@@ -33,18 +33,26 @@ export default {
       if ($hashParam().type === 'signup') {
         this.alert.type = 'success';
         this.alert.message = 'Acount activated!';
+
+        return null;
       }
 
       if ($hashParam().type === 'email_change') {
         this.alert.type = 'success';
         this.alert.message = 'Email changed successfully!';
+
+        return null;
       }
 
       if ($hashParam().message) {
         this.alert.type = 'info';
         this.alert.message = $hashParam().message;
+
+        return null;
       }
     }
+
+    return null;
   },
 };
 </script>

@@ -24,7 +24,7 @@ export default {
       this.idle = 1;
 
       const timeout = setInterval(() => {
-        this.idle--;
+        this.idle -= 1;
 
         if (this.idle <= 0) {
           clearInterval(timeout);
@@ -64,7 +64,8 @@ export default {
       v-on:focus="focused = true"
       v-on:blur="loseFocus"
       type="text"
-      v-bind:class="'bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm ' + addClass"
+      v-bind:class="`bg-white border border-gray-300 p-2 rounded-md shadow-sm
+      text-gray-700 text-sm ${addClass}`"
     />
     <ul
       v-show="focused"

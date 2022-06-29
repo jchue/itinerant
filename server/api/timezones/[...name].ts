@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Not Found',
     }));
 
-    return;
+    return null;
   }
   return timezone;
 });
