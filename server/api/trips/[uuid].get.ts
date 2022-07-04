@@ -1,7 +1,7 @@
 import { createError, sendError } from 'h3';
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import prisma from '@/server/utils/db';
+import { prismaClient } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   let tripData = null;
   try {
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
      * UUID currently has UNIQUE constraint in DB,
      * so can change if performance becomes detrimental
      */
-    tripData = await prisma.trip.findFirst({
+    tripData = await prismaClient.trip.findFirst({
       where: {
         uuid: event.context.params.uuid,
         userId,

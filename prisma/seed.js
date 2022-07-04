@@ -22,7 +22,7 @@ async function seedAirlines() {
     return 0;
   });
 
-  for (const airline of airlines) {
+  airlines.forEach((airline) => {
     try {
       await prisma.airline.upsert({
         where: {
@@ -39,7 +39,7 @@ async function seedAirlines() {
       console.error(airline);
       console.error(error.message);
     }
-  }
+  });
 }
 
 async function seedAirports() {
@@ -67,7 +67,7 @@ async function seedAirports() {
     return 0;
   });
 
-  for (const airport of airports) {
+  airports.forEach((airport) => {
     try {
       await prisma.airport.upsert({
         where: {
@@ -86,7 +86,7 @@ async function seedAirports() {
       console.error(airport);
       console.error(error.message);
     }
-  }
+  });
 }
 
 async function main() {

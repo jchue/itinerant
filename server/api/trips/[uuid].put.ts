@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   const body = await useBody(event);
 
-  const { name } = body;
+  const { name }: { name: string } = body;
 
   // Check required fields
   if (!name) {
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Using updateMany() to be able to enforce user ID
-    const response = await prisma.trip.updateMany({
+    const response = await prismaClient.trip.updateMany({
       where: {
         uuid: event.context.params.uuid,
         userId,

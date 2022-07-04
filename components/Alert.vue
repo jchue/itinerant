@@ -1,6 +1,6 @@
 <script lang="ts">
 export default {
-  props: ['type', 'transient', 'add-class'],
+  props: ['type', 'transient', 'addClass'],
   data() {
     return {
       visible: true,

@@ -1,6 +1,6 @@
 import { createError, sendError, send } from 'h3';
 import { v4 as uuidv4 } from 'uuid';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -13,12 +13,12 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   const body = await useBody(event);
 
   // Uniqueness currently enforced by DB
-  const uuid = uuidv4();
+  const uuid: string = uuidv4();
 
   const { name } = body;
 
@@ -32,15 +32,26 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  let trip = null;
+  const trip: Prisma.TripCreateInput = {
+    uuid,
+    userId,
+    name,
+  };
+
+  const tripInfo = Prisma.validator<Prisma.TripSelect>()({
+    uuid: true,
+    name: true,
+  });
+
   try {
-    trip = await prisma.trip.create({
-      data: {
-        uuid,
-        userId,
-        name,
-      },
+    const createTrip = await prismaClient.trip.create({
+      data: trip,
+      select: tripInfo,
     });
+
+    event.res.statusCode = 201;
+
+    return createTrip;
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -49,11 +60,4 @@ export default defineEventHandler(async (event) => {
 
     return null;
   }
-
-  event.res.statusCode = 201;
-
-  return {
-    uuid: trip.uuid,
-    name: trip.name,
-  };
 });

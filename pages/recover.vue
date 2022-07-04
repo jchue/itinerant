@@ -13,7 +13,7 @@ async function updatePassword() {
     errorMessage.value = null;
     loading.value = true;
 
-    const { error } = await $supabase.auth.api.updateUser(route.query.access_token, {
+    const { error } = await $supabase.auth.api.updateUser(route.query.access_token.toString(), {
       password: password.value,
     });
 

@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
-  const requestedId = event.context.params.uuid;
+  const userId: string = event.context.auth.user.id;
+  const requestedId: string = event.context.params.uuid;
 
   // Requesting user must be requested user
   if (userId !== requestedId) {
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
     if (error) throw error;
 
     // Delete associated trips
-    await prisma.trip.deleteMany({
+    await prismaClient.trip.deleteMany({
       where: {
         userId,
       },

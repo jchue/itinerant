@@ -3,8 +3,11 @@ import { find } from 'geo-tz';
 export default defineEventHandler((event) => {
   const query = useQuery(event);
 
-  if (query.lat && query.lon) {
-    return find(query.lat, query.lon);
+  const latitude: number = Number(query.lat);
+  const longitude: number = Number(query.lon);
+
+  if (latitude && longitude) {
+    return find(latitude, longitude);
   }
 
   /* No need for database yet because strings; may revisit in the future */

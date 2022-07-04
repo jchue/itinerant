@@ -56,7 +56,7 @@ async function login() {
 
     successMessage.value = 'Login successful!';
 
-    return navigateTo(route.query.redirect);
+    return navigateTo(route.query.redirect.toString());
   } catch (error) {
     errorMessage.value = error.message;
 

@@ -66,6 +66,7 @@ export default {
 
       <User />
     </header>
+
     <main class="p-4">
       <Alert
         v-if="alert.message"
@@ -76,11 +77,10 @@ export default {
         {{ alert.message }}
       </Alert>
 
-      <Transition>
-        <NuxtPage/>
-      </Transition>
+      <NuxtPage/>
     </main>
-    <footer
-    ></footer>
+
+    <footer>
+    </footer>
   </div>
 </template>

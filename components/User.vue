@@ -3,7 +3,14 @@ import 'material-icons/iconfont/material-icons.css';
 
 const { $supabase } = useNuxtApp();
 
-const user = ref($supabase.auth.user());
+const user = ref(null);
+
+// Postpone user update until after hydration to prevent mismatch
+onMounted(() => {
+  if (process.client) {
+    user.value = $supabase.auth.user();
+  }
+});
 
 // Detect log in/out
 $supabase.auth.onAuthStateChange((event) => {

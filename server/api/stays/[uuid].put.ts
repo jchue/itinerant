@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   const body = await useBody(event);
 
@@ -26,6 +26,16 @@ export default defineEventHandler(async (event) => {
     checkinTimestamp,
     checkoutTimestamp,
     timezoneName,
+  }: {
+    tripUuid: string,
+    name: string,
+    address: string,
+    latitude: number,
+    longitude: number,
+    confirmationNumber: string,
+    checkinTimestamp: Date,
+    checkoutTimestamp: Date,
+    timezoneName: string,
   } = body;
 
   // Check required fields
@@ -62,7 +72,7 @@ export default defineEventHandler(async (event) => {
    */
   let trip = null;
   try {
-    trip = await prisma.trip.findFirst({
+    trip = await prismaClient.trip.findFirst({
       where: {
         uuid: tripUuid,
         userId,
@@ -85,7 +95,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Using updateMany() to be able to enforce user ID
-    const response = await prisma.stay.updateMany({
+    const response = await prismaClient.stay.updateMany({
       where: {
         uuid: event.context.params.uuid,
         userId,

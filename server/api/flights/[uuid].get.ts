@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   let flight = null;
   try {
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
      * UUID currently has UNIQUE constraint in DB,
      * so can change if performance becomes detrimental
      */
-    flight = await prisma.flight.findFirst({
+    flight = await prismaClient.flight.findFirst({
       where: {
         uuid: event.context.params.uuid,
         userId,
@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
    */
   let trip = null;
   try {
-    trip = await prisma.trip.findFirst({
+    trip = await prismaClient.trip.findFirst({
       where: {
         id: flight.tripId,
         userId,

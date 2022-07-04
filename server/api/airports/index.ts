@@ -1,10 +1,20 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  let airports = null;
+  const airportInfo = Prisma.validator<Prisma.AirportSelect>()({
+    code: true,
+    name: true,
+    latitude: true,
+    longitude: true,
+  });
+
   try {
-    airports = await prisma.airport.findMany();
+    const airports = await prismaClient.airport.findMany({
+      select: airportInfo,
+    });
+
+    return airports;
   } catch (error) {
     sendError(event, createError({
       statusCode: 500,
@@ -13,6 +23,4 @@ export default defineEventHandler(async (event) => {
 
     return null;
   }
-
-  return airports;
 });

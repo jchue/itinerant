@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   try {
     // Using deleteMany() to be able to enforce user ID
-    const response = await prisma.trip.deleteMany({
+    const response = await prismaClient.trip.deleteMany({
       where: {
         uuid: event.context.params.uuid,
         userId,

@@ -2,9 +2,9 @@ import { createError, sendError } from 'h3';
 
 export default defineEventHandler(async (event) => {
   /* Call all timezones endpoint */
-  const timezones = await $fetch('/api/timezones');
+  const timezones: string[] = await $fetch('/api/timezones');
 
-  const timezone = timezones.find((element) => element === event.context.params.name);
+  const timezone: string = timezones.find((element) => element === event.context.params.name);
 
   if (!timezone) {
     sendError(event, createError({

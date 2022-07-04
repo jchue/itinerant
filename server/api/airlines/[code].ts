@@ -1,19 +1,22 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  let airline = null;
+  const airlineInfo = Prisma.validator<Prisma.AirlineSelect>()({
+    code: true,
+    name: true,
+  });
+
   try {
-    airline = await prisma.airline.findUnique({
+    const airline = await prismaClient.airline.findUnique({
       where: {
         code: event.context.params.code,
       },
-      select: {
-        code: true,
-        name: true,
-      },
+      select: airlineInfo,
       rejectOnNotFound: true,
     });
+
+    return airline;
   } catch (error) {
     sendError(event, createError({
       statusCode: 404,
@@ -22,6 +25,4 @@ export default defineEventHandler(async (event) => {
 
     return null;
   }
-
-  return airline;
 });

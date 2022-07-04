@@ -1,21 +1,24 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient, Prisma } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
-  let airport = null;
+  const airportInfo = Prisma.validator<Prisma.AirportSelect>()({
+    code: true,
+    name: true,
+    latitude: true,
+    longitude: true,
+  });
+
   try {
-    airport = await prisma.airport.findUnique({
+    const airport = await prismaClient.airport.findUnique({
       where: {
         code: event.context.params.code,
       },
-      select: {
-        code: true,
-        name: true,
-        latitude: true,
-        longitude: true,
-      },
+      select: airportInfo,
       rejectOnNotFound: true,
     });
+
+    return airport;
   } catch (error) {
     sendError(event, createError({
       statusCode: 404,
@@ -24,6 +27,4 @@ export default defineEventHandler(async (event) => {
 
     return null;
   }
-
-  return airport;
 });

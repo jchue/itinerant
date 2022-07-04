@@ -1,5 +1,5 @@
 import { createError, sendError } from 'h3';
-import prisma from '@/server/utils/db';
+import { prismaClient } from '@/server/utils/db';
 
 export default defineEventHandler(async (event) => {
   // Require auth
@@ -12,13 +12,13 @@ export default defineEventHandler(async (event) => {
     return null;
   }
 
-  const userId = event.context.auth.user.id;
+  const userId: string = event.context.auth.user.id;
 
   let trips = [];
 
   try {
     // User ID enforced on both trip and feature levels
-    const tripsData = await prisma.trip.findMany({
+    const tripsData = await prismaClient.trip.findMany({
       where: {
         userId,
       },
