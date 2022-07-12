@@ -4,7 +4,7 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import 'material-icons/iconfont/material-icons.css';
 
-const { $supabase, $timezones } = useNuxtApp();
+const { $supabase } = useNuxtApp();
 
 // Get current session
 const session = $supabase.auth.session();
@@ -102,7 +102,7 @@ async function updateFlight() {
   }
 
   // Check flight number format
-  if (!Number.isInteger(flightNumber.value)) {
+  if (Number.isNaN(Number(flightNumber.value))) {
     loading.value = false;
     errorMessage.value = 'Invalid Flight Number';
 
@@ -229,22 +229,7 @@ async function updateFlight() {
             <Input label="Time" type="time" v-model="departureTime" required />
 
             <div>
-              <label class="block font-medium mb-1 text-sm">Timezone</label>
-              <select
-                v-model="departureTimezoneName"
-                class="bg-white border border-gray-300 p-2 rounded-md shadow-sm
-                text-gray-700 text-sm w-full disabled:bg-gray-100 disabled:text-gray-400"
-                required
-                disabled
-              >
-                <option
-                  v-for="timezone in $timezones()"
-                  v-bind:key="timezone.name"
-                  v-bind:value="timezone.name"
-                >
-                  GMT {{ timezone.offset }} {{ timezone.name }}
-                </option>
-              </select>
+              <Input label="Timezone" v-model="departureTimezoneName" required disabled />
             </div>
           </div>
         </fieldset>
@@ -276,22 +261,7 @@ async function updateFlight() {
             <Input label="Time" type="time" v-model="arrivalTime" required />
 
             <div>
-              <label class="block font-medium mb-1 text-sm">Timezone</label>
-              <select
-                v-model="arrivalTimezoneName"
-                class="bg-white border border-gray-300 p-2 rounded-md shadow-sm
-                text-gray-700 text-sm w-full disabled:bg-gray-100 disabled:text-gray-400"
-                required
-                disabled
-              >
-                <option
-                  v-for="timezone in $timezones()"
-                  v-bind:key="timezone.name"
-                  v-bind:value="timezone.name"
-                >
-                  GMT {{ timezone.offset }} {{ timezone.name }}
-                </option>
-              </select>
+              <Input label="Timezone" v-model="arrivalTimezoneName" required disabled />
             </div>
           </div>
         </fieldset>
