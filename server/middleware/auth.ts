@@ -7,8 +7,18 @@ export default defineEventHandler(async (event) => {
   const authHeader: string = event.req.headers.authorization;
   const token: string = authHeader ? authHeader.split('Bearer ')[1] : null;
 
-  // Check if token returns valid user
-  const { user, error } = await supabase.auth.api.getUser(token);
+  try {
+    if (!token) throw new Error();
 
-  event.context.auth = { supabase, user, error };
+    // Check if token returns valid user
+    const { user, error } = await supabase.auth.api.getUser(token);
+
+    if (error) throw error;
+
+    event.context.auth = { supabase, user, error };
+  } catch (error) {
+    const user = null;
+
+    event.context.auth = { supabase, user, error };
+  }
 });
