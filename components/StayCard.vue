@@ -25,17 +25,24 @@ export default {
 </script>
 
 <template>
-  <div class="flex items-center my-4 p-4 rounded shadow hover:shadow-md transition-shadow">
-    <div class="flex-none text-center w-20">
-      <span class="material-icons !text-4xl text-slate-300">bed</span>
-    </div>
+  <div class="flex items-center p-6 rounded-2xl shadow hover:shadow-lg transition-shadow">
     <div class="flex-1">
-      <div class="text-slate-500 text-sm">
-        {{ prefix }} | {{ name }}
+      <div class="text-gray-600 text-xs uppercase">
+        {{ prefix }}
       </div>
-      <div class="text-2xl">
+      <div class="font-bold mr-4 text-emerald-700 text-2xl">
         {{ time }}
       </div>
+      <div class="font-light -mt-1 text-gray-500 text-[0.625rem]">
+        {{ timezoneName }}
+      </div>
+      <div class="font-light mt-6 text-emerald-700 text-xl">
+        {{ name }}
+      </div>
+    </div>
+
+    <div class="flex-none text-center w-20">
+      <span class="material-icons !text-4xl text-slate-300">bed</span>
     </div>
   </div>
 </template>

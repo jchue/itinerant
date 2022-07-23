@@ -5,7 +5,7 @@ export default {
 </script>
 
 <template>
-  <h1 v-bind:class="'font-bold mb-4 text-3xl ' + addClass">
+  <h1 v-bind:class="'text-[2.5rem] uppercase ' + addClass">
     <slot />
   </h1>
 </template>

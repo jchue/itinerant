@@ -40,7 +40,7 @@ async function logout() {
   <div v-if="user">
     <NuxtLink
       to="/profile"
-      class="align-middle mr-2 text-gray-500 hover:text-gray-600 text-sm" title="Edit Profile"
+      class="align-middle mr-2 text-emerald-500 hover:text-emerald-400 text-sm" title="Edit Profile"
     >
       {{ user.email}}
     </NuxtLink>
@@ -48,14 +48,14 @@ async function logout() {
     <span
       v-on:click="logout"
       class="align-middle cursor-pointer material-icons pr-2
-      !text-xl text-gray-400 hover:text-gray-500"
+      !text-xl text-emerald-500 hover:text-emerald-400"
       title="Log Out">
       logout
     </span>
   </div>
   <div v-else class="text-gray-500 text-sm">
-    <NuxtLink to="/register" class="hover:text-gray-600">Register</NuxtLink> |
-    <NuxtLink to="/login" class="hover:text-gray-600">Log In</NuxtLink>
+    <NuxtLink to="/register" class="text-emerald-500 hover:text-emerald-400">Register</NuxtLink> |
+    <NuxtLink to="/login" class="text-emerald-500 hover:text-emerald-400">Log In</NuxtLink>
   </div>
 </template>
 

@@ -122,7 +122,7 @@ async function changePassword() {
       <form v-on:submit.prevent="updateProfile" class="mb-6">
         <Input label="Email" type="email" add-class="mb-6" v-model="email" required />
 
-        <Button type="submit">Update Email</Button>
+        <PrimaryButton type="submit">Update Email</PrimaryButton>
       </form>
 
        <form v-on:submit.prevent="changePassword" class="mb-4">
@@ -149,7 +149,7 @@ async function changePassword() {
           required
         />
 
-        <Button type="submit">Change Password</Button>
+        <PrimaryButton type="submit">Change Password</PrimaryButton>
       </form>
 
       <form v-on:submit.prevent="deleteAccount" class="mb-6">

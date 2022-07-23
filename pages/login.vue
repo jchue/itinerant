@@ -56,7 +56,7 @@ async function login() {
 
     successMessage.value = 'Login successful!';
 
-    return navigateTo(route.query.redirect.toString());
+    return navigateTo(route.query.redirect ? route.query.redirect.toString() : '/');
   } catch (error) {
     errorMessage.value = error.message;
 
@@ -68,7 +68,7 @@ async function login() {
 </script>
 
 <template>
-  <div>
+  <div class="mt-10 mx-auto w-96">
     <div v-if="loading">
       <Loader />
     </div>
@@ -78,20 +78,22 @@ async function login() {
       </Alert>
     </div>
     <div v-else>
-      <PageTitle>Log In</PageTitle>
+      <PageTitle add-class="mb-6 text-center">Log In</PageTitle>
 
       <Alert v-if="errorMessage" type="error" add-class="mb-6">
         {{ errorMessage }}
       </Alert>
 
-      <form v-on:submit.prevent="login">
-        <Input type="email" label="Email" add-class="mb-4" v-model="email" required />
-        <Input type="password" label="Password" add-class="mb-6" v-model="password" required />
+      <form v-on:submit.prevent="login" class="p-10 rounded-lg shadow">
+        <Input type="email" label="Email" add-class="mb-4 w-full" v-model="email" required />
+        <Input type="password" label="Password" add-class="mb-6 w-full" v-model="password" required />
 
-        <NuxtLink to="/reset" class="mr-4 text-gray-500 text-xs hover:text-gray-600">
-          Forgot password?
-        </NuxtLink>
-        <Button type="submit">Log In</Button>
+        <div class="flex items-center">
+          <NuxtLink to="/reset" class="flex-1 mr-4 text-emerald-500 text-xs hover:text-emerald-400">
+            Forgot password?
+          </NuxtLink>
+          <PrimaryButton type="submit">Log In</PrimaryButton>
+        </div>
       </form>
     </div>
   </div>

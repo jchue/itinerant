@@ -59,69 +59,72 @@ refresh();
       <NotFound />
     </div>
     <div v-else>
-      <header>
-        <NuxtLink
-          to="/trips"
-          class="float-left text-gray-300 text-sm uppercase hover:text-gray-400"
-        >
-          &larr; Trips
-        </NuxtLink>
+      <header class="mb-6">
+        <div>
+          <NuxtLink
+            to="/trips"
+            class="text-gray-300 text-sm uppercase hover:text-gray-400"
+          >
+            &larr; Trips
+          </NuxtLink>
+        </div>
+        <div class="flex items-center">
+          <PageTitle add-class="mr-2">{{ name }}</PageTitle>
 
-        <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
-
-        <DeleteButton itemType="trip" v-bind:itemUuid="route.params.uuid" add-class="float-left" />
-        <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-edit'" class="float-left">
-          <span class="material-icons !text-xl text-gray-500 hover:text-gray-600">edit</span>
-        </NuxtLink>
-
-        <div class="float-right">
-          <NuxtLink v-on:click="toggleMap" class="cursor-pointer" title="Toggle Map">
-            <span class="material-icons-outlined pr-2 !text-xl text-gray-500 hover:text-gray-600">
-              map
-            </span>
+          <DeleteButton itemType="trip" v-bind:itemUuid="route.params.uuid" add-class="float-left" />
+          <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-edit'" class="float-left">
+            <span class="material-icons !text-xl text-gray-500 hover:text-gray-600">edit</span>
           </NuxtLink>
 
-          <div class="inline relative">
-            <NuxtLink v-on:click="addMenuVisible = !addMenuVisible" class="cursor-pointer">
-              <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">
-                add
+          <div class="flex-1 text-right">
+            <NuxtLink v-on:click="toggleMap" class="cursor-pointer" title="Toggle Map">
+              <span class="material-icons-outlined pr-2 !text-xl text-gray-500 hover:text-gray-600">
+                map
               </span>
             </NuxtLink>
 
-            <Transition>
-              <ul
-                v-if="addMenuVisible"
-                class="inline-block bg-white py-2 absolute rounded
-                shadow-md top-8 right-0 z-10 w-max"
-              >
-                <li>
-                  <NuxtLink
-                    v-bind:to="'/trips/' + route.params.uuid + '-addflight'"
-                    class="block pl-4 pr-6 py-1 hover:bg-gray-50"
-                  >
-                    <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
-                    <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink
-                    v-bind:to="'/trips/' + route.params.uuid + '-addstay'"
-                    class="block pl-4 pr-6 py-1 hover:bg-gray-50"
-                  >
-                    <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
-                    <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>
-                  </NuxtLink>
-                </li>
-              </ul>
-            </Transition>
-          </div>
+            <div class="inline relative">
+              <NuxtLink v-on:click="addMenuVisible = !addMenuVisible" class="cursor-pointer">
+                <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">
+                  add
+                </span>
+              </NuxtLink>
 
-          <!-- Scrim -->
-          <div
-            v-if="addMenuVisible"
-            v-on:click="addMenuVisible = !addMenuVisible"
-            class="absolute top-0 right-0 bottom-0 left-0"
-          >
+              <Transition>
+                <ul
+                  v-if="addMenuVisible"
+                  class="inline-block bg-white py-2 absolute rounded
+                  shadow-md top-8 right-0 z-10 w-max"
+                >
+                  <li>
+                    <NuxtLink
+                      v-bind:to="'/trips/' + route.params.uuid + '-addflight'"
+                      class="block pl-4 pr-6 py-1 hover:bg-gray-50"
+                    >
+                      <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
+                      <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
+                    </NuxtLink>
+                  </li>
+                  <li>
+                    <NuxtLink
+                      v-bind:to="'/trips/' + route.params.uuid + '-addstay'"
+                      class="block pl-4 pr-6 py-1 hover:bg-gray-50"
+                    >
+                      <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
+                      <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>
+                    </NuxtLink>
+                  </li>
+                </ul>
+              </Transition>
+            </div>
+
+            <!-- Scrim -->
+            <div
+              v-if="addMenuVisible"
+              v-on:click="addMenuVisible = !addMenuVisible"
+              class="absolute top-0 right-0 bottom-0 left-0"
+            >
+            </div>
           </div>
         </div>
       </header>
@@ -152,14 +155,14 @@ refresh();
             </NuxtLink>
           </div>
 
-          <ul>
+          <ul class="max-w-screen-sm">
             <li v-for="(group, date) in trip.events" v-bind:key="date">
-              <h2 class="font-bold text-2xl">
+              <SectionTag>
                 {{ format(utcToZonedTime(date, group[0].indexTimezoneName), 'EEEE, LLLL d, yyyy') }}
-              </h2>
+              </SectionTag>
 
               <ul>
-                <li v-for="event in group" v-bind:key="event.uuid">
+                <li v-for="event in group" v-bind:key="event.uuid" class="my-8">
                   <NuxtLink v-if="event.type === 'flight'" v-bind:to="/flights/ + event.uuid">
                     <FlightCard
                       v-bind:airline="event.airline"

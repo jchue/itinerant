@@ -28,7 +28,7 @@ export default {
       if (
         (this.airline || this.flightNumber)
         && (this.duration.years || this.duration.months || this.duration.days
-        || this.duration.minutes || this.duration.seconds)
+        || this.duration.hours || this.duration.minutes || this.duration.seconds)
       ) {
         return '|';
       }
@@ -40,25 +40,39 @@ export default {
 </script>
 
 <template>
-  <div class="flex items-center my-4 p-4 rounded shadow hover:shadow-md transition-shadow">
-    <div class="flex-none text-center w-20">
-      <span class="material-icons !text-4xl text-slate-300">flight</span>
-    </div>
+  <div class="flex items-center p-6 rounded-2xl shadow hover:shadow-lg transition-shadow">
     <div class="flex-1">
-      <div class="text-slate-500 text-sm">
-        {{ airline ? airline.name : '' }} {{ flightNumber }} {{ delimiter }} {{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}
-      </div>
+      <!-- Depart/Arrive -->
       <div class="flex">
-        <div class="flex-1">
-          <span class="block text-2xl">{{ departureTime }}</span>
-          <span class="block text-xl text-slate-500">{{ departureAirport }}</span>
+        <!-- Depart -->
+        <div class="mr-10 shrink">
+          <div class="text-gray-600 text-xs uppercase">Depart</div>
+          <div class="text-2xl">
+            <span class="font-bold mr-4 text-emerald-700">{{ departureTime }}</span>
+            <span class="font-light text-gray-600">{{ departureAirport }}</span>
+          </div>
+          <div class="font-light -mt-1 text-gray-500 text-[0.625rem]">{{ departureTimezoneName }}</div>
         </div>
-        <div class="flex-1 text-right">
-          <span class="block text-2xl">{{ arrivalTime }}</span>
-          <span class="block text-xl text-slate-500">{{ arrivalAirport }}</span>
+
+        <!-- Arrive -->
+        <div class="shrink">
+          <div class="text-gray-600 text-xs uppercase">Arrive</div>
+          <div class="text-2xl">
+            <span class="font-bold mr-4 text-emerald-700">{{ arrivalTime }}</span>
+            <span class="font-light text-gray-600">{{ arrivalAirport }}</span>
+          </div>
+          <div class="font-light -mt-1 text-gray-500 text-[0.625rem]">{{ arrivalTimezoneName }}</div>
         </div>
+      </div>
+
+      <!-- Flight Name -->
+      <div class="font-light mt-6 text-emerald-700 text-xl">
+        {{ airline ? `${airline.name} ${airline.code}` : '' }} {{ flightNumber }} {{ delimiter }} {{ duration.days ? duration.days + 'd' : '' }} {{ duration.hours ? duration.hours + 'h' : '' }} {{ duration.minutes ? duration.minutes + 'm' : '' }}
       </div>
     </div>
+    <div class="flex-none text-center w-20">
+        <span class="material-icons !text-4xl text-slate-300">flight</span>
+      </div>
   </div>
 </template>
 

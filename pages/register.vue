@@ -50,8 +50,8 @@ useHead({
 </script>
 
 <template>
-  <div>
-    <PageTitle>Register</PageTitle>
+  <div class="mt-10 mx-auto w-96">
+    <PageTitle add-class="mb-6 text-center">Register</PageTitle>
 
     <div v-if="loading">
       <Loader />
@@ -66,11 +66,19 @@ useHead({
         {{ errorMessage }}
       </Alert>
 
-      <form v-on:submit.prevent="register">
-        <Input type="email" label="Email" add-class="mb-4" v-model="email" required />
-        <Input type="password" label="Password" add-class="mb-6" v-model="password" required />
+      <form v-on:submit.prevent="register" class="p-10 rounded-lg shadow-lg">
+        <Input type="email" label="Email" add-class="mb-4 w-full" v-model="email" required />
+        <Input
+          type="password"
+          label="Password"
+          add-class="mb-6 w-full"
+          v-model="password"
+          required
+        />
 
-        <Button type="submit">Register</Button>
+        <div class="text-right">
+          <PrimaryButton type="submit">Register</PrimaryButton>
+        </div>
       </form>
     </div>
   </div>

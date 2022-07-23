@@ -56,7 +56,7 @@ useHead({
       <form v-on:submit.prevent="updatePassword">
         <Input type="password" label="New Password" add-class="mb-6" v-model="password" required />
 
-        <Button type="submit">Submit</Button>
+        <PrimaryButton type="submit">Submit</PrimaryButton>
       </form>
     </div>
   </div>

@@ -37,12 +37,13 @@ refresh();
     </div>
     <div v-else>
       <header>
-        <span class="text-slate-300 text-sm uppercase">Trips</span>
+        <PageTitle add-class="align-middle inline-block mr-6">Trips</PageTitle>
 
         <NuxtLink to="/addtrip">
-          <span class="float-right material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">
-            add
-          </span>
+          <SecondaryButton add-class="align-middle flex inline-block items-center pr-5">
+            <span class="!leading-none material-icons !text-lg">add</span>
+            New
+          </SecondaryButton>
         </NuxtLink>
       </header>
 
@@ -61,7 +62,7 @@ refresh();
           </NuxtLink>
         </div>
 
-        <ul>
+        <ul class="grid grid-cols-4 gap-4">
           <li v-for="trip in trips" v-bind:key="trip.uuid">
             <NuxtLink v-bind:to="/trips/ + trip.uuid">
               <TripCard

@@ -38,13 +38,13 @@ export default {
     v-bind:style="visibility"
   >
     <div class="pr-4">
-      <span class="material-icons !text-xl text-green-300">check_circle</span>
+      <span class="material-icons !text-xl text-green-500">check_circle</span>
     </div>
     <div class="py-1">
-      <div class="text-green-900 mb-2 text-sm">
+      <div class="font-bold mb-2 text-green-700 text-sm uppercase">
         Success
       </div>
-      <div class="text-green-700 text-xs">
+      <div class="text-green-700 text-sm">
         <slot />
       </div>
     </div>
@@ -56,13 +56,13 @@ export default {
     v-bind:style="visibility"
   >
     <div class="pr-4">
-      <span class="material-icons !text-xl text-red-300">error</span>
+      <span class="material-icons !text-xl text-red-500">error</span>
     </div>
     <div class="py-1">
-      <div class="text-red-900 mb-2 text-sm">
+      <div class="font-bold mb-2 text-red-700 text-sm uppercase">
         Error
       </div>
-      <div class="text-red-700 text-xs">
+      <div class="text-red-700 text-sm">
         <slot />
       </div>
     </div>
@@ -74,10 +74,10 @@ export default {
     v-bind:style="visibility"
   >
     <div class="pr-4">
-      <span class="material-icons !text-xl text-blue-300">info</span>
+      <span class="material-icons !text-xl text-blue-500">info</span>
     </div>
     <div class="py-1">
-      <div class="text-blue-700 text-xs">
+      <div class="text-blue-700 text-sm">
         <slot />
       </div>
     </div>
