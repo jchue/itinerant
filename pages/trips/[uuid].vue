@@ -71,7 +71,12 @@ refresh();
         <div class="flex items-center">
           <PageTitle add-class="mr-2">{{ name }}</PageTitle>
 
-          <DeleteButton itemType="trip" v-bind:itemUuid="route.params.uuid" add-class="float-left" />
+          <DeleteButton
+            itemType="trip"
+            v-bind:itemUuid="route.params.uuid"
+            add-class="float-left"
+          />
+
           <NuxtLink v-bind:to="'/trips/' + route.params.uuid + '-edit'" class="float-left">
             <span class="material-icons !text-xl text-gray-500 hover:text-gray-600">edit</span>
           </NuxtLink>

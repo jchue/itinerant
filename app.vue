@@ -59,8 +59,8 @@ export default {
 
 <template>
   <div>
-    <header class="p-4 shadow-sm sticky">
-      <div class="container flex items-center mx-auto">
+    <header class="shadow-sm sticky">
+      <div class="container flex items-center mx-auto p-4">
       <div class="flex-1">
         <NuxtLink to="/" class="font-bold text-lg">Itinerant</NuxtLink>
       </div>
@@ -69,7 +69,7 @@ export default {
       </div>
     </header>
 
-    <main class="p-4">
+    <main class="container mx-auto p-4">
       <Alert
         v-if="alert.message"
         v-bind:type="alert.type"

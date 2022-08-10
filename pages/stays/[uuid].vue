@@ -60,47 +60,58 @@ refresh();
       <NotFound />
     </div>
     <div v-else>
-      <header>
-        <NuxtLink
-          v-bind:to="/trips/ + tripUuid"
-          class="float-left text-gray-300 text-sm uppercase hover:text-gray-400"
-        >
-          &larr; Trip
-        </NuxtLink>
+      <header class="mb-4">
+        <div>
+          <NuxtLink
+            v-bind:to="/trips/ + tripUuid"
+            class="text-gray-300 text-sm uppercase hover:text-gray-400"
+          >
+            &larr; Trip
+          </NuxtLink>
+        </div>
+        <div class="flex items-center">
+          <PageTitle add-class="mr-2">
+            {{ name }}
+          </PageTitle>
 
-        <PageTitle add-class="clear-left float-left mr-2">{{ name }}</PageTitle>
+          <DeleteButton
+            itemType="stay"
+            v-bind:itemUuid="route.params.uuid"
+            v-bind:tripUuid="tripUuid"
+            add-class="float-left"
+          />
 
-        <DeleteButton
-          itemType="stay"
-          v-bind:itemUuid="route.params.uuid"
-          v-bind:tripUuid="tripUuid"
-          add-class="float-left"
-        />
-
-        <NuxtLink v-bind:to="'/stays/' + route.params.uuid + '-edit'" class="float-left">
-          <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
-        </NuxtLink>
+          <NuxtLink v-bind:to="'/stays/' + route.params.uuid + '-edit'" class="float-left">
+            <span class="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
+          </NuxtLink>
+        </div>
       </header>
 
-      <main class="clear-both">
-        <span class="block mb-4">{{ address }}</span>
+      <main>
+        <span class="block mb-6 font-light text-gray-600">{{ address }}</span>
 
-        <span class="block mb-2">Confirmation Number: {{ confirmationNumber }}</span>
+        <div class="flex items-center mb-8">
 
-        <div class="flex">
-          <div class="flex-1">
-            <span class="block text-sm">Check-In</span>
-            <span class="block text-xl">{{ checkinDate }}</span>
-            <span class="block text-md">{{ checkinTime }}</span>
+          <div>
+            <span class="block text-gray-600 text-xs uppercase">Check-In</span>
+            <span class="block font-bold -mb-1 text-emerald-700 text-2xl">{{ checkinDate }}</span>
+            <span class="block text-emerald-700 text-sm">{{ checkinTime }}</span>
+            <span class="block text-gray-600 text-[0.625rem]">{{ timezoneName }}</span>
           </div>
-          <div class="flex-1 text-right">
-            <span class="block text-sm">Check-Out</span>
-            <span class="block text-xl">{{ checkoutDate }}</span>
-            <span class="block text-md">{{ checkoutTime }}</span>
+          <div class="px-32"></div>
+          <div>
+            <span class="block text-gray-600 text-xs uppercase">Check-Out</span>
+            <span class="block font-bold -mb-1 text-emerald-700 text-2xl">{{ checkoutDate }}</span>
+            <span class="block text-emerald-700 text-sm">{{ checkoutTime }}</span>
+            <span class="block text-gray-600 text-[0.625rem]">{{ timezoneName }}</span>
           </div>
+
         </div>
 
-        <span class="block text-gray-500 text-xs">{{ timezoneName }}</span>
+        <div>
+          <span class="block text-gray-600 text-xs uppercase">Confirmation Number</span>
+          <span class="font-bold">{{ confirmationNumber }}</span>
+        </div>
       </main>
     </div>
   </Transition>
