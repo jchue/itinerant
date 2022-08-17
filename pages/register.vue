@@ -50,7 +50,7 @@ useHead({
 </script>
 
 <template>
-  <div class="mt-10 mx-auto w-96">
+  <div class="mt-10 mx-auto max-w-sm">
     <PageTitle add-class="mb-6 text-center">Register</PageTitle>
 
     <div v-if="loading">

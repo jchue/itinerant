@@ -58,14 +58,16 @@ definePageMeta({
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink
-        v-bind:to="'/flights/' + route.params.uuid"
-        class="text-gray-300 text-sm uppercase hover:text-gray-400"
-      >
-        &larr; Back
-      </NuxtLink>
+      <header class="mb-6">
+        <NuxtLink
+          v-bind:to="'/flights/' + route.params.uuid"
+          class="text-gray-300 text-sm uppercase hover:text-gray-400"
+        >
+          &larr; Back
+        </NuxtLink>
 
-      <PageTitle>Edit Flight</PageTitle>
+        <PageTitle>Edit Flight</PageTitle>
+      </header>
 
       <FlightForm
         v-bind:flightUuid="route.params.uuid"

@@ -157,7 +157,7 @@ async function updateFlight() {
 </script>
 
 <template>
-  <div>
+  <div class="max-w-lg">
     <div v-if="loading">
       <Loader />
     </div>
@@ -173,17 +173,17 @@ async function updateFlight() {
 
       <form v-on:submit.prevent="updateFlight">
         <div class="mb-6">
-          <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
+          <label class="block font-bold mb-1 text-xs uppercase">Assigned Trip</label>
           <TripSelect v-model="tripUuid" />
         </div>
 
         <div class="flex gap-4 mb-6">
           <div>
-            <label class="block font-medium mb-1 text-sm">Airline</label>
+            <label class="block font-bold mb-1 text-xs uppercase">Airline</label>
             <select
               v-model="airline"
-              class="bg-white border border-gray-300 p-2 rounded-md
-              shadow-sm text-gray-700 text-sm w-full"
+              class="bg-gray-200 border-2 outline-none p-2 rounded-md
+              text-gray-700 text-sm w-full"
               required
             >
               <option v-for="airline in airlines" v-bind:key="airline.code" v-bind:value="airline">
@@ -206,11 +206,11 @@ async function updateFlight() {
           <legend class="font-bold mb-4">Departure</legend>
 
           <div class="mb-4">
-            <label class="block font-medium mb-1 text-sm">Airport</label>
+            <label class="block font-bold mb-1 text-xs uppercase">Airport</label>
             <select
               v-model="departureAirport"
-              class="bg-white border border-gray-300 p-2 rounded-md
-              shadow-sm text-gray-700 text-sm w-full"
+              class="bg-gray-200 border-2 outline-none p-2 rounded-md
+              text-gray-700 text-sm w-full"
               required
             >
               <option
@@ -238,11 +238,11 @@ async function updateFlight() {
           <legend class="font-bold mb-4">Arrival</legend>
 
           <div class="mb-4">
-            <label class="block font-medium mb-1 text-sm">Airport</label>
+            <label class="block font-bold mb-1 text-xs uppercase">Airport</label>
             <select
               v-model="arrivalAirport"
-              class="bg-white border border-gray-300 p-2 rounded-md
-              shadow-sm text-gray-700 text-sm w-full"
+              class="bg-gray-200 border-2 outline-none p-2 rounded-md
+              text-gray-700 text-sm w-full"
               required
             >
               <option
@@ -270,11 +270,11 @@ async function updateFlight() {
           label="Confirmation Number"
           type="text"
           size="6"
-          add-class="mb-6"
+          add-class="mb-8"
           v-model="confirmationNumber"
         />
 
-        <Button type="submit">Submit</Button>
+        <PrimaryButton type="submit">Submit</PrimaryButton>
       </form>
     </div>
   </div>

@@ -35,7 +35,7 @@ export default {
     <select
       v-bind:value="modelValue"
       v-on:input="$emit('update:modelValue', $event.target.value)"
-      class="bg-white border border-gray-300 p-2 rounded-md shadow-sm text-gray-700 text-sm w-full"
+      class="bg-gray-200 border-2 outline-none p-2 rounded-md text-gray-700 text-sm w-full"
       required
     >
       <option v-for="trip in trips" v-bind:key="trip.uuid" v-bind:value="trip.uuid">

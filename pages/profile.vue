@@ -103,8 +103,10 @@ async function changePassword() {
 </script>
 
 <template>
-  <div>
-    <PageTitle>Profile</PageTitle>
+  <div class="max-w-md">
+    <header class="mb-6">
+      <PageTitle>Profile</PageTitle>
+    </header>
 
     <div v-if="loading">
       <Loader />
@@ -119,13 +121,13 @@ async function changePassword() {
         {{ errorMessage }}
       </Alert>
 
-      <form v-on:submit.prevent="updateProfile" class="mb-6">
+      <form v-on:submit.prevent="updateProfile" class="mb-12">
         <Input label="Email" type="email" add-class="mb-6" v-model="email" required />
 
         <PrimaryButton type="submit">Update Email</PrimaryButton>
       </form>
 
-       <form v-on:submit.prevent="changePassword" class="mb-4">
+       <form v-on:submit.prevent="changePassword" class="mb-12">
         <Input
           label="Current Password"
           type="password"

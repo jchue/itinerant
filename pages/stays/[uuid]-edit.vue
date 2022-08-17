@@ -56,14 +56,16 @@ definePageMeta({
       <NotFound />
     </div>
     <div v-else>
-      <NuxtLink
-        v-bind:to="'/stays/' + route.params.uuid"
-        class="text-gray-300 text-sm uppercase hover:text-gray-400"
-      >
-        &larr; Back
-      </NuxtLink>
+      <header class="mb-6">
+        <NuxtLink
+          v-bind:to="'/stays/' + route.params.uuid"
+          class="text-gray-300 text-sm uppercase hover:text-gray-400"
+        >
+          &larr; Back
+        </NuxtLink>
 
-      <PageTitle>Edit Stay</PageTitle>
+        <PageTitle>Edit Stay</PageTitle>
+      </header>
 
       <StayForm
         v-bind:stayUuid="route.params.uuid"

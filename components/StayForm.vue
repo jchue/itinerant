@@ -172,7 +172,7 @@ async function updateStay() {
 </script>
 
 <template>
-  <div>
+  <div class="max-w-lg">
     <div v-if="loading">
       <Loader />
     </div>
@@ -188,12 +188,12 @@ async function updateStay() {
 
       <form v-on:submit.prevent="updateStay">
         <div class="mb-6">
-          <label class="block font-medium mb-1 text-sm">Assigned Trip</label>
+          <label class="block font-bold mb-1 text-xs uppercase">Assigned Trip</label>
           <TripSelect v-model="tripUuid" />
         </div>
 
         <div class="mb-4">
-          <label class="block font-medium mb-1 text-sm">Name</label>
+          <label class="block font-bold mb-1 text-xs uppercase">Name</label>
           <LocationSearch v-model="location" v-bind:initialValue="name" add-class="w-full" />
         </div>
 
@@ -217,7 +217,7 @@ async function updateStay() {
           <Input label="Check-In Time" type="time" v-model="checkinTime" required />
         </div>
 
-        <div class="flex gap-4 mb-6">
+        <div class="flex gap-4 mb-8">
           <Input label="Check-Out Date" type="date" v-model="checkoutDate" required />
 
           <Input
@@ -229,7 +229,7 @@ async function updateStay() {
           />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <PrimaryButton type="submit">Submit</PrimaryButton>
       </form>
     </div>
   </div>

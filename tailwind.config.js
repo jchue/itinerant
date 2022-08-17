@@ -15,6 +15,7 @@ module.exports = {
       sm: '0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);',
       DEFAULT: '0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);',
       lg: '0 0.25rem 1.75rem rgba(0, 0, 0, 0.15);',
+      none: 'none',
     },
     colors: {
       transparent: 'transparent',
@@ -32,6 +33,7 @@ module.exports = {
         700: '#233832',
       },
       gray: {
+        100: '#F8FAF8',
         200: '#EDF1ED',
         300: '#D1D8D1',
         400: '#B8BEB8',

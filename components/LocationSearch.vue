@@ -64,8 +64,8 @@ export default {
       v-on:focus="focused = true"
       v-on:blur="loseFocus"
       type="text"
-      v-bind:class="`bg-white border border-gray-300 p-2 rounded-md shadow-sm
-      text-gray-700 text-sm ${addClass}`"
+      v-bind:class="`bg-gray-200 border-2 outline-none p-2 rounded-md
+      text-gray-700 text-sm focus:border-emerald-400 ${addClass}`"
     />
     <ul
       v-show="focused"

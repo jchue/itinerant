@@ -70,71 +70,64 @@ export default {
 
 <template>
   <div class="inline">
-    <div class="relative">
-      <!-- button -->
-      <button
-        v-if="type === 'button'"
-        v-bind:class="`inline-flex justify-center mb-6 py-2 px-4 border border-gray-300
-        shadow-sm text-sm rounded-md text-gray-600 bg-white hover:bg-gray-100
-        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 ${addClass}`"
-        v-on:click="showConfirm = true"
+    <!-- button -->
+    <SecondaryButton
+      v-if="type === 'button'"
+      v-bind:class="`inline-flex justify-center mb-6 ${addClass}`"
+      v-on:click="showConfirm = true"
+    >
+      <slot />
+    </SecondaryButton>
+
+    <!-- icon -->
+    <button
+      v-else
+      v-bind:class="'material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ' + addClass "
+      v-on:click="showConfirm = true"
+    >
+      delete
+    </button>
+
+    <Transition>
+      <div
+        v-if="showConfirm"
+        class="fixed flex justify-center items-center top-0 right-0 bottom-0 left-0"
       >
-        <slot />
-      </button>
-
-      <!-- icon -->
-      <button
-        v-else
-        v-bind:class="'material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ' + addClass "
-        v-on:click="showConfirm = true"
-      >
-        delete
-      </button>
-
-      <Transition>
-        <div
-          v-if="showConfirm"
-          class="absolute bg-white overflow-hidden rounded-lg shadow-xl top-12 z-10"
-        >
-          <div class="mb-2 px-4 py-3">
-            <div class="inline-block align-top pr-2">
-              <span class="material-icons pr-2 !text-2xl text-red-500">error</span>
-            </div>
-            <div class="inline-block">
-              <span class="block mb-3 text-md font-medium text-gray-900">Delete</span>
-
-              <p class="text-gray-500 text-sm">{{ confirmMessage }}</p>
-            </div>
+        <!-- dialogue box -->
+        <div class="bg-white max-w-lg px-8 py-6 overflow-hidden relative rounded-xl shadow-lg z-20">
+          <header class="mb-4">
+            <span class="align-middle inline-block material-icons pr-2 text-red-500 !text-2xl">error</span>
+            <span class="align-middle font-bold inline-block text-md text-red-500 text-sm uppercase">Delete</span>
+          </header>
+          <div class="mb-6">
+            <p class="text-sm">{{ confirmMessage }}</p>
           </div>
-          <div class="bg-gray-50 px-4 py-3 text-right">
-            <button
+          <footer class="text-right">
+            <PrimaryButton
               v-on:click="deleteItem"
-              class="rounded-md border border-transparent shadow-sm px-4 py-2
-              bg-red-600 text-sm font-medium mr-2 text-white hover:bg-red-700
+              add-class="!bg-transparent !border-red-500
+              mr-3 !shadow-none !text-red-500 hover:!bg-red-500 hover:!text-white
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Yes
-            </button>
-            <button
+            </PrimaryButton>
+            <PrimaryButton
               v-on:click="showConfirm = false"
-              class="rounded-md border border-gray-300 shadow-sm px-4 py-2
-              bg-white text-sm font-medium text-gray-700 hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               No
-            </button>
-          </div>
+            </PrimaryButton>
+          </footer>
         </div>
-      </Transition>
-    </div>
 
-    <!-- scrim -->
-    <div
-      v-if="showConfirm"
-      v-on:click="showConfirm = !showConfirm"
-      class="absolute top-0 right-0 bottom-0 left-0"
-    >
-    </div>
+        <!-- scrim -->
+        <div
+          v-if="showConfirm"
+          v-on:click="showConfirm = false"
+          class="absolute bg-white opacity-80 top-0 right-0 bottom-0 left-0 z-10"
+        >
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 

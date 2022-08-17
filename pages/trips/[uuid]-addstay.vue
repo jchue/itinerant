@@ -15,11 +15,16 @@ definePageMeta({
 
 <template>
   <div>
-    <NuxtLink v-bind:to="'/trips/' + route.params.uuid" class="text-slate-300 text-sm uppercase">
-      &larr; Back
-    </NuxtLink>
+    <header class="mb-6">
+      <NuxtLink
+        v-bind:to="'/trips/' + route.params.uuid"
+        class="text-gray-300 text-sm uppercase hover:text-gray-400"
+      >
+        &larr; Back
+      </NuxtLink>
 
-    <PageTitle>New Stay</PageTitle>
+      <PageTitle>New Stay</PageTitle>
+    </header>
 
     <StayForm v-bind:tripUuid="tripUuid" />
   </div>

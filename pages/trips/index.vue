@@ -62,7 +62,7 @@ refresh();
           </NuxtLink>
         </div>
 
-        <ul class="grid grid-cols-4 gap-4">
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <li v-for="trip in trips" v-bind:key="trip.uuid">
             <NuxtLink v-bind:to="/trips/ + trip.uuid">
               <TripCard

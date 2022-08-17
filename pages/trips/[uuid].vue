@@ -99,12 +99,12 @@ refresh();
                 <ul
                   v-if="addMenuVisible"
                   class="inline-block bg-white py-2 absolute rounded
-                  shadow-md top-8 right-0 z-10 w-max"
+                  shadow text-left top-8 right-0 z-10 w-max"
                 >
                   <li>
                     <NuxtLink
                       v-bind:to="'/trips/' + route.params.uuid + '-addflight'"
-                      class="block pl-4 pr-6 py-1 hover:bg-gray-50"
+                      class="block pl-4 pr-6 py-1 hover:bg-gray-100"
                     >
                       <span class="material-icons pr-2 !text-xl text-gray-400">flight</span>
                       <span class="inline-block align-top mt-1.5 text-gray-500 text-sm">Flight</span>
@@ -113,7 +113,7 @@ refresh();
                   <li>
                     <NuxtLink
                       v-bind:to="'/trips/' + route.params.uuid + '-addstay'"
-                      class="block pl-4 pr-6 py-1 hover:bg-gray-50"
+                      class="block pl-4 pr-6 py-1 hover:bg-gray-100"
                     >
                       <span class="material-icons pr-2 !text-xl text-gray-400">bed</span>
                       <span class="inline-block align-top mt-1 text-gray-500 text-sm z-10">Stay</span>

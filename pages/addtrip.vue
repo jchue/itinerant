@@ -7,9 +7,13 @@ definePageMeta({
 
 <template>
   <div>
-    <NuxtLink to="/trips" class="text-slate-300 text-sm uppercase">&larr; Back</NuxtLink>
+    <header class="mb-6">
+      <NuxtLink to="trips" class="text-gray-300 text-sm uppercase hover:text-gray-400">
+        &larr; Back
+      </NuxtLink>
 
-    <PageTitle>New Trip</PageTitle>
+      <PageTitle>New Trip</PageTitle>
+    </header>
 
     <TripForm />
   </div>

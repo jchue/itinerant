@@ -65,7 +65,7 @@ async function updateTrip() {
 </script>
 
 <template>
-  <div>
+  <div class="max-w-sm">
     <div v-if="loading">
       <Loader />
     </div>
@@ -80,11 +80,11 @@ async function updateTrip() {
       </Alert>
 
       <form v-on:submit.prevent="updateTrip">
-        <div class="mb-6">
+        <div class="mb-8">
           <Input label="Name" type="text" add-class="w-full" v-model="name" required />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <PrimaryButton type="submit">Submit</PrimaryButton>
       </form>
     </div>
   </div>

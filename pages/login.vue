@@ -68,7 +68,7 @@ async function login() {
 </script>
 
 <template>
-  <div class="mt-10 mx-auto w-96">
+  <div class="mt-10 mx-auto max-w-sm">
     <div v-if="loading">
       <Loader />
     </div>
