@@ -6,7 +6,7 @@ export default defineEventHandler((event) => {
    * If latitude and longitude are received, find specific timezone
    */
 
-  const query = useQuery(event);
+  const query = getQuery(event);
 
   const latitude: number = Number(query.lat);
   const longitude: number = Number(query.lon);

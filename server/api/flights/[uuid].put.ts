@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const userId: string = event.context.auth.user.id;
 
-  const body = await useBody(event);
+  const body = await readBody(event);
 
   interface Airline {
     code: string,

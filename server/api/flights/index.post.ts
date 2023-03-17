@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const userId: string = event.context.auth.user.id;
 
-  const body = await useBody(event);
+  const body = await readBody(event);
 
   // Uniqueness currently enforced by DB
   const uuid: string = uuidv4();
