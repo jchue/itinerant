@@ -59,7 +59,7 @@ export default {
 
 <template>
   <div>
-    <header class="shadow-sm sticky">
+    <header class="bg-white shadow-sm sticky top-0">
       <div class="container flex items-center mx-auto p-4">
       <div class="flex-1">
         <NuxtLink to="/" class="font-bold text-lg">Itinerant</NuxtLink>
