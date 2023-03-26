@@ -1,0 +1,11 @@
+.maplibregl-popup {
+  max-width: 12rem;
+}
+
+.maplibregl-popup-close-button {
+  padding: 0.2rem 0.5rem;
+}
+
+.maplibregl-popup-content {
+  text-align: center;
+}
