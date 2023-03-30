@@ -36,7 +36,7 @@ export default function EditTrip() {
         <PageTitle>Edit Trip</PageTitle>
       </header>
 
-      <TripForm tripUuid={router.query.uuid} initialName={data.name} />
+      <TripForm tripUuid={router.query.uuid} initialName={data.name} initialDestination={data.destination} />
     </>
   );
 }

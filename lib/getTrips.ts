@@ -12,6 +12,7 @@ export default async function getTrips(userId) {
       select: {
         uuid: true,
         name: true,
+        destination: true,
         flight: {
           where: {
             userId,
@@ -64,6 +65,7 @@ export default async function getTrips(userId) {
       return {
         uuid: trip.uuid,
         name: trip.name,
+        destination: trip.destination,
         start: timestamps[0],
         end: timestamps[timestamps.length - 1],
       };

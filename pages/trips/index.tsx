@@ -50,6 +50,7 @@ export default function Trips() {
                 <Link href={`/trips/${trip.uuid}`}>
                   <TripCard
                     name={trip.name}
+                    destination={trip.destination}
                     start={trip.start}
                     end={trip.end}
                   />

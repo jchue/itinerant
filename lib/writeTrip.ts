@@ -3,11 +3,11 @@ import { prismaClient, Prisma } from '@/lib/db';
 import HTTPError from './error';
 
 export default async function writeTrip(userId, trip) {
-  let { uuid, name } = trip;
+  let { uuid, name, destination } = trip;
 
   // Check required fields
-  if (!name) {
-    throw new HTTPError(400, 'name is required');
+  if (!name || !destination) {
+    throw new HTTPError(400, 'name and destination are required');
   }
 
   try {
@@ -23,6 +23,7 @@ export default async function writeTrip(userId, trip) {
         },
         data: {
           name,
+          destination,
         },
       });
 
@@ -42,11 +43,13 @@ export default async function writeTrip(userId, trip) {
       uuid,
       userId,
       name,
+      destination,
     };
 
     const tripInfo = Prisma.validator<Prisma.TripSelect>()({
       uuid: true,
       name: true,
+      destination: true,
     });
 
     const createTrip = await prismaClient.trip.create({

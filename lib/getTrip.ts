@@ -21,6 +21,7 @@ export default async function getTrip(userId, uuid) {
       select: {
         uuid: true,
         name: true,
+        destination: true,
         flight: {
           where: {
             userId,
@@ -191,6 +192,7 @@ export default async function getTrip(userId, uuid) {
   return {
     uuid: tripData.uuid,
     name: tripData.name,
+    destination: tripData.destination,
     events: groupedEvents,
     geojson,
   };

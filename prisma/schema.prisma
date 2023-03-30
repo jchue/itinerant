@@ -38,12 +38,13 @@ model Flight {
 }
 
 model Trip {
-  id     Int      @id @default(autoincrement())
-  uuid   String   @unique(map: "trip_uuid") @db.Uuid
-  name   String   @db.VarChar(255)
-  userId String   @map("user_id") @db.Uuid
-  flight Flight[]
-  stay   Stay[]
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique(map: "trip_uuid") @db.Uuid
+  name        String   @db.VarChar(255)
+  destination String?  @db.VarChar(255)
+  userId      String   @map("user_id") @db.Uuid
+  flight      Flight[]
+  stay        Stay[]
 
   @@map("trip")
 }
