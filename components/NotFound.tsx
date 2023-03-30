@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
+import SectionTag from './SectionTag';
 
 export default function NotFound() {
   const router = useRouter();
 
   return (
     <div className="pt-10 text-center">
-      <span className="block text-emerald-600">404</span>
+      <SectionTag addClass="mb-4">404</SectionTag>
       <span className="block font-bold text-4xl">Page not found</span>
 
       <p className="font-light mb-6 text-gray-500">

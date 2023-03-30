@@ -186,7 +186,16 @@ export default function StayForm({
 
         <div className="mb-4">
           <label className="block font-bold mb-1 text-xs uppercase">Name</label>
-          <LocationSearch value={location} initialValue={name} onSelect={selectLocation} addClass="w-full" />
+          <LocationSearch
+            value={location}
+            initialValue={name}
+            onSelect={selectLocation}
+            addClass="w-full"
+            osmTag={{
+              key: 'tourism',
+              value: 'hotel',
+            }}
+          />
         </div>
 
         <div className="flex gap-4 mb-6">

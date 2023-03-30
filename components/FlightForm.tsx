@@ -6,6 +6,8 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import { fetchWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
+import AirlineSelect from './AirlineSelect';
+import AirportSelect from './AirportSelect';
 import Alert from './Alert';
 import Input from './Input';
 import Loader from './Loader'
@@ -35,7 +37,7 @@ export default function FlightForm({
   const [airlineCode, setAirlineCode] = useState(initialAirlineCode);
   const [flightNumber, setFlightNumber]  = useState(initialFlightNumber);
   const [departureAirportCode, setDepartureAirportCode] = useState(initialDepartureAirportCode);
-  const [departureTimestamp, setDepartureTimstamp] = useState(initialDepartureTimestamp);
+  const [departureTimestamp, setDepartureTimestamp] = useState(initialDepartureTimestamp);
   const [departureTimezoneName, setDepartureTimezoneName] = useState(initialDepartureTimezoneName);
   const [arrivalAirportCode, setArrivalAirportCode] = useState(initialArrivalAirportCode);
   const [arrivalTimestamp, setArrivalTimestamp] = useState(initialArrivalTimestamp);
@@ -56,14 +58,6 @@ export default function FlightForm({
 
   const [arrivalDate, setArrivalDate] = arrivalTimestamp ? useState(format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'yyyy-MM-dd')) : useState(null);
   const [arrivalTime, setArrivalTime] = arrivalTimestamp ? useState(format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'HH:mm')) : useState(null);
-
-  /**
-   * Get lookups
-   */
-
-  let isLoading, airlines, airports;
-  ({ data: airlines, isLoading } = fetchWithToken('/api/airlines', session?.access_token));
-  ({ data: airports, isLoading } = fetchWithToken('/api/airports', session?.access_token));
 
   /**
    * Automatically set timezones
@@ -153,7 +147,7 @@ export default function FlightForm({
     }
   }
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <Loader />
     );
@@ -176,111 +170,50 @@ export default function FlightForm({
       }
 
       <form onSubmit={updateFlight}>
-        <div className="mb-6">
-          <label className="block font-bold mb-1 text-xs uppercase">Assigned Trip</label>
-          <TripSelect value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
-        </div>
+        <TripSelect label="Assigned Trip" value={tripUuid} onChange={e => setTripUuid(e.target.value)} addClass="mb-6" />
 
         <div className="flex gap-4 mb-6">
-          <div>
-            <label className="block font-bold mb-1 text-xs uppercase">Airline</label>
-            <select
-              value={airlineCode}
-              onChange={e => setAirlineCode(e.target.value)}
-              defaultValue=''
-              className="bg-gray-200 border-2 outline-none p-2 rounded-md
-              text-gray-700 text-sm w-full"
-              required
-            >
-              <option value=''></option>
-              {airlines.map((airline) => (
-                <option key={airline.code} value={airline.code}>
-                  {airline.name} ({airline.code})
-                </option>
-              ))}
-            </select>
+          <div className="flex-1">
+            <AirlineSelect label="Airline" value={airlineCode} onChange={e => setAirlineCode(e.target.value)} />
           </div>
-
-          <Input
-            label="Flight Number"
-            type="text"
-            size="6"
-            addClass="w-auto"
-            value={flightNumber}
-            onChange={e => setFlightNumber(e.target.value)}
-            required
-          />
+          <div className="flex-none">
+            <Input
+              label="Flight Number"
+              type="text"
+              size="6"
+              addClass="w-auto"
+              value={flightNumber}
+              onChange={e => setFlightNumber(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
         <fieldset className="mb-6">
           <legend className="font-bold mb-4">Departure</legend>
 
-          <div className="mb-4">
-            <label className="block font-bold mb-1 text-xs uppercase">Airport</label>
-            <select
-              value={departureAirportCode}
-              onChange={async e => { setDepartureAirportCode(e.target.value); setDepartureTimezoneName(await getAirportTimezone(e.target.value))}}
-              defaultValue=''
-              className="bg-gray-200 border-2 outline-none p-2 rounded-md
-              text-gray-700 text-sm w-full"
-              required
-            >
-              <option value=''></option>
-              {airports.map((airport) => (
-                <option
-                  key={airport.code}
-                  value={airport.code}
-                >
-                  {airport.code} - {airport.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <AirportSelect label="Airport" value={departureAirportCode} onChange={async e => { setDepartureAirportCode(e.target.value); setDepartureTimezoneName(await getAirportTimezone(e.target.value))}} addClass="mb-4" />
 
           <div className="flex gap-4">
             <Input label="Date" type="date" value={departureDate} onChange={e => setDepartureDate(e.target.value)} required />
 
             <Input label="Time" type="time" value={departureTime} onChange={e => setDepartureTime(e.target.value)} required />
 
-            <div>
-              <Input label="Timezone" value={departureTimezoneName} onChange={e => setDepartureTimezoneName(e.target.value)} required disabled />
-            </div>
+            <Input label="Timezone" value={departureTimezoneName} onChange={e => setDepartureTimezoneName(e.target.value)} required disabled />
           </div>
         </fieldset>
 
         <fieldset className="mb-6">
           <legend className="font-bold mb-4">Arrival</legend>
 
-          <div className="mb-4">
-            <label className="block font-bold mb-1 text-xs uppercase">Airport</label>
-            <select
-              value={arrivalAirportCode}
-              onChange={async e => { setArrivalAirportCode(e.target.value); setArrivalTimezoneName(await getAirportTimezone(e.target.value))}}
-              defaultValue=''
-              className="bg-gray-200 border-2 outline-none p-2 rounded-md
-              text-gray-700 text-sm w-full"
-              required
-            >
-              <option value=''></option>
-              {airports.map((airport) => (
-                <option
-                  key={airport.code}
-                  value={airport.code}
-                >
-                  {airport.code} - {airport.name}
-                </option>
-              ))}
-          </select>
-          </div>
+          <AirportSelect label="Airport" value={arrivalAirportCode} onChange={async e => { setArrivalAirportCode(e.target.value); setArrivalTimezoneName(await getAirportTimezone(e.target.value))}} addClass="mb-4" />
 
           <div className="flex gap-4">
             <Input label="Date" type="date" value={arrivalDate} onChange={e => setArrivalDate(e.target.value)} required />
 
             <Input label="Time" type="time" value={arrivalTime} onChange={e =>setArrivalTime(e.target.value)} required />
 
-            <div>
-              <Input label="Timezone" value={arrivalTimezoneName} onChange={e => setArrivalTimezoneName(e.target.value)} required disabled />
-            </div>
+            <Input label="Timezone" value={arrivalTimezoneName} onChange={e => setArrivalTimezoneName(e.target.value)} required disabled />
           </div>
         </fieldset>
 

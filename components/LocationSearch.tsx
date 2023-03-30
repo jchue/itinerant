@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function LocationSearch({ addClass, initialValue, onSelect }) {
-
+export default function LocationSearch({ addClass, initialValue, onSelect, osmTag = {} }) {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState(initialValue);
@@ -29,8 +28,10 @@ export default function LocationSearch({ addClass, initialValue, onSelect }) {
     }
   }, [query]);
 
+  const osmTagFilter = osmTag ? (osmTag.key && osmTag.value) ? `&osm_tag=${osmTag.key}:${osmTag.value}` : osmTag.key ? `&osm_tag=${osmTag.key}` : '' : '';
+
   async function suggest(term) {
-    const suggestions = (await axios(`https://photon.komoot.io/api/?q=${term}`)).data.features;
+    const suggestions = (await axios(`https://photon.komoot.io/api/?q=${term}${osmTagFilter}`)).data.features;
     setSuggestions(suggestions);
   }
 
