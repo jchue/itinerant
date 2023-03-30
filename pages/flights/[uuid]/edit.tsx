@@ -67,12 +67,12 @@ export default function EditFlight() {
       <FlightForm
         flightUuid={router.query.uuid}
         initialTripUuid={tripUuid}
-        initialAirlineCode={airline.code}
+        initialAirline={airline}
         initialFlightNumber={flightNumber}
-        initialDepartureAirportCode={departureAirport.code}
+        initialDepartureAirport={departureAirport}
         initialDepartureTimestamp={departureTimestamp}
         initialDepartureTimezoneName={departureTimezoneName}
-        initialArrivalAirportCode={arrivalAirport.code}
+        initialArrivalAirport={arrivalAirport}
         initialArrivalTimestamp={arrivalTimestamp}
         initialArrivalTimezoneName={arrivalTimezoneName}
         initialConfirmationNumber={confirmationNumber}

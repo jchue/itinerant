@@ -1,6 +1,6 @@
 import { fetchWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
-import Select from './Select';
+import CustomAsyncSelect from './CustomAsyncSelect';
 
 export default function AirportSelect({ label, value, onChange, addClass }) {
   // Get current session
@@ -8,28 +8,47 @@ export default function AirportSelect({ label, value, onChange, addClass }) {
   
   const { data: airports, error, isLoading } = fetchWithToken('/api/airports', session?.access_token);
 
+  function promiseOptions(inputValue) {
+    return new Promise((resolve) => {
+      const filtered = airports.filter((airport) => {
+        if (
+          airport.name.toLowerCase().includes(inputValue.toLowerCase())
+          || airport.code.toLowerCase().includes(inputValue.toLowerCase())
+          || `${airport.code.toLowerCase()} - ${airport.name.toLowerCase()}`.includes(inputValue.toLowerCase())
+        ) {
+          return true;
+        }
+        return false;
+      });
+      resolve(filtered);
+    });
+  }
+
+  function filterAirports(query) {
+    const filtered = airports.filter((airport) => {
+      if (
+        airport.name.toLowerCase().includes(query.toLowerCase())
+        || airport.code.toLowerCase().includes(query.toLowerCase())
+        || `${airport.code.toLowerCase()} - ${airport.name.toLowerCase()}`.includes(query.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    return filtered;
+  }
+
   return (
-    <Select
+    <CustomAsyncSelect
       label={label}
       value={value}
       onChange={onChange}
       addClass={addClass}
-      disabled={isLoading}
-      required
-    >
-      {isLoading ? (
-        <option>Loading...</option>
-      ) : (
-        <>
-          <option value=''></option>
-
-          {airports.map((airport) => (
-            <option key={airport.code} value={airport.code}>
-              {airport.code} - {airport.name}
-            </option>
-          ))}
-        </>
-      )}
-    </Select>
+      isLoading={isLoading}
+      filterFn={filterAirports}
+      getOptionLabel={airport => `${airport.code} - ${airport.name}`}
+      getOptionValue={airport => airport.code}
+    />
   );
 }

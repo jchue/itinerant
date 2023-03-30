@@ -4,7 +4,6 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
-import { fetchWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import AirlineSelect from './AirlineSelect';
 import AirportSelect from './AirportSelect';
@@ -17,12 +16,12 @@ import TripSelect from './TripSelect';
 export default function FlightForm({
   flightUuid,
   initialTripUuid,
-  initialAirlineCode,
+  initialAirline,
   initialFlightNumber,
-  initialDepartureAirportCode,
+  initialDepartureAirport,
   initialDepartureTimestamp,
   initialDepartureTimezoneName,
-  initialArrivalAirportCode,
+  initialArrivalAirport,
   initialArrivalTimestamp,
   initialArrivalTimezoneName,
   initialConfirmationNumber,
@@ -34,12 +33,12 @@ export default function FlightForm({
    */
 
   const [tripUuid, setTripUuid] = useState(initialTripUuid);
-  const [airlineCode, setAirlineCode] = useState(initialAirlineCode);
+  const [airline, setAirline] = useState(initialAirline);
   const [flightNumber, setFlightNumber]  = useState(initialFlightNumber);
-  const [departureAirportCode, setDepartureAirportCode] = useState(initialDepartureAirportCode);
+  const [departureAirport, setDepartureAirport] = useState(initialDepartureAirport);
   const [departureTimestamp, setDepartureTimestamp] = useState(initialDepartureTimestamp);
   const [departureTimezoneName, setDepartureTimezoneName] = useState(initialDepartureTimezoneName);
-  const [arrivalAirportCode, setArrivalAirportCode] = useState(initialArrivalAirportCode);
+  const [arrivalAirport, setArrivalAirport] = useState(initialArrivalAirport);
   const [arrivalTimestamp, setArrivalTimestamp] = useState(initialArrivalTimestamp);
   const [arrivalTimezoneName, setArrivalTimezoneName] = useState(initialArrivalTimezoneName);
   const [confirmationNumber, setConfirmationNumber] = useState(initialConfirmationNumber);
@@ -63,9 +62,8 @@ export default function FlightForm({
    * Automatically set timezones
    */
 
-  async function getAirportTimezone(airportCode) {
-    const airport = airports.find((airport) => airport.code === airportCode);
-    const { data } = await axios(`/api/timezones?lat=${airport.latitude}&lon=${airport.longitude}`);
+  async function getTimezone(latitude, longitude) {
+    const { data } = await axios(`/api/timezones?lat=${latitude}&lon=${longitude}`);
     return data[0];
   }
 
@@ -85,13 +83,13 @@ export default function FlightForm({
     // Check required fields
     if (
       !tripUuid
-      || !airlineCode
+      || !airline
       || !flightNumber
-      || !departureAirportCode
+      || !departureAirport
       || !departureDate
       || !departureTime
       || !departureTimezoneName
-      || !arrivalAirportCode
+      || !arrivalAirport
       || !arrivalDate
       || !arrivalTime
       || !arrivalTimezoneName
@@ -112,12 +110,12 @@ export default function FlightForm({
 
     const body = {
       tripUuid,
-      airlineCode,
+      airlineCode: airline.code,
       flightNumber: parseInt(flightNumber, 10),
-      departureAirportCode,
+      departureAirportCode: departureAirport.code,
       departureTimestamp: zonedTimeToUtc(`${departureDate} ${departureTime}`, departureTimezoneName),
       departureTimezoneName: departureTimezoneName,
-      arrivalAirportCode,
+      arrivalAirportCode: arrivalAirport.code,
       arrivalTimestamp: zonedTimeToUtc(`${arrivalDate} ${arrivalTime}`, arrivalTimezoneName),
       arrivalTimezoneName,
       confirmationNumber,
@@ -174,7 +172,7 @@ export default function FlightForm({
 
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
-            <AirlineSelect label="Airline" value={airlineCode} onChange={e => setAirlineCode(e.target.value)} />
+            <AirlineSelect label="Airline" value={airline} onChange={selected => setAirline(selected)} />
           </div>
           <div className="flex-none">
             <Input
@@ -192,7 +190,7 @@ export default function FlightForm({
         <fieldset className="mb-6">
           <legend className="font-bold mb-4">Departure</legend>
 
-          <AirportSelect label="Airport" value={departureAirportCode} onChange={async e => { setDepartureAirportCode(e.target.value); setDepartureTimezoneName(await getAirportTimezone(e.target.value))}} addClass="mb-4" />
+          <AirportSelect label="Airport" value={departureAirport} onChange={selected => { setDepartureAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setDepartureTimezoneName(timezone))}} addClass="mb-4" />
 
           <div className="flex gap-4">
             <Input label="Date" type="date" value={departureDate} onChange={e => setDepartureDate(e.target.value)} required />
@@ -206,7 +204,7 @@ export default function FlightForm({
         <fieldset className="mb-6">
           <legend className="font-bold mb-4">Arrival</legend>
 
-          <AirportSelect label="Airport" value={arrivalAirportCode} onChange={async e => { setArrivalAirportCode(e.target.value); setArrivalTimezoneName(await getAirportTimezone(e.target.value))}} addClass="mb-4" />
+          <AirportSelect label="Airport" value={arrivalAirport} onChange={selected => { setArrivalAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setArrivalTimezoneName(timezone))}} addClass="mb-4" />
 
           <div className="flex gap-4">
             <Input label="Date" type="date" value={arrivalDate} onChange={e => setArrivalDate(e.target.value)} required />

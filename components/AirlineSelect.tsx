@@ -1,6 +1,6 @@
 import { fetchWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
-import Select from './Select';
+import CustomAsyncSelect from './CustomAsyncSelect';
 
 export default function AirlineSelect({ label, value, onChange, addClass }) {
   // Get current session
@@ -8,28 +8,28 @@ export default function AirlineSelect({ label, value, onChange, addClass }) {
   
   const { data: airlines, error, isLoading } = fetchWithToken('/api/airlines', session?.access_token);
 
-  return (
-    <Select
-      label={label}
-      value={value}
-      onChange={onChange}
-      addClass={addClass}
-      disabled={isLoading}
-      required
-    >
-      {isLoading ? (
-        <option>Loading...</option>
-      ) : (
-        <>
-          <option value=''></option>
+  function filterAirlines(query) {
+    const filtered = airlines.filter((airline) => {
+        if ( airline.name.toLowerCase().includes(query.toLowerCase())
+        || airline.code.toLowerCase().includes(query.toLowerCase())) {
+          return true;
+        }
+        return false;
+    });
 
-          {airlines.map((airline) => (
-            <option key={airline.code} value={airline.code}>
-              {airline.name} ({airline.code})
-            </option>
-          ))}
-        </>
-      )}
-    </Select>
+    return filtered;
+  }
+
+  return (
+    <CustomAsyncSelect
+      value={value}
+      isLoading={isLoading}
+      onChange={onChange}
+      filterFn={filterAirlines}
+      getOptionLabel={airline => `${airline.name} (${airline.code})`}
+      getOptionValue={airline => airline.code}
+      addClass={addClass}
+      label={label}
+    />
   );
 }
