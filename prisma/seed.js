@@ -1,10 +1,10 @@
 const { PrismaClient } = require('@prisma/client');
-const { $fetch } = require('ohmyfetch');
 
 const prisma = new PrismaClient();
 
 async function seedAirlines() {
-  const airlinesData = await $fetch('https://api.travelpayouts.com/data/en/airlines.json');
+  const response = await fetch('https://api.travelpayouts.com/data/en/airlines.json');
+  const airlinesData = await response.json();
 
   const airlines = airlinesData.map((airline) => ({
     code: airline.code,
@@ -22,7 +22,7 @@ async function seedAirlines() {
     return 0;
   });
 
-  airlines.forEach((airline) => {
+  airlines.forEach(async (airline) => {
     try {
       await prisma.airline.upsert({
         where: {
@@ -43,7 +43,8 @@ async function seedAirlines() {
 }
 
 async function seedAirports() {
-  const data = await $fetch('https://api.travelpayouts.com/data/en/airports.json');
+  const response = await fetch('https://api.travelpayouts.com/data/en/airports.json');
+  const data = await response.json();
 
   const airportsData = data.filter((element) => element.iata_type === 'airport' && element.flightable === true);
 
@@ -67,7 +68,7 @@ async function seedAirports() {
     return 0;
   });
 
-  airports.forEach((airport) => {
+  airports.forEach(async (airport) => {
     try {
       await prisma.airport.upsert({
         where: {
