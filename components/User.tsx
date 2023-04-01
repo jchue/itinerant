@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import supabase from '@/lib/supabase';
 import Link from 'next/link';
-import 'material-icons/iconfont/material-icons.css';
+import 'material-symbols';
 
 export default function User() {
   const [user, setUser] = useState(null);
@@ -47,7 +47,7 @@ export default function User() {
 
         <span
           onClick={logout}
-          className="align-middle cursor-pointer material-icons pr-2
+          className="align-middle cursor-pointer material-symbols-sharp pr-2
           !text-xl text-emerald-500 hover:text-emerald-400"
           title="Log Out">
           logout

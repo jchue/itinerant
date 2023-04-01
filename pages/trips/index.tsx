@@ -14,7 +14,7 @@ export default function Trips() {
 
   return (
     <>
-      <header>
+      <header className="mb-6">
         <PageTitle addClass="align-middle inline-block mr-6">Trips</PageTitle>
 
         <Link href="/addtrip">
@@ -51,6 +51,7 @@ export default function Trips() {
                   <TripCard
                     name={trip.name}
                     destination={trip.destination}
+                    image={trip.image}
                     start={trip.start}
                     end={trip.end}
                   />

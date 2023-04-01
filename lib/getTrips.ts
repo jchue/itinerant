@@ -13,6 +13,7 @@ export default async function getTrips(userId) {
         uuid: true,
         name: true,
         destination: true,
+        imageUrl: true,
         flight: {
           where: {
             userId,
@@ -66,6 +67,7 @@ export default async function getTrips(userId) {
         uuid: trip.uuid,
         name: trip.name,
         destination: trip.destination,
+        image: trip.imageUrl,
         start: timestamps[0],
         end: timestamps[timestamps.length - 1],
       };

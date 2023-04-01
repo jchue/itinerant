@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import supabase from '@/lib/supabase';
 import PrimaryButton from './PrimaryButton';
 import SecondaryButton from './SecondaryButton';
-import 'material-icons/iconfont/material-icons.css';
+import 'material-symbols';
 
-export default function DeleteButton({ children, addClass, itemUuid, itemType, tripUuid, type }) {
+export default function DeleteButton({ children, title, addClass, itemUuid, itemType, tripUuid, type, inverted }) {
   const router = useRouter();
 
   const [showConfirm, setShowConfirm] = useState(false);
@@ -67,15 +67,18 @@ export default function DeleteButton({ children, addClass, itemUuid, itemType, t
       {type === 'button' ? (
         /* button */
         <SecondaryButton
+          title={title}
           addClass={`inline-flex justify-center mb-6 ${addClass}`}
           onClick={() => setShowConfirm(true)}
+          inverted={inverted}
         >
           {children}
         </SecondaryButton>
       ) : (
        /* icon */
         <button
-          className={`material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600 ${addClass}`}
+          title={title}
+          className={`material-symbols-sharp pr-2 !text-xl ${inverted ? `text-gray-400 hover:text-white` : `text-gray-500 hover:text-gray-600`} ${addClass}`}
           onClick={() => setShowConfirm(true)}
         >
           delete
@@ -84,12 +87,12 @@ export default function DeleteButton({ children, addClass, itemUuid, itemType, t
 
       {showConfirm &&
         <div
-          className="fixed flex justify-center items-center top-0 right-0 bottom-0 left-0"
+          className="fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 z-20"
         >
           {/* dialogue box */}
-          <div className="bg-white max-w-lg px-8 py-6 overflow-hidden relative rounded-xl shadow-lg z-20">
+          <div className="bg-white max-w-lg px-8 py-6 overflow-hidden relative rounded-xl shadow-lg z-30">
             <header className="mb-4">
-              <span className="align-middle inline-block material-icons pr-2 text-red-500 !text-2xl">error</span>
+              <span className="align-middle inline-block material-symbols-sharp pr-2 text-red-500 !text-2xl">error</span>
               <span className="align-middle font-bold inline-block text-md text-red-500 text-sm uppercase">Delete</span>
             </header>
             <div className="mb-6">
@@ -115,7 +118,7 @@ export default function DeleteButton({ children, addClass, itemUuid, itemType, t
           {/* scrim */}
           <div
             onClick={() => setShowConfirm(false)}
-            className="absolute bg-white opacity-80 top-0 right-0 bottom-0 left-0 z-10"
+            className="absolute bg-white opacity-80 top-0 right-0 bottom-0 left-0 z-20"
           >
           </div>
         </div>

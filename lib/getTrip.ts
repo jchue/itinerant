@@ -22,6 +22,7 @@ export default async function getTrip(userId, uuid) {
         uuid: true,
         name: true,
         destination: true,
+        imageUrl: true,
         flight: {
           where: {
             userId,
@@ -192,6 +193,7 @@ export default async function getTrip(userId, uuid) {
   return {
     uuid: tripData.uuid,
     name: tripData.name,
+    image: tripData.imageUrl,
     destination: tripData.destination,
     events: groupedEvents,
     geojson,

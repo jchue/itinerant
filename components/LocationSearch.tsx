@@ -80,11 +80,11 @@ export default function LocationSearch({ addClass, initialValue, onSelect, osmTa
             <li
               key={suggestion.properties.osm_id}
               onClick={() => select(suggestion)}
-              className="text-gray-900 cursor-pointer select-none relative
-              py-2 pl-3 pr-9 text-sm hover:bg-gray-100"
+              className="text-gray-700 cursor-pointer select-none relative
+              py-2 pl-3 pr-9 text-sm hover:bg-gray-200"
             >
               <span className="block">{suggestion.properties.name}</span>
-              <span className="block text-gray-400 text-xs">
+              <span className="block text-gray-500 text-xs">
                 ({capitalize(suggestion.properties.osm_value)}) {suggestion.properties.city ? suggestion.properties.city + ',' : ''} {suggestion.properties.state ? suggestion.properties.state + ',' : ''} {suggestion.properties.country}
               </span>
             </li>

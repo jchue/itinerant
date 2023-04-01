@@ -55,6 +55,16 @@ module.exports = {
       yellow: colors.yellow,
     },
     extend: {
+      animation: {
+        'reverse-spin': 'reverse-spin 1s linear infinite',
+      },
+      keyframes: {
+        'reverse-spin': {
+          from: {
+            transform: 'rotate(360deg)',
+          },
+        },
+      },
       boxShadow: {
         glow: '0 0 1rem rgba(0, 0, 0, 0.3)',
         'glow-lg': '0 0 1.5rem rgba(0, 0, 0, 0.3)',

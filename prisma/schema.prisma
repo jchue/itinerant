@@ -42,6 +42,7 @@ model Trip {
   uuid        String   @unique(map: "trip_uuid") @db.Uuid
   name        String   @db.VarChar(255)
   destination String?  @db.VarChar(255)
+  imageUrl    String?  @map("image_url") @db.Text
   userId      String   @map("user_id") @db.Uuid
   flight      Flight[]
   stay        Stay[]
