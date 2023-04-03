@@ -1,7 +1,7 @@
 export default function Select({ children, value, onChange, addClass, label, disabled = false, required = false }) {
   return (
     <div>
-      <label className="block font-bold mb-1 text-xs uppercase">{label}</label>
+      <label className="block mb-1 text-xs uppercase">{label}</label>
       <select
         value={value}
         onChange={onChange}

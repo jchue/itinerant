@@ -5,7 +5,7 @@ import Loader from '@/components/Loader';
 import PageTitle from '@/components/PageTitle';
 import SecondaryButton from '@/components/SecondaryButton';
 import TripCard from '@/components/TripCard';
-import 'material-icons/iconfont/material-icons.css';
+import 'material-symbols';
 
 export default function Trips() {
   const session = supabase.auth.session();
@@ -19,7 +19,7 @@ export default function Trips() {
 
         <Link href="/addtrip">
           <SecondaryButton addClass="align-middle flex inline-block items-center pr-5">
-            <span className="!leading-none material-icons !text-lg">add</span>
+            <span className="!leading-none material-symbols-sharp !text-lg">add</span>
             New
           </SecondaryButton>
         </Link>
@@ -31,13 +31,13 @@ export default function Trips() {
         ) : data.length === 0 ? (
           /* Blank state */
           <div className="p-6 rounded-lg text-center text-gray-500">
-            <span className="material-icons-outlined pr-2 !text-[200px] text-gray-200">map</span>
+            <span className="material-symbols-sharp pr-2 !text-[200px] text-gray-200">map</span>
 
             <p className="mb-4">Nothing to see here yet.</p>
 
             <Link href="/addtrip">
               <button type="button">
-                <span className="material-icons pr-2 !text-xl text-white">add</span>
+                <span className="material-symbols-sharp pr-2 !text-xl text-white">add</span>
                 <span className="mt-1">New Trip</span>
               </button>
             </Link>

@@ -42,7 +42,7 @@ module.exports = {
       },
       green: {
         50: '#EEFAF6',
-        500: '#00D092',
+        500: '#08AE7C',
         700: '#007753',
       },
       indigo: colors.indigo,

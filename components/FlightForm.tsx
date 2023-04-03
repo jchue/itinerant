@@ -9,8 +9,10 @@ import AirlineSelect from './AirlineSelect';
 import AirportSelect from './AirportSelect';
 import Alert from './Alert';
 import Input from './Input';
+import Legend from './Legend';
 import Loader from './Loader'
 import PrimaryButton from './PrimaryButton';
+import TertiaryButton from './TertiaryButton';
 import TripSelect from './TripSelect';
 
 export default function FlightForm({
@@ -153,42 +155,57 @@ export default function FlightForm({
 
   if (successMessage) {
     return (
-      <Alert type="success">
+      <Alert type="success" addClass="max-w-sm mx-auto">
         {successMessage}
       </Alert>
     );
   }
 
   return (
-    <div className="max-w-lg">
+    <div className="p-8 rounded-lg shadow">
       {errorMessage &&
-        <Alert type="error" addClass="mb-6">
+        <Alert type="error" addClass="max-w-sm mx-auto mb-6">
           {errorMessage}
         </Alert>
       }
 
       <form onSubmit={updateFlight}>
-        <TripSelect label="Assigned Trip" value={tripUuid} onChange={e => setTripUuid(e.target.value)} addClass="mb-6" />
+        <fieldset className="mb-6">
+          <div className="flex gap-4 mb-4">
+            <div className="flex-1">
+              <TripSelect label="Assigned Trip" value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
+            </div>
+            <div className="flex-none">
+              <Input
+                label="Confirmation Number"
+                type="text"
+                size="6"
+                value={confirmationNumber}
+                onChange={e => setConfirmationNumber(e.target.value)}
+              />
+            </div>
+          </div>
 
-        <div className="flex gap-4 mb-6">
-          <div className="flex-1">
-            <AirlineSelect label="Airline" value={airline} onChange={selected => setAirline(selected)} />
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <AirlineSelect label="Airline" value={airline} onChange={selected => setAirline(selected)} />
+            </div>
+            <div className="flex-none">
+              <Input
+                label="Flight Number"
+                type="text"
+                size="6"
+                addClass="w-auto"
+                value={flightNumber}
+                onChange={e => setFlightNumber(e.target.value)}
+                required
+              />
+            </div>
           </div>
-          <div className="flex-none">
-            <Input
-              label="Flight Number"
-              type="text"
-              size="6"
-              addClass="w-auto"
-              value={flightNumber}
-              onChange={e => setFlightNumber(e.target.value)}
-              required
-            />
-          </div>
-        </div>
+        </fieldset>
 
         <fieldset className="mb-6">
-          <legend className="font-bold mb-4">Departure</legend>
+          <Legend addClass="mb-4">Departure</Legend>
 
           <AirportSelect label="Airport" value={departureAirport} onChange={selected => { setDepartureAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setDepartureTimezoneName(timezone))}} addClass="mb-4" />
 
@@ -197,12 +214,12 @@ export default function FlightForm({
 
             <Input label="Time" type="time" value={departureTime} onChange={e => setDepartureTime(e.target.value)} required />
 
-            <Input label="Timezone" value={departureTimezoneName} onChange={e => setDepartureTimezoneName(e.target.value)} required disabled />
+            <Input label="Timezone" value={departureTimezoneName} onChange={e => setDepartureTimezoneName(e.target.value)} required disabled addClass="flex-1" />
           </div>
         </fieldset>
 
         <fieldset className="mb-6">
-          <legend className="font-bold mb-4">Arrival</legend>
+          <Legend addClass="mb-4">Arrival</Legend>
 
           <AirportSelect label="Airport" value={arrivalAirport} onChange={selected => { setArrivalAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setArrivalTimezoneName(timezone))}} addClass="mb-4" />
 
@@ -211,20 +228,14 @@ export default function FlightForm({
 
             <Input label="Time" type="time" value={arrivalTime} onChange={e =>setArrivalTime(e.target.value)} required />
 
-            <Input label="Timezone" value={arrivalTimezoneName} onChange={e => setArrivalTimezoneName(e.target.value)} required disabled />
+            <Input label="Timezone" value={arrivalTimezoneName} onChange={e => setArrivalTimezoneName(e.target.value)} required disabled addClass="flex-1" />
           </div>
         </fieldset>
 
-        <Input
-          label="Confirmation Number"
-          type="text"
-          size="6"
-          addClass="mb-8"
-          value={confirmationNumber}
-          onChange={e => setConfirmationNumber(e.target.value)}
-        />
-
-        <PrimaryButton type="submit">Submit</PrimaryButton>
+        <div className="text-right">
+          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+          <PrimaryButton type="submit">Submit</PrimaryButton>
+        </div>
       </form>
     </div>
   );

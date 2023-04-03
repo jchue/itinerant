@@ -52,11 +52,11 @@ export default function EditFlight() {
   }
 
   return (
-    <>
+    <div className="mx-auto max-w-screen-sm">
       <header className="mb-6">
         <Link
           href={`/flights/${router.query.uuid}`}
-          className="text-gray-300 text-sm uppercase hover:text-gray-400"
+          className="inline-block mb-4 text-gray-500 text-sm uppercase hover:text-gray-600"
         >
           &larr; Back
         </Link>
@@ -77,6 +77,6 @@ export default function EditFlight() {
         initialArrivalTimezoneName={arrivalTimezoneName}
         initialConfirmationNumber={confirmationNumber}
       />
-    </>
+    </div>
   );
 }

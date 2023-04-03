@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import 'material-symbols';
 import 'material-icons/iconfont/material-icons.css';
 
 export default function Alert({ children, addClass, transient, type }) {
   const [ visibility, setVisibility ] = useState({
-    maxHeight: '6rem',
+    maxHeight: '10rem',
     marginTop: null,
     marginBottom: null,
     opacity: 1,
@@ -33,7 +34,7 @@ export default function Alert({ children, addClass, transient, type }) {
         style={visibility}
       >
         <div className="pr-4">
-          <span className="material-icons !text-xl text-green-500">check_circle</span>
+          <span className="material-symbols-sharp !text-xl text-green-500">check_circle</span>
         </div>
         <div className="py-1">
           <div className="font-bold mb-2 text-green-700 text-sm uppercase">
@@ -54,7 +55,7 @@ export default function Alert({ children, addClass, transient, type }) {
         style={visibility}
       >
         <div className="pr-4">
-          <span className="material-icons !text-xl text-red-500">error</span>
+          <span className="material-symbols-sharp !text-xl text-red-500">error</span>
         </div>
         <div className="py-1">
           <div className="font-bold mb-2 text-red-700 text-sm uppercase">

@@ -9,7 +9,7 @@ export default function CustomAsyncSelect({ label, value, onChange, addClass, is
 
   return (
     <div>
-      <label className="block font-bold mb-1 text-xs uppercase">{label}</label>
+      <label className="block mb-1 text-xs uppercase">{label}</label>
       <AsyncSelect
         value={isLoading ? 'Loading...' : value}
         onChange={onChange}

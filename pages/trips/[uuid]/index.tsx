@@ -209,22 +209,22 @@ export default function Trip() {
                   <div
                     className="p-6 rounded-lg text-center text-gray-500"
                   >
-                    <span className="material-icons-outlined pr-2 !text-[200px] text-gray-200">map</span>
+                    <span className="material-symbols-sharp pr-2 !text-[200px] text-gray-300">map</span>
 
-                    <p className="mb-4">What a boring trip. Why don't you add a flight or stay?</p>
+                    <p className="mb-6">Nothing to see yet. Why don't you add a flight or stay?</p>
 
                     <Link href={`/trips/${router.query.uuid}/addflight`} className="mr-2">
-                      <button type="button">
-                        <span className="material-icons pr-2 !text-xl text-white">flight</span>
-                        <span className="mt-0.5">Flight</span>
-                      </button>
+                      <SecondaryButton type="button" addClass="flex items-center">
+                        <span className="material-symbols-sharp pr-2 !text-xl">flight</span>
+                        Flight
+                      </SecondaryButton>
                     </Link>
 
                     <Link href={`/trips/${router.query.uuid}/addstay`} className="ml-2">
-                      <button type="button">
-                        <span className="material-icons pr-2 !text-xl text-white">bed</span>
-                        <span className="mt-0.5">Stay</span>
-                      </button>
+                      <SecondaryButton type="button" addClass="flex items-center">
+                        <span className="material-symbols-sharp pr-2 !text-xl">bed</span>
+                        Stay
+                      </SecondaryButton>
                     </Link>
                   </div>
                 ) : (

@@ -7,6 +7,7 @@ import CitySearch from './CitySearch';
 import Input from './Input';
 import Loader from './Loader';
 import PrimaryButton from './PrimaryButton';
+import TertiaryButton from './TertiaryButton';
 
 export default function TripForm({ initialName = '', initialDestination, tripUuid }) {
   // Get current session
@@ -85,16 +86,16 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
 
   if (successMessage) {
     return (
-      <Alert type="success">
+      <Alert type="success" addClass="max-w-sm mx-auto">
         {successMessage}
       </Alert>
     );
   }
 
   return (
-    <div className="max-w-sm">
+    <div className="p-8 rounded-lg shadow">
       {errorMessage && (
-        <Alert type="error" addClass="mb-6">
+        <Alert type="error" addClass="max-w-sm mx-auto mb-6">
           {errorMessage}
         </Alert>
       )}
@@ -104,14 +105,17 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
           <Input label="Name" type="text" addClass="w-full" value={name} onChange={e => setName(e.target.value)} required />
         </div>
         <div className="mb-6">
-          <label className="block font-bold mb-1 text-xs uppercase">Primary Destination City</label>
+          <label className="block mb-1 text-xs uppercase">Primary Destination City</label>
           <CitySearch
             initialValue={destination}
             onSelect={selectDestination}
             addClass="w-full"
           />
         </div>
-        <PrimaryButton type="submit">Submit</PrimaryButton>
+        <div className="text-right">
+          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+          <PrimaryButton type="submit">Submit</PrimaryButton>
+        </div>
       </form>
     </div>
   );

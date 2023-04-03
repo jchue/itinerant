@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import 'material-icons/iconfont/material-icons.css';
+import 'material-symbols';
 
 export default function StayCard({ type, name, timestamp, timezoneName }) {
   const prefix = type === 'checkin' ? 'Check-In' : type === 'checkout' ? 'Check-Out' : '';
@@ -24,7 +24,7 @@ export default function StayCard({ type, name, timestamp, timezoneName }) {
       </div>
 
       <div className="flex-none text-center w-20">
-        <span className="material-icons !text-4xl text-slate-300">bed</span>
+        <span className="material-symbols-sharp !text-4xl text-emerald-700">bed</span>
       </div>
     </div>
   );

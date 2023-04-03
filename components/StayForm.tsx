@@ -10,6 +10,7 @@ import Input from './Input';
 import Loader from './Loader';
 import LocationSearch from './LocationSearch';
 import PrimaryButton from './PrimaryButton';
+import TertiaryButton from './TertiaryButton';
 import TripSelect from './TripSelect';
 
 export default function StayForm({
@@ -164,28 +165,33 @@ export default function StayForm({
 
   if (successMessage) {
     return (
-      <Alert type="success">
+      <Alert type="success" addClass="max-w-sm mx-auto">
         {successMessage}
       </Alert>
     );
   }
 
   return (
-    <div className="max-w-lg">
+    <div className="p-8 rounded-lg shadow">
       {errorMessage &&
-        <Alert type="error">
+        <Alert type="error" addClass="max-w-sm mx-auto mb-6">
           {errorMessage}
         </Alert>
       }
 
       <form onSubmit={updateStay}>
-        <div className="mb-6">
-          <label className="block font-bold mb-1 text-xs uppercase">Assigned Trip</label>
-          <TripSelect value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
+        <div className="flex gap-4 mb-6">
+          <div className="flex-1">
+            <label className="block mb-1 text-xs uppercase">Assigned Trip</label>
+            <TripSelect value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
+          </div>
+          <div className="flex-none">
+            <Input label="Confirmation Number" type="text" size="6" value={confirmationNumber} onChange={e => setConfirmationNumber(e.target.value)} />
+          </div>
         </div>
 
         <div className="mb-4">
-          <label className="block font-bold mb-1 text-xs uppercase">Name</label>
+          <label className="block mb-1 text-xs uppercase">Name</label>
           <LocationSearch
             value={location}
             initialValue={name}
@@ -200,16 +206,12 @@ export default function StayForm({
 
         <div className="flex gap-4 mb-6">
           <div className="grow shrink-0">
-            <Input label="Address" type="text" addClass="w-full" value={address} onChange={e => setAddress(e.target.value)} disabled />
+            <Input label="Address" type="text" value={address} onChange={e => setAddress(e.target.value)} disabled />
           </div>
 
           <div className="grow-0 shrink">
             <Input label="Timezone" value={timezoneName} onChange={e => setTimezoneName(e.target.value)} required disabled />
           </div>
-        </div>
-
-        <div className="mb-6">
-          <Input label="Confirmation Number" type="text" value={confirmationNumber} onChange={e => setConfirmationNumber(e.target.value)} />
         </div>
 
         <div className="flex gap-4 mb-6">
@@ -222,10 +224,13 @@ export default function StayForm({
           <Input label="Check-Out Date" type="date" value={checkoutDate} onChange={e => setCheckoutDate(e.target.value)} required />
 
           <Input
-            label="Check-Out Time" type="time" addClass="w-full" value={checkoutTime} onChange={e => setCheckoutTime(e.target.value)} required />
+            label="Check-Out Time" type="time" value={checkoutTime} onChange={e => setCheckoutTime(e.target.value)} required />
         </div>
 
-        <PrimaryButton type="submit">Submit</PrimaryButton>
+        <div className="text-right">
+          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+          <PrimaryButton type="submit">Submit</PrimaryButton>
+        </div>
       </form>
     </div>
   );
