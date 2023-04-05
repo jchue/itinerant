@@ -54,13 +54,6 @@ export default function EditFlight() {
   return (
     <div className="mx-auto max-w-screen-sm">
       <header className="mb-6">
-        <Link
-          href={`/flights/${router.query.uuid}`}
-          className="inline-block mb-4 text-gray-500 text-sm uppercase hover:text-gray-600"
-        >
-          &larr; Back
-        </Link>
-
         <PageTitle>Edit Flight</PageTitle>
       </header>
 

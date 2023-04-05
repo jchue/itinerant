@@ -4,6 +4,7 @@ import axios from 'axios';
 import supabase from '@/lib/supabase';
 import Alert from './Alert';
 import CitySearch from './CitySearch';
+import ConfirmationModal from './ConfirmationModal';
 import Input from './Input';
 import Loader from './Loader';
 import PrimaryButton from './PrimaryButton';
@@ -12,6 +13,13 @@ import TertiaryButton from './TertiaryButton';
 export default function TripForm({ initialName = '', initialDestination, tripUuid }) {
   // Get current session
   const session = supabase.auth.session();
+
+  const [isEdited, setIsEdited] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  /**
+   * Get any initialized props
+   */
 
   const [name, setName] = useState(initialName);
   const [destination, setDestination] = useState(initialDestination);
@@ -100,7 +108,7 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
         </Alert>
       )}
 
-      <form onSubmit={updateTrip}>
+      <form onChange={() => setIsEdited(true)} onSubmit={updateTrip}>
         <div className="mb-4">
           <Input label="Name" type="text" addClass="w-full" value={name} onChange={e => setName(e.target.value)} required />
         </div>
@@ -113,8 +121,14 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
           />
         </div>
         <div className="text-right">
-          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+          <TertiaryButton onClick={() => { isEdited ? setShowConfirm(true) : router.back() }}>Cancel</TertiaryButton>
           <PrimaryButton type="submit">Submit</PrimaryButton>
+
+          {showConfirm &&
+            <ConfirmationModal title="Discard Changes" onCancel={() => setShowConfirm(false)} onConfirm={() => router.back()}>
+              You have unsaved changes. Do you want to proceed without saving them?
+            </ConfirmationModal>
+          }
         </div>
       </form>
     </div>

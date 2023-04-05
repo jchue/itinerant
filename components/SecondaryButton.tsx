@@ -1,4 +1,4 @@
-export default function SecondaryButton({ children, addClass, onClick, title, type, inverted }) {
+export default function SecondaryButton({ children, addClass, onClick, title, type = 'button', inverted }) {
   return (
     <button
       type={type}

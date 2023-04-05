@@ -211,7 +211,7 @@ export default function Trip() {
                   >
                     <span className="material-symbols-sharp pr-2 !text-[200px] text-gray-300">map</span>
 
-                    <p className="mb-6">Nothing to see yet. Why don't you add a flight or stay?</p>
+                    <p className="mb-6">Nothing to see yet. Why don't you add a plan?</p>
 
                     <Link href={`/trips/${router.query.uuid}/addflight`} className="mr-2">
                       <SecondaryButton type="button" addClass="flex items-center">

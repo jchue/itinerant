@@ -1,4 +1,4 @@
-export default function PrimaryButton({ children, addClass, onClick, type }) {
+export default function PrimaryButton({ children, addClass, onClick, type = 'button' }) {
   return (
     <button
       type={type}

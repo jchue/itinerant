@@ -34,7 +34,7 @@ export default function FlightCard({ airline, flightNumber, departureAirport, de
               <span className="font-bold mr-4 text-emerald-700">{departureTime}</span>
               <span className="font-light text-gray-600">{departureAirport}</span>
             </div>
-            <div className="font-light -mt-1 text-gray-500 text-[0.625rem]">{departureTimezoneName}</div>
+            <div className="-mt-1 text-gray-600 text-[0.625rem]">{departureTimezoneName}</div>
           </div>
 
           {/* Arrive */}
@@ -44,7 +44,7 @@ export default function FlightCard({ airline, flightNumber, departureAirport, de
               <span className="font-bold mr-4 text-emerald-700">{arrivalTime}</span>
               <span className="font-light text-gray-600">{arrivalAirport}</span>
             </div>
-            <div className="font-light -mt-1 text-gray-500 text-[0.625rem]">{arrivalTimezoneName}</div>
+            <div className="-mt-1 text-gray-600 text-[0.625rem]">{arrivalTimezoneName}</div>
           </div>
         </div>
 

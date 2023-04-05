@@ -8,6 +8,7 @@ import supabase from '@/lib/supabase';
 import AirlineSelect from './AirlineSelect';
 import AirportSelect from './AirportSelect';
 import Alert from './Alert';
+import ConfirmationModal from './ConfirmationModal';
 import Input from './Input';
 import Legend from './Legend';
 import Loader from './Loader'
@@ -29,6 +30,9 @@ export default function FlightForm({
   initialConfirmationNumber,
 }) {
   const session = supabase.auth.session();
+
+  const [isEdited, setIsEdited] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   /**
    * Get any initialized props
@@ -169,7 +173,7 @@ export default function FlightForm({
         </Alert>
       }
 
-      <form onSubmit={updateFlight}>
+      <form onChange={() => setIsEdited(true)} onSubmit={updateFlight}>
         <fieldset className="mb-6">
           <div className="flex gap-4 mb-4">
             <div className="flex-1">
@@ -233,8 +237,14 @@ export default function FlightForm({
         </fieldset>
 
         <div className="text-right">
-          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+        <TertiaryButton onClick={() => { isEdited ? setShowConfirm(true) : router.back() }}>Cancel</TertiaryButton>
           <PrimaryButton type="submit">Submit</PrimaryButton>
+
+          {showConfirm &&
+            <ConfirmationModal title="Discard Changes" onCancel={() => setShowConfirm(false)} onConfirm={() => router.back()}>
+              You have unsaved changes. Do you want to proceed without saving them?
+            </ConfirmationModal>
+          }
         </div>
       </form>
     </div>

@@ -51,12 +51,12 @@ export default function Stay() {
   }
 
   return (
-    <>
+    <div className="max-w-screen-md mx-auto">
       <header className="mb-4">
         <div>
           <Link
             href={`/trips/${tripUuid}`}
-            className="text-gray-300 text-sm uppercase hover:text-gray-400"
+            className="inline-block mb-4 text-gray-500 text-sm uppercase hover:text-gray-600"
           >
             &larr; Trip
           </Link>
@@ -105,6 +105,6 @@ export default function Stay() {
           <span className="font-bold">{confirmationNumber}</span>
         </div>
       </main>
-    </>
+    </div>
   );
 }

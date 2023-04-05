@@ -15,7 +15,7 @@ export default function StayCard({ type, name, timestamp, timezoneName }) {
         <div className="font-bold mr-4 text-emerald-700 text-2xl">
           {time}
         </div>
-        <div className="font-light -mt-1 text-gray-500 text-[0.625rem]">
+        <div className="-mt-1 text-gray-600 text-[0.625rem]">
           {timezoneName}
         </div>
         <div className="font-light mt-6 text-emerald-700 text-xl">

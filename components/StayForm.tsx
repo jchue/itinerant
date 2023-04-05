@@ -6,6 +6,7 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import supabase from '@/lib/supabase';
 import Alert from './Alert';
+import ConfirmationModal from './ConfirmationModal';
 import Input from './Input';
 import Loader from './Loader';
 import LocationSearch from './LocationSearch';
@@ -26,6 +27,9 @@ export default function StayForm({
   initialTimezoneName
 }) {
   const session = supabase.auth.session();
+
+  const [isEdited, setIsEdited] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   /**
    * Get any initialized props
@@ -179,7 +183,7 @@ export default function StayForm({
         </Alert>
       }
 
-      <form onSubmit={updateStay}>
+      <form onChange={() => setIsEdited(true)} onSubmit={updateStay}>
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
             <label className="block mb-1 text-xs uppercase">Assigned Trip</label>
@@ -228,8 +232,14 @@ export default function StayForm({
         </div>
 
         <div className="text-right">
-          <TertiaryButton addClass="mr-4" onClick={() => router.back()}>Cancel</TertiaryButton>
+          <TertiaryButton onClick={() => { isEdited ? setShowConfirm(true) : router.back() }}>Cancel</TertiaryButton>
           <PrimaryButton type="submit">Submit</PrimaryButton>
+
+          {showConfirm &&
+            <ConfirmationModal title="Discard Changes" onCancel={() => setShowConfirm(false)} onConfirm={() => router.back()}>
+              You have unsaved changes. Do you want to proceed without saving them?
+            </ConfirmationModal>
+          }
         </div>
       </form>
     </div>

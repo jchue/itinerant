@@ -8,6 +8,7 @@ import DeleteButton from '@/components/DeleteButton';
 import Loader from '@/components/Loader';
 import NotFound from '@/components/NotFound';
 import PageTitle from '@/components/PageTitle';
+import 'material-symbols';
 
 export default function Flight() {
   const router = useRouter();
@@ -62,12 +63,12 @@ export default function Flight() {
   }
 
   return (
-    <>
+    <div className="max-w-screen-md mx-auto">
       <header className="mb-6">
         <div>
           <Link
             href={`/trips/${tripUuid}`}
-            className="text-gray-300 text-sm uppercase hover:text-gray-400"
+            className="inline-block mb-4 text-gray-500 text-sm uppercase hover:text-gray-600"
           >
             &larr; Trip
           </Link>
@@ -85,7 +86,7 @@ export default function Flight() {
           />
 
           <Link href={`/flights/${router.query.uuid}/edit`} className="float-left">
-            <span className="material-icons pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
+            <span className="material-symbols-sharp pr-2 !text-xl text-gray-500 hover:text-gray-600">edit</span>
           </Link>
         </div>
       </header>
@@ -93,6 +94,7 @@ export default function Flight() {
       <main>
         <div className="flex items-center mb-8">
 
+          <span className="material-symbols-sharp mt-8 mr-3 !text-4xl text-emerald-700">flight_takeoff</span>
           <div>
             <span className="text-gray-600 text-xs uppercase">Depart</span>
             <span className="block text-emerald-700 text-sm">{departureDate}</span>
@@ -117,6 +119,7 @@ export default function Flight() {
             </span>
           </div>
 
+          <span className="material-symbols-sharp mt-8 mr-3 !text-4xl text-emerald-700">flight_land</span>
           <div>
             <span className="text-gray-600 text-xs uppercase">Arrive</span>
             <span className="block text-emerald-700 text-sm">{arrivalDate}</span>
@@ -142,6 +145,6 @@ export default function Flight() {
           <span className="font-bold">{confirmationNumber}</span>
         </div>
       </main>
-    </>
+    </div>
   );
 }
