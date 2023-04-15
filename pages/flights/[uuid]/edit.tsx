@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import Link from 'next/link';
 import FlightForm from '@/components/FlightForm';
@@ -12,7 +12,7 @@ export default function EditFlight() {
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = fetchWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
 
   let tripUuid,
   airline,

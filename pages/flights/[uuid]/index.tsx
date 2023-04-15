@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { format, intervalToDuration } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ export default function Flight() {
   
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = fetchWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
 
   let tripUuid,
   airlineName,

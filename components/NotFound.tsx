@@ -10,7 +10,7 @@ export default function NotFound() {
       <span className="block font-bold text-4xl">Page not found</span>
 
       <p className="font-light mb-6 text-gray-500">
-        Sorry, we couldn't find the page you're looking for.
+        Sorry, we couldn&apos;t find the page you&apos;re looking for.
       </p>
       <span
         onClick={router.back}

@@ -1,4 +1,4 @@
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import CustomAsyncSelect from './CustomAsyncSelect';
 
@@ -6,7 +6,7 @@ export default function AirlineSelect({ label, value, onChange, addClass }) {
   // Get current session
   const session = supabase.auth.session();
   
-  const { data: airlines, error, isLoading } = fetchWithToken('/api/airlines', session?.access_token);
+  const { data: airlines, error, isLoading } = useApiWithToken('/api/airlines', session?.access_token);
 
   function filterAirlines(query) {
     const filtered = airlines.filter((airline) => {

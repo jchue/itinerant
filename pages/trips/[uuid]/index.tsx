@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ export default function Trip() {
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = fetchWithToken(`/api/trips/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/trips/${router.query.uuid}`, session?.access_token);
 
   const [image, setImage] = useState('');
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -223,7 +223,7 @@ export default function Trip() {
                   >
                     <span className="material-symbols-sharp pr-2 text-[200px] text-gray-300">map</span>
 
-                    <p className="mb-6">Nothing to see yet. Why don't you add a plan?</p>
+                    <p className="mb-6">Nothing to see yet. Why don&apos;t you add a plan?</p>
 
                     <Link href={`/trips/${router.query.uuid}/addflight`} className="mr-2">
                       <SecondaryButton type="button" addClass="flex items-center">

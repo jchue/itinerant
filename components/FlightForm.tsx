@@ -58,11 +58,11 @@ export default function FlightForm({
    * Calculate dates and times
    */
 
-  const [departureDate, setDepartureDate] = departureTimestamp ? useState(format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'yyyy-MM-dd')) : useState(null);
-  const [departureTime, setDepartureTime] = departureTimestamp ? useState(format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'HH:mm')) : useState(null);
+  const [departureDate, setDepartureDate] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'yyyy-MM-dd') : null);
+  const [departureTime, setDepartureTime] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'HH:mm') : null);
 
-  const [arrivalDate, setArrivalDate] = arrivalTimestamp ? useState(format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'yyyy-MM-dd')) : useState(null);
-  const [arrivalTime, setArrivalTime] = arrivalTimestamp ? useState(format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'HH:mm')) : useState(null);
+  const [arrivalDate, setArrivalDate] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'yyyy-MM-dd') : null);
+  const [arrivalTime, setArrivalTime] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'HH:mm') : null);
 
   /**
    * Automatically set timezones

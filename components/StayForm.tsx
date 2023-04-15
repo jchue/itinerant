@@ -56,11 +56,11 @@ export default function StayForm({
    * Calculate dates and times
    */
 
-  const [checkinDate, setCheckinDate] = checkinTimestamp ? useState(format(utcToZonedTime(checkinTimestamp, timezoneName), 'yyyy-MM-dd')) : useState(null);
-  const [checkinTime, setCheckinTime] = checkinTimestamp ? useState(format(utcToZonedTime(checkinTimestamp, timezoneName), 'HH:mm')) : useState(null);
+  const [checkinDate, setCheckinDate] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'yyyy-MM-dd') : null);
+  const [checkinTime, setCheckinTime] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'HH:mm') : null);
 
-  const [checkoutDate, setCheckoutDate] = checkoutTimestamp ? useState(format(utcToZonedTime(checkoutTimestamp, timezoneName), 'yyyy-MM-dd')) : useState(null);
-  const [checkoutTime, setCheckoutTime] = checkoutTimestamp ? useState(format(utcToZonedTime(checkoutTimestamp, timezoneName), 'HH:mm')) : useState(null);
+  const [checkoutDate, setCheckoutDate] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'yyyy-MM-dd') : null);
+  const [checkoutTime, setCheckoutTime] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'HH:mm') : null);
 
   /**
    * Automatically set timezone and coordinates

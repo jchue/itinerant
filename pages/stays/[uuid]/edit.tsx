@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import Link from 'next/link';
 import Loader from '@/components/Loader';
@@ -12,7 +12,7 @@ export default function EditStay() {
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = fetchWithToken(`/api/stays/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/stays/${router.query.uuid}`, session?.access_token);
 
   let tripUuid,
   name,

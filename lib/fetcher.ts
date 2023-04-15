@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-function fetchWithToken(url, token) {
+function useApiWithToken(url, token) {
 
   const fetcher = async (url, token) => {
     const res = await fetch(url, {
@@ -23,4 +23,4 @@ function fetchWithToken(url, token) {
   return { data, error, isLoading };
 }
 
-export { fetchWithToken };
+export { useApiWithToken };

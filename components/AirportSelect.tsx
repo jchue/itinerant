@@ -1,4 +1,4 @@
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import CustomAsyncSelect from './CustomAsyncSelect';
 
@@ -6,7 +6,7 @@ export default function AirportSelect({ label, value, onChange, addClass }) {
   // Get current session
   const session = supabase.auth.session();
   
-  const { data: airports, error, isLoading } = fetchWithToken('/api/airports', session?.access_token);
+  const { data: airports, error, isLoading } = useApiWithToken('/api/airports', session?.access_token);
 
   function promiseOptions(inputValue) {
     return new Promise((resolve) => {

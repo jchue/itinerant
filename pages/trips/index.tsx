@@ -1,4 +1,4 @@
-import { fetchWithToken } from '@/lib/fetcher';
+import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import Link from 'next/link';
 import Loader from '@/components/Loader';
@@ -10,7 +10,7 @@ import 'material-symbols';
 export default function Trips() {
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = fetchWithToken('/api/trips', session?.access_token);
+  const { data, error, isLoading } = useApiWithToken('/api/trips', session?.access_token);
 
   return (
     <>
