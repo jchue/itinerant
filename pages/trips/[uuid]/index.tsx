@@ -75,117 +75,129 @@ export default function Trip() {
   if (data) {
     return (
       <div className="mx-auto max-w-screen-md">
-        <Link
-          href="/trips"
-          className="inline-block mb-4 text-gray-500 text-sm uppercase hover:text-gray-600"
-        >
-          &larr; Trips
-        </Link>
+        <header className="mb-4">
 
-        <header className="flex h-72 mb-4">
+          {/* Actions */}
+          <div className="flex mb-4">
+            <Link
+              href="/trips"
+              className="flex items-center text-gray-500 text-sm uppercase hover:text-gray-600"
+            >
+              <span className="material-symbols-sharp material-symbols-extralight mr-1 text-sm">arrow_back</span>
+              <span>Trips</span>
+            </Link>
 
-          {/* Content container */}
-          <div className="bg-emerald-700 flex flex-col py-6 pl-6 rounded-l-2xl w-6/12">
-
-            {/* Content */}
-            <div className="flex-1 flex">
-
-              {/* Trip information */}
-              <div className="flex-1">
-                <PageTitle addClass="mb-2 text-white">{data.name}</PageTitle>
-                <span className="block text-gray-400 text-sm">{data.destination}</span>
-              </div>
-
-              {/* Trip actions */}
-              <div className="pr-2 pl-3">
-                <Link href={`/trips/${router.query.uuid}/edit`} title="Edit trip attributes" className="block">
-                  <span className="material-symbols-sharp !text-xl text-gray-400 hover:text-white">edit</span>
-                </Link>
-                
-                <DeleteButton
-                  title="Delete trip"
-                  itemType="trip"
-                  itemUuid={router.query.uuid}
-                  inverted
-                />
-              </div>
+            <div className="flex-1 flex justify-end">
+              <DeleteButton
+                title="Delete trip"
+                itemType="trip"
+                itemUuid={router.query.uuid}
+                addClass="flex items-center text-gray-500 text-sm uppercase hover:text-gray-600"
+              >
+                <span className="material-symbols-sharp material-symbols-extralight mr-1 text-xl">delete</span>
+                <span>Delete</span>
+              </DeleteButton>
             </div>
-
-            {/* Buttons */}
-            <div>
-              <div className="inline relative">
-                <SecondaryButton inverted onClick={() => setAddMenuVisible(!addMenuVisible)}>
-                  Add Plan
-                </SecondaryButton>
-
-                {addMenuVisible &&
-                  <ul
-                    className="inline-block bg-white py-2 absolute rounded
-                    shadow-lg text-left top-8 right-0 z-10 w-max"
-                  >
-                    <li>
-                      <Link
-                        href={`/trips/${router.query.uuid}/addflight`}
-                        className="block pl-4 pr-6 py-1 hover:bg-gray-200"
-                      >
-                        <span className="material-symbols-sharp pr-2 !text-xl text-gray-600">flight</span>
-                        <span className="inline-block align-top mt-1.5 text-gray-700 text-sm">Flight</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href={{
-                          pathname: '/trips/[uuid]/addstay',
-                          query: { uuid: router.query.uuid },
-                        }}
-                        className="block pl-4 pr-6 py-1 hover:bg-gray-200"
-                      >
-                        <span className="material-symbols-sharp pr-2 !text-xl text-gray-600">bed</span>
-                        <span className="inline-block align-top mt-1 text-gray-700 text-sm z-10">Stay</span>
-                      </Link>
-                    </li>
-                  </ul>
-                }
-              </div>
-
-              {addMenuVisible &&
-                /* Scrim */
-                <div
-                  onClick={() => setAddMenuVisible(!addMenuVisible)}
-                  className="absolute top-0 right-0 bottom-0 left-0"
-                >
-                </div>
-              }
-            </div>  
           </div>
 
-          {/* Image */}
-          <div className="relative group overflow-hidden rounded-r-2xl w-6/12">
-            {/* Scrim */}
-            {isImageLoading ? (
-              <div className="absolute bg-white/80 flex items-center justify-center inset-0 z-10 cursor-pointer transition-opacity">
-                <span className="animate-reverse-spin material-symbols-sharp !text-[50px] text-gray-600">sync</span>
-              </div>
-            ) : (
-              <div className="absolute bg-white/25 flex items-center justify-center inset-0 z-10 opacity-0 transition-opacity group-hover:opacity-100">
-                <span title="Get new image" className="bg-white cursor-pointer rounded-full p-4 material-symbols-sharp !text-[40px] text-gray-600 transition-shadow hover:shadow hover:shadow-white/75" onClick={refreshImage}>reset_image</span>
-              </div>
-            )}
+          <div className="flex h-72 mb-4">
 
-            {image ? (
-              <Image
-                src={`${image}&q=85&w=720&fm=jpg&fit=max&crop=entropy`}
-                alt=""
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'center' }}
-                quality="80"
-                className="z-0"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                <span className="material-symbols-sharp !text-[100px] text-gray-300">location_city</span>
+            {/* Content container */}
+            <div className="bg-emerald-700 flex flex-col py-6 pl-6 rounded-l-2xl w-6/12">
+
+              {/* Content */}
+              <div className="flex-1 flex">
+
+                {/* Trip information */}
+                <div className="flex-1">
+                  <h1 className="leading-none mb-2 text-[2.5rem] text-white uppercase">{data.name}</h1>
+                  <span className="block text-gray-400 text-sm">{data.destination}</span>
+                </div>
+
+                {/* Edit */}
+                <div className="px-2">
+                  <Link href={`/trips/${router.query.uuid}/edit`} title="Edit trip attributes" className="group flex place-content-center h-8 w-8">
+                    <span className="material-symbols-sharp text-xl text-gray-400 group-hover:text-white">edit</span>
+                  </Link>
+                </div>
               </div>
-            )}
+
+              {/* Buttons */}
+              <div>
+                <div className="inline relative">
+                  <SecondaryButton inverted onClick={() => setAddMenuVisible(!addMenuVisible)}>
+                    Add Plan
+                  </SecondaryButton>
+
+                  {addMenuVisible &&
+                    <ul
+                      className="inline-block bg-white py-2 absolute rounded
+                      shadow-lg text-left top-8 right-0 z-10 w-max"
+                    >
+                      <li>
+                        <Link
+                          href={`/trips/${router.query.uuid}/addflight`}
+                          className="block pl-4 pr-6 py-1 hover:bg-gray-200"
+                        >
+                          <span className="material-symbols-sharp pr-2 text-xl text-gray-600">flight</span>
+                          <span className="inline-block align-top mt-1.5 text-gray-700 text-sm">Flight</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href={{
+                            pathname: '/trips/[uuid]/addstay',
+                            query: { uuid: router.query.uuid },
+                          }}
+                          className="block pl-4 pr-6 py-1 hover:bg-gray-200"
+                        >
+                          <span className="material-symbols-sharp pr-2 text-xl text-gray-600">bed</span>
+                          <span className="inline-block align-top mt-1 text-gray-700 text-sm z-10">Stay</span>
+                        </Link>
+                      </li>
+                    </ul>
+                  }
+                </div>
+
+                {addMenuVisible &&
+                  /* Scrim */
+                  <div
+                    onClick={() => setAddMenuVisible(!addMenuVisible)}
+                    className="absolute top-0 right-0 bottom-0 left-0"
+                  >
+                  </div>
+                }
+              </div>  
+            </div>
+
+            {/* Image */}
+            <div className="relative group overflow-hidden rounded-r-2xl w-6/12">
+              {/* Scrim */}
+              {isImageLoading ? (
+                <div className="absolute bg-white/80 flex items-center justify-center inset-0 z-10 cursor-pointer transition-opacity">
+                  <span className="animate-reverse-spin material-symbols-sharp text-[50px] text-gray-600">sync</span>
+                </div>
+              ) : (
+                <div className="absolute bg-white/25 flex items-center justify-center inset-0 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span title="Get new image" className="bg-white cursor-pointer rounded-full p-4 material-symbols-sharp text-[40px] text-gray-600 transition-shadow hover:shadow hover:shadow-white/75" onClick={refreshImage}>reset_image</span>
+                </div>
+              )}
+
+              {image ? (
+                <Image
+                  src={`${image}&q=85&w=720&fm=jpg&fit=max&crop=entropy`}
+                  alt=""
+                  fill
+                  style={{ objectFit: 'cover', objectPosition: 'center' }}
+                  quality="80"
+                  className="z-0"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                  <span className="material-symbols-sharp text-[100px] text-gray-300">location_city</span>
+                </div>
+              )}
+            </div>
           </div>
         </header>
       
@@ -209,21 +221,21 @@ export default function Trip() {
                   <div
                     className="p-6 rounded-lg text-center text-gray-500"
                   >
-                    <span className="material-symbols-sharp pr-2 !text-[200px] text-gray-300">map</span>
+                    <span className="material-symbols-sharp pr-2 text-[200px] text-gray-300">map</span>
 
                     <p className="mb-6">Nothing to see yet. Why don't you add a plan?</p>
 
                     <Link href={`/trips/${router.query.uuid}/addflight`} className="mr-2">
                       <SecondaryButton type="button" addClass="flex items-center">
-                        <span className="material-symbols-sharp pr-2 !text-xl">flight</span>
-                        Flight
+                        <span className="material-symbols-sharp pr-2 text-xl">flight</span>
+                        <span>Flight</span>
                       </SecondaryButton>
                     </Link>
 
                     <Link href={`/trips/${router.query.uuid}/addstay`} className="ml-2">
                       <SecondaryButton type="button" addClass="flex items-center">
-                        <span className="material-symbols-sharp pr-2 !text-xl">bed</span>
-                        Stay
+                        <span className="material-symbols-sharp pr-2 text-xl">bed</span>
+                        <span>Stay</span>
                       </SecondaryButton>
                     </Link>
                   </div>

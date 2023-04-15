@@ -1,10 +1,13 @@
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
+import { Inter } from 'next/font/google';
 import { motion, AnimatePresence } from 'framer-motion'
 import supabase from '@/lib/supabase';
 import Layout from '@/components/layout';
 import '@/styles/globals.css';
 import '@/styles/maps.css';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps, router }: AppProps) {
   const session = supabase.auth.session();
@@ -39,7 +42,9 @@ export default function App({ Component, pageProps, router }: AppProps) {
         animate="in"
         initial="out"
         exit="out">
-          <Component {...pageProps} />
+          <main className={inter.className}>
+            <Component {...pageProps} />
+          </main>
         </motion.div>
       </AnimatePresence>
     </Layout>

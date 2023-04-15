@@ -55,8 +55,9 @@ export default function Layout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <header className="bg-white shadow-sm sticky top-0 z-20">
-        <div className="container flex items-center mx-auto p-4">
+        <div className="container flex items-center mx-auto px-8 py-4">
           <div className="flex-1">
             <Link href="/" className="font-bold text-lg">Itinerant</Link>
           </div>

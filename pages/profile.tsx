@@ -6,6 +6,7 @@ import Input from '@/components/Input';
 import Loader from '@/components/Loader';
 import PageTitle from '@/components/PageTitle';
 import PrimaryButton from '@/components/PrimaryButton';
+import SecondaryButton from '@/components/SecondaryButton';
 
 export default function Profile() {
   const user = supabase.auth.user();
@@ -161,7 +162,11 @@ export default function Profile() {
             <PrimaryButton type="submit">Change Password</PrimaryButton>
           </form>
 
-          <DeleteButton type="button" itemType="user" addClass="mb-6">Delete Account</DeleteButton>
+          <DeleteButton title="Delete account" itemType="user" addClass="mb-6">
+            <SecondaryButton>
+              Delete Account
+            </SecondaryButton>
+          </DeleteButton>
         </>
       )}
     </div>

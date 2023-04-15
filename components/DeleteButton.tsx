@@ -5,7 +5,7 @@ import PrimaryButton from './PrimaryButton';
 import SecondaryButton from './SecondaryButton';
 import 'material-symbols';
 
-export default function DeleteButton({ children, title, addClass, itemUuid, itemType, tripUuid, type, inverted }) {
+export default function DeleteButton({ children, title, addClass = '', itemUuid, itemType, tripUuid, type, inverted }) {
   const router = useRouter();
 
   const [showConfirm, setShowConfirm] = useState(false);
@@ -63,27 +63,10 @@ export default function DeleteButton({ children, title, addClass, itemUuid, item
   }
 
   return (
-    <div className="inline">
-      {type === 'button' ? (
-        /* button */
-        <SecondaryButton
-          title={title}
-          addClass={`inline-flex justify-center mb-6 ${addClass}`}
-          onClick={() => setShowConfirm(true)}
-          inverted={inverted}
-        >
-          {children}
-        </SecondaryButton>
-      ) : (
-       /* icon */
-        <button
-          title={title}
-          className={`material-symbols-sharp pr-2 !text-xl ${inverted ? `text-gray-400 hover:text-white` : `text-gray-500 hover:text-gray-600`} ${addClass}`}
-          onClick={() => setShowConfirm(true)}
-        >
-          delete
-        </button>
-      )}
+    <>
+      <div className={`inline-block cursor-pointer ${addClass}`} title={title} onClick={() => setShowConfirm(true)}>
+        {children}
+      </div>
 
       {showConfirm &&
         <div
@@ -92,7 +75,7 @@ export default function DeleteButton({ children, title, addClass, itemUuid, item
           {/* dialogue box */}
           <div className="bg-white max-w-lg px-8 py-6 overflow-hidden relative rounded-xl shadow-lg z-30">
             <header className="mb-4">
-              <span className="align-middle inline-block material-symbols-sharp pr-2 text-red-500 !text-2xl">error</span>
+              <span className="align-middle inline-block material-symbols-sharp pr-2 text-red-500 text-2xl">error</span>
               <span className="align-middle font-bold inline-block text-md text-red-500 text-sm uppercase">Delete</span>
             </header>
             <div className="mb-6">
@@ -123,6 +106,6 @@ export default function DeleteButton({ children, title, addClass, itemUuid, item
           </div>
         </div>
       }
-    </div>
+    </>
   );
 }
