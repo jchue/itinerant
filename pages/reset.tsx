@@ -13,7 +13,7 @@ export default function Reset() {
 
   const [email, setEmail] = useState('');
 
-  async function reset(e) {
+  async function reset(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -50,7 +50,7 @@ export default function Reset() {
           }
 
           <form onSubmit={reset}>
-            <Input type="email" label="Email" addClass="mb-6" value={email} onChange={e => setEmail(e.target.value)} required />
+            <Input type="email" label="Email" addClass="mb-6" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
 
             <PrimaryButton type="submit">Reset</PrimaryButton>
           </form>

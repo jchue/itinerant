@@ -1,5 +1,7 @@
 class HTTPError extends Error {
-  constructor(code = 500, ...params) {
+  code: number;
+
+  constructor(code = 500, ...params: any[]) {
     super(...params);
     this.code = code;
     this.name = 'HTTPError';

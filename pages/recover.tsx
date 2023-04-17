@@ -16,14 +16,14 @@ export default function Recover() {
 
   const [password, setPassword] = useState('');
 
-  async function updatePassword(e) {
+  async function updatePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
       setLoading(true);
       setErrorMessage('');
   
-      const { error } = await supabase.auth.api.updateUser(router.query.access_token.toString(), {
+      const { error } = await supabase.auth.api.updateUser(router.query.access_token?.toString() || '', {
         password,
       });
   
@@ -49,7 +49,7 @@ export default function Recover() {
             {successMessage}
           </Alert>
       
-          <PrimaryButton onClick={() => router.push('/')} href="/">Continue</PrimaryButton>
+          <PrimaryButton onClick={() => router.push('/')}>Continue</PrimaryButton>
         </>
       ) : (
         <>
@@ -60,7 +60,7 @@ export default function Recover() {
           }
 
           <form onSubmit={updatePassword}>
-            <Input type="password" label="New Password" addClass="mb-6" value={password} onChange={e => setPassword(e.target.value)} required />
+            <Input type="password" label="New Password" addClass="mb-6" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required />
 
             <PrimaryButton type="submit">Submit</PrimaryButton>
           </form>

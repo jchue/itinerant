@@ -1,4 +1,6 @@
-export default function Select({ children, value, onChange, addClass, label, disabled = false, required = false }) {
+import { ReactNode } from 'react';
+
+export default function Select({ children, value, onChange, addClass, label, disabled = false, required = false }: { children: ReactNode, value: any, onChange: any, addClass?: string, label: string, disabled?: boolean, required?: boolean }) {
   return (
     <div>
       <label className="block mb-1 text-xs uppercase">{label}</label>

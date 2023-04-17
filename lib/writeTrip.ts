@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { prismaClient, Prisma } from '@/lib/db';
+import { Trip } from '@prisma/client';
 import HTTPError from './error';
 
-export default async function writeTrip(userId, trip) {
+export default async function writeTrip(userId: string, trip: Trip) {
   let { uuid, name, destination } = trip;
 
   // Check required fields

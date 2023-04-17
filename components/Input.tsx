@@ -1,4 +1,4 @@
-export default function Input({ value, onChange, addClass, label, type = 'text', size = 20, disabled = false, required = false }) {
+export default function Input({ value, onChange, addClass, label, type = 'text', size = 20, disabled = false, required = false }: { value?: string, onChange: any, addClass?: string, label: string, type?: string, size?: number, disabled?: boolean, required?: boolean }) {
   return (
     <div className={addClass}>
       <label className="block mb-1 text-xs uppercase">{label}</label>

@@ -14,7 +14,7 @@ export default function Stay() {
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken(`/api/stays/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/stays/${router.query.uuid}`, session?.access_token || '');
 
   let tripUuid,
   name,
@@ -68,7 +68,7 @@ export default function Stay() {
             <DeleteButton
               title="Delete stay"
               itemType="stay"
-              itemUuid={router.query.uuid}
+              itemUuid={typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid }
               tripUuid={tripUuid}
               addClass="flex items-center mr-4 text-gray-500 text-sm uppercase hover:text-gray-600"
             >
@@ -86,16 +86,18 @@ export default function Stay() {
           </div>
         </div>
 
-        <div className="flex items-center mb-2">
+        <div className="flex items-stretch mb-2">
 
           {/* Badge */}
           <div className="bg-emerald-700 mr-1.5 rounded-l-lg">
             <span className="material-symbols-sharp p-2 text-5xl text-white">bed</span>
           </div>
 
-          <h1 className="bg-emerald-700 font-bold leading-none mr-2 p-2 rounded-r-lg text-2xl text-white uppercase">
-            {name}
-          </h1>
+          <div className="flex items-center bg-emerald-700 px-3 py-2 rounded-r-lg">
+            <h1 className="font-bold leading-none text-2xl text-white uppercase">
+              {name}
+            </h1>
+          </div>
 
         </div>
 

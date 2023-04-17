@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import supabase from '@/lib/supabase';
+import { User as UserType } from '@supabase/supabase-js';
 import Link from 'next/link';
 import 'material-symbols';
 
 export default function User() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const router = useRouter();
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { prismaClient } from '@/lib/db';
+import { DateTime } from '@/additional';
 
-export default async function getTrips(userId) {
+export default async function getTrips(userId: string) {
   let trips = [];
 
   try {
@@ -40,28 +41,29 @@ export default async function getTrips(userId) {
 
     trips = tripsData.map((trip) => {
       /* Find first and last timestamp */
-      const timestamps = [];
+      // TODO: Currently falling back to new Date() b/c timestamp cannot be null
+      const timestamps: Array<DateTime> = [];
       trip.flight.forEach((flight) => {
         timestamps.push({
-          timestamp: flight.departureTimestamp,
+          timestamp: flight.departureTimestamp || new Date(),
           timezoneName: flight.departureTimezoneName || 'Etc/UTC',
         });
         timestamps.push({
-          timestamp: flight.arrivalTimestamp,
+          timestamp: flight.arrivalTimestamp || new Date(),
           timezoneName: flight.arrivalTimezoneName || 'Etc/UTC',
         });
       });
       trip.stay.forEach((stay) => {
         timestamps.push({
-          timestamp: stay.checkinTimestamp,
+          timestamp: stay.checkinTimestamp || new Date(),
           timezoneName: stay.timezoneName || 'Etc/UTC',
         });
         timestamps.push({
-          timestamp: stay.checkoutTimestamp,
+          timestamp: stay.checkoutTimestamp || new Date(),
           timezoneName: stay.timezoneName || 'Etc/UTC',
         });
       });
-      timestamps.sort((a, b) => a.timestamp - b.timestamp);
+      timestamps.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
       return {
         uuid: trip.uuid,

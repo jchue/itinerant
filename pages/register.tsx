@@ -8,17 +8,17 @@ import PrimaryButton from '@/components/PrimaryButton';
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
 
-  async function register(e) {
+  async function register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
-      setErrorMessage(null);
+      setErrorMessage(undefined);
       setLoading(true);
   
       // Check required fields
@@ -45,7 +45,7 @@ export default function Register() {
       if (error) throw error;
   
       setSuccessMessage('Please check your email for a verification link.');
-    } catch (error) {
+    } catch (error: any) {
       setErrorMessage(error.message);
     } finally {
       setLoading(false);
@@ -71,13 +71,13 @@ export default function Register() {
           }
 
           <form onSubmit={register} className="p-10 rounded-lg shadow-lg">
-            <Input type="email" label="Email" addClass="mb-4 w-full" value={email} onChange={e => setEmail(e.target.value)} required />
+            <Input type="email" label="Email" addClass="mb-4 w-full" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
             <Input
               type="password"
               label="Password"
               addClass="mb-6 w-full"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               required
             />
 

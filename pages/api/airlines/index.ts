@@ -1,6 +1,7 @@
 import { prismaClient, Prisma } from '@/lib/db';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const airlineInfo = Prisma.validator<Prisma.AirlineSelect>()({
     code: true,
     name: true,

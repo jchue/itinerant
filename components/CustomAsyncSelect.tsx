@@ -1,7 +1,7 @@
 import AsyncSelect from 'react-select/async';
 
-export default function CustomAsyncSelect({ label, value, onChange, addClass, isLoading, filterFn, getOptionLabel, getOptionValue }) {
-  function loadOptions(inputValue, callback) {
+export default function CustomAsyncSelect({ label, value, onChange, addClass, isLoading, filterFn, getOptionLabel, getOptionValue }: { label: string, value: any, onChange: any, addClass?: string, isLoading: boolean, filterFn: any, getOptionLabel: any, getOptionValue: any }) {
+  function loadOptions(inputValue: string, callback: any) {
     setTimeout(() => {
       callback(filterFn(inputValue));
     }, 500);
@@ -13,7 +13,7 @@ export default function CustomAsyncSelect({ label, value, onChange, addClass, is
       <AsyncSelect
         value={isLoading ? 'Loading...' : value}
         onChange={onChange}
-        disabled={isLoading}
+        isDisabled={isLoading}
         required
         unstyled
         classNames={{
@@ -27,10 +27,9 @@ export default function CustomAsyncSelect({ label, value, onChange, addClass, is
         }}
         loadOptions={loadOptions}
         cacheOptions
-        components={{ LoadingIndicator: null }}
+        components={{ LoadingIndicator: undefined }}
         getOptionLabel={getOptionLabel}
         getOptionValue={getOptionValue}
-        isDisabled={isLoading}
         isLoading={isLoading}
         noOptionsMessage={() => 'Type to search'}
         placeholder={isLoading ? 'Loading...' : 'Select...'}

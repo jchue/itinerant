@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
-import Link from 'next/link';
 import Loader from '@/components/Loader';
 import NotFound from '@/components/NotFound';
 import PageTitle from '@/components/PageTitle';
@@ -9,10 +8,11 @@ import StayForm from '@/components/StayForm';
 
 export default function EditStay() {
   const router = useRouter();
+  const stayUuid = typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid || '';
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken(`/api/stays/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/stays/${router.query.uuid}`, session?.access_token || '');
 
   let tripUuid,
   name,
@@ -55,7 +55,7 @@ export default function EditStay() {
       </header>
 
       <StayForm
-        stayUuid={router.query.uuid}
+        stayUuid={stayUuid}
         initialTripUuid={tripUuid}
         initialName={name}
         initialAddress={address}

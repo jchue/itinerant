@@ -29,7 +29,7 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -45,7 +45,7 @@ function LoginForm() {
       setSuccessMessage('Login successful!');
 
       return router.push(nextPath.current);
-    } catch (error) {
+    } catch (error: any) {
       setErrorMessage(error.message);
   
       return null;
@@ -77,8 +77,8 @@ function LoginForm() {
       )}
 
       <form onSubmit={handleSubmit} className="p-10 rounded-lg shadow">
-        <Input type="email" label="Email" addClass="mb-4 w-full" value={email} onChange={e => setEmail(e.target.value)} required />
-        <Input type="password" label="Password" addClass="mb-6 w-full" value={password} onChange={e => setPassword(e.target.value)} required />
+        <Input type="email" label="Email" addClass="mb-4 w-full" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
+        <Input type="password" label="Password" addClass="mb-6 w-full" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required />
 
         <div className="flex items-center">
           <Link href="/reset" className="flex-1 mr-4 text-emerald-500 text-xs hover:text-emerald-400">

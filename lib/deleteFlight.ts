@@ -1,7 +1,7 @@
 import { prismaClient } from './db';
 import HTTPError from './error';
 
-export default async function deleteFlight(userId, flight) {
+export default async function deleteFlight(userId: string, flight: { uuid: string }) {
   const { uuid } = flight;
 
   try {

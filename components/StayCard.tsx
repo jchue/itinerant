@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import 'material-symbols';
 
-export default function StayCard({ type, name, timestamp, timezoneName }) {
+export default function StayCard({ type, name, timestamp, timezoneName }: { type: string, name: string, timestamp: Date, timezoneName: string }) {
   const prefix = type === 'checkin' ? 'Check-In' : type === 'checkout' ? 'Check-Out' : '';
   const time = format(utcToZonedTime(timestamp, timezoneName), 'p');
 

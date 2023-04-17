@@ -24,7 +24,18 @@ export default function StayForm({
   initialConfirmationNumber,
   initialCheckinTimestamp,
   initialCheckoutTimestamp,
-  initialTimezoneName
+  initialTimezoneName,
+}: {
+  stayUuid?: string,
+  initialTripUuid: string,
+  initialName?: string,
+  initialAddress?: string,
+  initialLatitude?: number,
+  initialLongitude?: number,
+  initialConfirmationNumber?: string,
+  initialCheckinTimestamp?: Date,
+  initialCheckoutTimestamp?: Date,
+  initialTimezoneName?: string,
 }) {
   const session = supabase.auth.session();
 
@@ -43,7 +54,7 @@ export default function StayForm({
   const [confirmationNumber, setConfirmationNumber] = useState(initialConfirmationNumber);
   const [checkinTimestamp, setCheckinTimestamp] = useState(initialCheckinTimestamp);
   const [checkoutTimestamp, setCheckoutTimestamp] = useState(initialCheckoutTimestamp);
-  const [timezoneName, setTimezoneName] = useState(initialTimezoneName);
+  const [timezoneName, setTimezoneName] = useState(initialTimezoneName || 'Etc/UTC');
 
   const [location, setLocation] = useState();
 
@@ -56,22 +67,22 @@ export default function StayForm({
    * Calculate dates and times
    */
 
-  const [checkinDate, setCheckinDate] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'yyyy-MM-dd') : null);
-  const [checkinTime, setCheckinTime] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'HH:mm') : null);
+  const [checkinDate, setCheckinDate] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'yyyy-MM-dd') : undefined);
+  const [checkinTime, setCheckinTime] = useState(checkinTimestamp ? format(utcToZonedTime(checkinTimestamp, timezoneName), 'HH:mm') : undefined);
 
-  const [checkoutDate, setCheckoutDate] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'yyyy-MM-dd') : null);
-  const [checkoutTime, setCheckoutTime] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'HH:mm') : null);
+  const [checkoutDate, setCheckoutDate] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'yyyy-MM-dd') : undefined);
+  const [checkoutTime, setCheckoutTime] = useState(checkoutTimestamp ? format(utcToZonedTime(checkoutTimestamp, timezoneName), 'HH:mm') : undefined);
 
   /**
    * Automatically set timezone and coordinates
    */
 
-  async function getTimezone(latitude, longitude) {
+  async function getTimezone(latitude: number, longitude: number) {
     const { data } = await axios(`/api/timezones?lat=${latitude}&lon=${longitude}`);
     return data[0];
   }
 
-  async function selectLocation(selected) {
+  async function selectLocation(selected: any) {
     setLocation(selected);
 
     if (selected) {
@@ -106,7 +117,7 @@ export default function StayForm({
    * Handle form
    */
 
-  async function updateStay(e) {
+  async function updateStay(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // Check required fields
@@ -137,7 +148,7 @@ export default function StayForm({
       timezoneName,
     };
 
-    const headers = { Authorization: `Bearer ${session.access_token}` };
+    const headers = { Authorization: `Bearer ${session?.access_token}` };
 
     let nextPath = null;
 
@@ -186,18 +197,16 @@ export default function StayForm({
       <form onChange={() => setIsEdited(true)} onSubmit={updateStay}>
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
-            <label className="block mb-1 text-xs uppercase">Assigned Trip</label>
-            <TripSelect value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
+            <TripSelect label="Assigned Trip" value={tripUuid} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTripUuid(e.target.value)} />
           </div>
           <div className="flex-none">
-            <Input label="Confirmation Number" type="text" size="6" value={confirmationNumber} onChange={e => setConfirmationNumber(e.target.value)} />
+            <Input label="Confirmation Number" type="text" size={6} value={confirmationNumber} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmationNumber(e.target.value)} />
           </div>
         </div>
 
         <div className="mb-4">
           <label className="block mb-1 text-xs uppercase">Name</label>
           <LocationSearch
-            value={location}
             initialValue={name}
             onSelect={selectLocation}
             addClass="w-full"
@@ -210,25 +219,25 @@ export default function StayForm({
 
         <div className="flex gap-4 mb-6">
           <div className="grow shrink-0">
-            <Input label="Address" type="text" value={address} onChange={e => setAddress(e.target.value)} disabled />
+            <Input label="Address" type="text" value={address} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)} disabled />
           </div>
 
           <div className="grow-0 shrink">
-            <Input label="Timezone" value={timezoneName} onChange={e => setTimezoneName(e.target.value)} required disabled />
+            <Input label="Timezone" value={timezoneName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTimezoneName(e.target.value)} required disabled />
           </div>
         </div>
 
         <div className="flex gap-4 mb-6">
-          <Input label="Check-In Date" type="date" value={checkinDate} onChange={e => setCheckinDate(e.target.value)} required />
+          <Input label="Check-In Date" type="date" value={checkinDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckinDate(e.target.value)} required />
 
-          <Input label="Check-In Time" type="time" value={checkinTime} onChange={e => setCheckinTime(e.target.value)} required />
+          <Input label="Check-In Time" type="time" value={checkinTime} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckinTime(e.target.value)} required />
         </div>
 
         <div className="flex gap-4 mb-8">
-          <Input label="Check-Out Date" type="date" value={checkoutDate} onChange={e => setCheckoutDate(e.target.value)} required />
+          <Input label="Check-Out Date" type="date" value={checkoutDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckoutDate(e.target.value)} required />
 
           <Input
-            label="Check-Out Time" type="time" value={checkoutTime} onChange={e => setCheckoutTime(e.target.value)} required />
+            label="Check-Out Time" type="time" value={checkoutTime} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckoutTime(e.target.value)} required />
         </div>
 
         <div className="text-right">

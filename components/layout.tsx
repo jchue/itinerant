@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useHashParam } from '@/lib/useHashParam';
 import Head from 'next/head';
@@ -6,19 +6,22 @@ import Link from 'next/link';
 import Alert from './Alert';
 import User from './User';
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const hashParam = useHashParam();
 
-  const [alert, setAlert] = useState({
-    message: null,
-    type: null,
+  const [alert, setAlert] = useState<{
+    message?: string,
+    type?: string,
+  }>({
+    message: undefined,
+    type: undefined,
   });
 
   useEffect(() => {
     if (hashParam) {
       if (hashParam.type === 'recovery') {
-        return router.push(`/recover?access_token=${hashParam.access_token}`);
+         router.push(`/recover?access_token=${hashParam.access_token}`);
       }
 
       if (hashParam.type === 'signup') {
@@ -26,7 +29,6 @@ export default function Layout({ children }) {
           message: 'Acount activated!',
           type: 'success',
         });
-        return;
       }
 
       if (hashParam.type === 'email_change') {
@@ -34,7 +36,6 @@ export default function Layout({ children }) {
           message: 'Email changed successfully!',
           type: 'success',
         });
-        return;
       }
 
       if (hashParam.message) {
@@ -42,7 +43,6 @@ export default function Layout({ children }) {
           message: hashParam.message,
           type: 'info',
         });
-        return;
       }
     }
   }, [hashParam]);
@@ -70,7 +70,7 @@ export default function Layout({ children }) {
         {alert.message &&
           <Alert
             type={alert.type}
-            transient="true"
+            transient={true}
             addClass="mb-6 overflow-hidden"
           >
             {alert.message}

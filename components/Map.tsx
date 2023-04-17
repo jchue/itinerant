@@ -2,14 +2,14 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-export default function Map({ geojson }) {
-  const map = useRef(null);
-  const mapContainer = useRef(null);
+export default function Map({ geojson }: { geojson: any }) {
+  const map = useRef<any>(null);
+  const mapContainer = useRef<HTMLDivElement | null>(null);
 
   function createMap() {
     map.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: process.env.NEXT_PUBLIC_MAP_STYLE,
+      container: mapContainer.current || '',
+      style: process.env.NEXT_PUBLIC_MAP_STYLE || '',
     });
   
     map.current.on('load', () => {
@@ -33,7 +33,7 @@ export default function Map({ geojson }) {
   
       if (geojson.features.length) {
       // Center map to include all features
-        const coordinates = geojson.features.map((feature) => feature.geometry.coordinates);
+        const coordinates = geojson.features.map((feature: any) => feature.geometry.coordinates);
     
         map.current.fitBounds(coordinates, {
           padding: 32,
@@ -44,7 +44,7 @@ export default function Map({ geojson }) {
          * open a popup at the location of the feature
          * with description HTML from its properties.
          */
-        map.current.on('click', 'places', (e) => {
+        map.current.on('click', 'places', (e: any) => {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const { title, description } = e.features[0].properties;
     

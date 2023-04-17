@@ -1,4 +1,6 @@
-export default function PrimaryButton({ children, addClass, onClick, type = 'button' }) {
+import { ReactNode } from 'react';
+
+export default function PrimaryButton({ children, addClass, onClick, type = 'button' }: { children: ReactNode, addClass?: string, onClick?: React.MouseEventHandler<HTMLButtonElement>, type?: 'button' | 'submit' | 'reset' }) {
   return (
     <button
       type={type}

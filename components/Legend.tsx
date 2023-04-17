@@ -1,6 +1,6 @@
-import SectionTag from './SectionTag';
+import { ReactNode } from 'react';
 
-export default function Legend({ children, addClass }) {
+export default function Legend({ children, addClass }: { children: ReactNode, addClass?: string }) {
   return (
     <legend className={`block relative text-center w-full ${addClass}`}>
       <span className="bg-white font-bold px-4 text-emerald-700 text-xs uppercase">{children}</span>

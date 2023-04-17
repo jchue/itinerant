@@ -1,11 +1,12 @@
 import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
+import { DateTime } from '@/additional';
 
-function formatDate(timestamp, timezoneName) {
+function formatDate(timestamp: Date, timezoneName: string) {
   return format(utcToZonedTime(timestamp, timezoneName), 'MMM do');
 }
 
-export default function tripRange(start, end) {
+export default function tripRange(start?: DateTime, end?: DateTime): string {
   if (start && end) {
     const startDate = formatDate(start.timestamp, start.timezoneName);
     const endDate = formatDate(end.timestamp, end.timezoneName);
@@ -32,5 +33,5 @@ export default function tripRange(start, end) {
     return `${endDate}`;
   }
 
-  return null;
+  return '';
 }

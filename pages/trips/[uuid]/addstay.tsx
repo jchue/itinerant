@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import PageTitle from '@/components/PageTitle';
 import StayForm from '@/components/StayForm';
 
 export default function AddStay() {
   const router = useRouter();
+  const tripUuid = typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid || '';
 
   return (
     <div className="mx-auto max-w-screen-sm">
@@ -12,7 +12,7 @@ export default function AddStay() {
         <PageTitle>New Stay</PageTitle>
       </header>
 
-      <StayForm initialTripUuid={router.query.uuid} />
+      <StayForm initialTripUuid={tripUuid} />
     </div>
   );
 }

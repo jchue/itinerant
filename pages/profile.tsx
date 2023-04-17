@@ -12,19 +12,19 @@ export default function Profile() {
   const user = supabase.auth.user();
 
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState();
-  const [successMessage, setSuccessMessage] = useState();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [successMessage, setSuccessMessage] = useState<string>();
 
-  const [email, setEmail] = useState(null);
-  const [currentPassword, setCurrentPassword] = useState(null);
-  const [newPassword, setNewPassword] = useState(null);
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState(null);
+  const [email, setEmail] = useState<string>();
+  const [currentPassword, setCurrentPassword] = useState<string>();
+  const [newPassword, setNewPassword] = useState<string>();
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>();
 
   useEffect(() => {
     setEmail(user?.email);
   }, []);
 
-  async function updateProfile(e) {
+  async function updateProfile(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -55,11 +55,11 @@ export default function Profile() {
     }
   }
 
-  async function changePassword(e) {
+  async function changePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
-      setErrorMessage(null);
+      setErrorMessage(undefined);
       setLoading(true);
   
       // Check required fields
@@ -82,7 +82,7 @@ export default function Profile() {
       if (error) throw new Error('Oops. Something went wrong.');
   
       setSuccessMessage('Password updated!');
-    } catch (error) {
+    } catch (error: any) {
       setErrorMessage(error.message);
     } finally {
       setLoading(false);
@@ -127,7 +127,7 @@ export default function Profile() {
           }
 
           <form onSubmit={updateProfile} className="mb-12">
-            <Input label="Email" type="email" addClass="mb-6" value={email} onChange={e => setEmail(e.target.value)} required />
+            <Input label="Email" type="email" addClass="mb-6" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
 
             <PrimaryButton type="submit">Update Email</PrimaryButton>
           </form>
@@ -138,7 +138,7 @@ export default function Profile() {
               type="password"
               addClass="mb-4"
               value={currentPassword}
-              onChange={e => setCurrentPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
               required
             />
 
@@ -147,7 +147,7 @@ export default function Profile() {
               type="password"
               addClass="mb-4"
               value={newPassword}
-              onChange={e => setNewPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
               required
             />
             <Input
@@ -155,7 +155,7 @@ export default function Profile() {
               type="password"
               addClass="mb-6"
               value={newPasswordConfirm}
-              onChange={e => setNewPasswordConfirm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPasswordConfirm(e.target.value)}
               required
             />
 

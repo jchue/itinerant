@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import FlightForm from '@/components/FlightForm';
 import PageTitle from '@/components/PageTitle';
 
 export default function AddFlight() {
   const router = useRouter();
+  const tripUuid = typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid || '';
 
   return (
     <div className="mx-auto max-w-screen-sm">
@@ -12,7 +12,7 @@ export default function AddFlight() {
         <PageTitle>New Flight</PageTitle>
       </header>
 
-      <FlightForm initialTripUuid={router.query.uuid} />
+      <FlightForm initialTripUuid={tripUuid} />
     </div>
   );
 }

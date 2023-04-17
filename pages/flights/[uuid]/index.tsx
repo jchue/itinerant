@@ -12,10 +12,11 @@ import 'material-symbols';
 
 export default function Flight() {
   const router = useRouter();
+  const flightUuid = typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid || '';
   
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/flights/${router.query.uuid}`, session?.access_token || '');
 
   let tripUuid,
   airlineName,
@@ -29,6 +30,11 @@ export default function Flight() {
   arrivalTime,
   arrivalTimezoneName,
   duration,
+  years,
+  months,
+  days,
+  hours,
+  minutes,
   confirmationNumber;
 
   if (data) {
@@ -47,6 +53,11 @@ export default function Flight() {
       start: new Date(data.departureTimestamp),
       end: new Date(data.arrivalTimestamp),
     });
+    years = duration.years && duration.years > 0 ? duration.years + 'y' : '';
+    months = duration.months && duration.months > 0 ? duration.months + 'm' : '';
+    days = duration.days && duration.days > 0 ? duration.days + 'd' : '';
+    hours = duration.hours && duration.hours > 0 ? duration.hours + 'h' : '';
+    minutes = duration.minutes && duration.minutes > 0 ? duration.minutes + 'm' : '';
     confirmationNumber = data.confirmationNumber;
   }
 
@@ -80,7 +91,7 @@ export default function Flight() {
             <DeleteButton
               title="Delete flight"
               itemType="flight"
-              itemUuid={router.query.uuid}
+              itemUuid={flightUuid}
               tripUuid={tripUuid}
               addClass="flex items-center mr-4 text-gray-500 text-sm uppercase hover:text-gray-600"
             >
@@ -160,7 +171,7 @@ export default function Flight() {
           {/* Duration */}
           <div className="flex-1 mt-8 mx-6 relative text-center">
             <span className="relative inline-block bg-white font-light px-2 text-gray-500 text-sm z-10">
-              {duration.years ? duration.years + 'y' : ''} {duration.months ? duration.months + 'm' : ''} {duration.days ? duration.days + 'd' : ''} {duration.hours ? duration.hours + 'h' : ''} {duration.minutes ? duration.minutes + 'm' : ''}
+              {years} {months} {days} {hours} {minutes}
             </span>
 
             <div className="border-t border-dotted border-gray-500 absolute inset-x-0 inset-y-1/2"></div>

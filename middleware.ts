@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
 import supabase from '@/lib/supabase';
+import { NextResponse } from 'next/server';
 
 export const config = {
   matcher: ['/api/trips/:function*', '/api/flights/:function*', '/api/stays/:function*'],
 };
 
-export async function middleware(req) {
-  const authHeader: string = req.headers.get('authorization');
-  const token: string = authHeader ? authHeader.split('Bearer ')[1] : null;
+export async function middleware(req: NextResponse) {
+  const authHeader: string = req.headers.get('authorization') || '';
+  const token: string = authHeader ? authHeader.split('Bearer ')[1] : '';
 
   try {
     if (!token) throw new Error();
@@ -19,7 +19,7 @@ export async function middleware(req) {
 
     // Clone the request headers and set a new user header
     const requestHeaders = new Headers(req.headers)
-    requestHeaders.set('userid', user.id)
+    requestHeaders.set('userid', user?.id || '')
 
     const res = NextResponse.next({
       request: {

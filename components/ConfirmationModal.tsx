@@ -1,8 +1,9 @@
+import { ReactNode } from 'react';
 import PrimaryButton from './PrimaryButton';
 import TertiaryButton from './TertiaryButton';
 import 'material-symbols';
 
-export default function ConfirmationModal({ children, title, addClass, onCancel, onConfirm }) {
+export default function ConfirmationModal({ children, title, addClass, onCancel, onConfirm }: { children: ReactNode, title?: string, addClass?: string, onCancel: any, onConfirm: any }) {
   return (
     <div
       className="fixed flex justify-center items-center top-0 right-0 bottom-0 left-0 z-20"

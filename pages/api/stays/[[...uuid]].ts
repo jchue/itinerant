@@ -1,10 +1,11 @@
-import HTTPError from '@/lib/error';
 import deleteStay from '@/lib/deleteStay';
 import getStay from '@/lib/getStay';
 import writeStay from '@/lib/writeStay';
+import { NextApiRequest, NextApiResponse } from 'next';
+import HTTPError from '@/lib/error';
 
-export default async function hander(req, res) {
-  const userId = req.headers.userid;
+export default async function hander(req: NextApiRequest, res: NextApiResponse) {
+  const userId = typeof req.headers.userid === 'object' ? req.headers.userid[0] : req.headers.userid || '';
   let uuid = req.query.uuid ? req.query.uuid[0] : null;
 
   try {
@@ -45,7 +46,7 @@ export default async function hander(req, res) {
 
       if (!trip) throw new HTTPError(404, 'Not Found');
 
-      return res.status(204).send();
+      return res.status(204).send(null);
     }
 
     if (req.method === 'DELETE') {
@@ -59,7 +60,7 @@ export default async function hander(req, res) {
 
       if (!stay) throw new HTTPError(404, 'Not Found');
 
-      return res.status(204).send();
+      return res.status(204).send(null);
     }
   } catch (error) {
     console.error(error);

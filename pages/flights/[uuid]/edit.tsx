@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
-import Link from 'next/link';
 import FlightForm from '@/components/FlightForm';
 import Loader from '@/components/Loader';
 import NotFound from '@/components/NotFound';
@@ -9,10 +8,11 @@ import PageTitle from '@/components/PageTitle';
 
 export default function EditFlight() {
   const router = useRouter();
+  const flightUuid = typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid || '';
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken(`/api/flights/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/flights/${flightUuid}`, session?.access_token || '');
 
   let tripUuid,
   airline,
@@ -58,7 +58,7 @@ export default function EditFlight() {
       </header>
 
       <FlightForm
-        flightUuid={router.query.uuid}
+        flightUuid={flightUuid}
         initialTripUuid={tripUuid}
         initialAirline={airline}
         initialFlightNumber={flightNumber}

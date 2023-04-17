@@ -1,8 +1,9 @@
 import tripRange from '@/lib/tripRange';
+import { DateTime } from '@/additional';
 import Image from 'next/image';
 import 'material-symbols';
 
-export default function TripCard({ name, destination, image, start, end }) {
+export default function TripCard({ name, destination, image, start, end }: { name: string, destination: string | null, image: string | null, start?: DateTime, end?: DateTime}) {
   return (
     <div
       className="block cursor-pointer font-sans rounded-lg shadow hover:shadow-lg transition-shadow"

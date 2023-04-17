@@ -1,7 +1,7 @@
 import { prismaClient } from './db';
 import HTTPError from './error';
 
-export default async function deleteStay(userId, stay) {
+export default async function deleteStay(userId: string, stay: { uuid: string }) {
   const { uuid } = stay;
 
   try {

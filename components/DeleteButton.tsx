@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useRouter } from 'next/router';
 import supabase from '@/lib/supabase';
+import { Url } from 'next/dist/shared/lib/router/router';
 import PrimaryButton from './PrimaryButton';
-import SecondaryButton from './SecondaryButton';
 import 'material-symbols';
 
-export default function DeleteButton({ children, title, addClass = '', itemUuid, itemType, tripUuid, type, inverted }) {
+export default function DeleteButton({ children, title, addClass = '', itemUuid, itemType, tripUuid }: { children: ReactNode, title?: string, addClass?: string, itemUuid?: string, itemType: string, tripUuid?: string }) {
   const router = useRouter();
 
   const [showConfirm, setShowConfirm] = useState(false);
@@ -29,9 +29,9 @@ export default function DeleteButton({ children, title, addClass = '', itemUuid,
 
     setShowConfirm(false);
 
-    const headers = { Authorization: `Bearer ${session.access_token}` };
+    const headers = { Authorization: `Bearer ${session?.access_token}` };
 
-    let nextPath = null;
+    let nextPath: Url = '';
 
     try {
       switch (itemType) {
@@ -49,7 +49,7 @@ export default function DeleteButton({ children, title, addClass = '', itemUuid,
           break;
         case 'user':
           await supabase.auth.signOut();
-          await fetch(`/api/users/${user.id}`, { method: 'delete', headers });
+          await fetch(`/api/users/${user?.id}`, { method: 'delete', headers });
           nextPath = '/login';
           break;
         default:

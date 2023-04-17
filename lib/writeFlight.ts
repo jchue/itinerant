@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import tzData from 'geo-tz/data/index.json';
 import { prismaClient } from '@/lib/db';
+import { Flight } from '@/additional';
 import HTTPError from './error';
 
-export default async function writeFlight(userId, flight) {
+export default async function writeFlight(userId: string, flight: Flight) {
   interface Airline {
     code: string,
     name: string,
@@ -37,7 +38,7 @@ export default async function writeFlight(userId, flight) {
     arrivalAirportCode: string,
     arrivalTimestamp: Date,
     arrivalTimezoneName: string,
-    confirmationNumber: string,
+    confirmationNumber: string | null,
   } = flight;
 
   // Check required fields
@@ -94,7 +95,7 @@ export default async function writeFlight(userId, flight) {
         data: {
           tripId: trip.id,
           airlineCode,
-          flightNumber: parseInt(flightNumber, 10) || undefined,
+          flightNumber,
           departureAirportCode,
           departureTimestamp,
           departureTimezoneName,
@@ -124,7 +125,7 @@ export default async function writeFlight(userId, flight) {
         tripId: trip.id,
         userId,
         airlineCode,
-        flightNumber: parseInt(flightNumber, 10) || undefined,
+        flightNumber,
         departureAirportCode,
         departureTimestamp,
         departureTimezoneName,

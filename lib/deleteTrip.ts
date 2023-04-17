@@ -1,7 +1,7 @@
 import { prismaClient } from './db';
 import HTTPError from './error';
 
-export default async function deleteTrip(userId, trip) {
+export default async function deleteTrip(userId: string, trip: { uuid: string }) {
   const { uuid } = trip;
 
   try {

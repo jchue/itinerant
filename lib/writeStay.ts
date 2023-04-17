@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import tzData from 'geo-tz/data/index.json';
 import { prismaClient } from '@/lib/db';
+import { Stay } from '@/additional';
+// TODO: Resolve Decimal
+import { Decimal } from '@prisma/client/runtime';
 import HTTPError from './error';
 
-export default async function writeStay(userId, stay) {
+export default async function writeStay(userId: string, stay: Stay) {
   let {
     uuid,
     tripUuid,
@@ -19,10 +22,10 @@ export default async function writeStay(userId, stay) {
     uuid: string,
     tripUuid: string,
     name: string,
-    address: string,
-    latitude: number,
-    longitude: number,
-    confirmationNumber: string,
+    address: string | null,
+    latitude: Decimal | null,
+    longitude: Decimal | null,
+    confirmationNumber: string | null,
     checkinTimestamp: Date,
     checkoutTimestamp: Date,
     timezoneName: string,

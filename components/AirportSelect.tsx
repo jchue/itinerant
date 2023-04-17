@@ -1,16 +1,17 @@
 import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
+import { Airport } from '@prisma/client';
 import CustomAsyncSelect from './CustomAsyncSelect';
 
-export default function AirportSelect({ label, value, onChange, addClass }) {
+export default function AirportSelect({ label, value, onChange, addClass }: { label: string, value?: Airport, onChange: any, addClass: string }) {
   // Get current session
   const session = supabase.auth.session();
   
-  const { data: airports, error, isLoading } = useApiWithToken('/api/airports', session?.access_token);
+  const { data: airports, error, isLoading } = useApiWithToken('/api/airports', session?.access_token || '');
 
-  function promiseOptions(inputValue) {
+  function promiseOptions(inputValue: string) {
     return new Promise((resolve) => {
-      const filtered = airports.filter((airport) => {
+      const filtered = airports.filter((airport: Airport) => {
         if (
           airport.name.toLowerCase().includes(inputValue.toLowerCase())
           || airport.code.toLowerCase().includes(inputValue.toLowerCase())
@@ -24,8 +25,8 @@ export default function AirportSelect({ label, value, onChange, addClass }) {
     });
   }
 
-  function filterAirports(query) {
-    const filtered = airports.filter((airport) => {
+  function filterAirports(query: string) {
+    const filtered = airports.filter((airport: Airport) => {
       if (
         airport.name.toLowerCase().includes(query.toLowerCase())
         || airport.code.toLowerCase().includes(query.toLowerCase())
@@ -47,8 +48,8 @@ export default function AirportSelect({ label, value, onChange, addClass }) {
       addClass={addClass}
       isLoading={isLoading}
       filterFn={filterAirports}
-      getOptionLabel={airport => `${airport.code} - ${airport.name}`}
-      getOptionValue={airport => airport.code}
+      getOptionLabel={(airport: Airport) => `${airport.code} - ${airport.name}`}
+      getOptionValue={(airport: Airport) => airport.code}
     />
   );
 }

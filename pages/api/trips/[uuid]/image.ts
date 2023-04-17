@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { prismaClient } from '@/lib/db';
+import { NextApiRequest, NextApiResponse } from 'next';
 import HTTPError from '@/lib/error';
 
 /**
@@ -10,9 +11,9 @@ const imgSet = 25;
 const orientation = 'landscape';
 const size = 'raw';
 
-export default async function handler(req, res) {
-  const userId = req.headers.userid;
-  const { uuid } = req.query;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const userId = typeof req.headers.userid === 'object' ? req.headers.userid[0] : req.headers.userid || '';
+  const uuid = typeof req.query.uuid === 'object' ? req.query.uuid[0] : req.query.uuid || '';
 
   try {
     /**
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
         },
       });
 
-      destination = tripData?.destination;
+      destination = tripData?.destination || '';
     } catch (error) {
       throw new HTTPError(404, 'Not Found');
     }
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
       });
 
       image = data.results[imgIndex].urls[size];
-    } catch (error) {
+    } catch (error: any) {
       throw error.cause || error.response.data;
     }
 

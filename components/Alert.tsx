@@ -1,27 +1,27 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import 'material-symbols';
 import 'material-icons/iconfont/material-icons.css';
 
-export default function Alert({ children, addClass, transient, type }) {
-  const [ visibility, setVisibility ] = useState({
+export default function Alert({ children, addClass, transient = false, type }: { children: ReactNode, addClass?: string, transient?: boolean, type?: string }) {
+  const [ visibility, setVisibility ] = useState<React.CSSProperties>({
     maxHeight: '10rem',
-    marginTop: null,
-    marginBottom: null,
+    marginTop: undefined,
+    marginBottom: undefined,
     opacity: 1,
-    paddingTop: null,
-    paddingBottom: null,
+    paddingTop: undefined,
+    paddingBottom: undefined,
   });
 
   useEffect(() => {
     if (transient) {
       setTimeout(() => {
         setVisibility({
-          maxHeight: 0,
-          marginTop: 0,
-          marginBottom: 0,
+          maxHeight: '0',
+          marginTop: '0',
+          marginBottom: '0',
           opacity: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
+          paddingTop: '0',
+          paddingBottom: '0',
         });
       }, 5000);
     }
@@ -69,21 +69,20 @@ export default function Alert({ children, addClass, transient, type }) {
     );
   }
 
-  if (type === 'info') {
-    return (
-      <div
-        className={`bg-blue-50 flex px-5 py-4 rounded-md transition-all duration-1000 ${addClass}`}
-        style={visibility}
-      >
-        <div className="pr-4">
-          <span className="material-icons !text-xl text-blue-500">info</span>
-        </div>
-        <div className="py-1">
-          <div className="text-blue-700 text-sm">
-            {children}
-          </div>
+  /* Default to info */
+  return (
+    <div
+      className={`bg-blue-50 flex px-5 py-4 rounded-md transition-all duration-1000 ${addClass}`}
+      style={visibility}
+    >
+      <div className="pr-4">
+        <span className="material-icons !text-xl text-blue-500">info</span>
+      </div>
+      <div className="py-1">
+        <div className="text-blue-700 text-sm">
+          {children}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

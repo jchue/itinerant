@@ -1,4 +1,6 @@
-export default function TertiaryButton({ children, addClass, onClick, title, type = 'button' }) {
+import { ReactNode } from 'react';
+
+export default function TertiaryButton({ children, addClass, onClick, title, type = 'button' }: { children: ReactNode, addClass?: string, onClick: any, title?: string, type?: 'button' | 'submit' | 'reset' }) {
   return (
     <button
       type={type}

@@ -1,7 +1,7 @@
 import { prismaClient } from './db';
 import HTTPError from './error';
 
-export default async function getStay(userId, uuid) {
+export default async function getStay(userId: string, uuid: string) {
   try {
     /**
      * Using findFirst() to be able to enforce user ID,

@@ -1,4 +1,6 @@
-export default function SecondaryButton({ children, addClass, onClick, title, type = 'button', inverted }) {
+import { ReactNode } from 'react';
+
+export default function SecondaryButton({ children, addClass, onClick, title, type = 'button', inverted }: { children: ReactNode, addClass?: string, onClick?: any, title?: string, type?: 'button' | 'submit' | 'reset', inverted?: boolean }) {
   return (
     <button
       type={type}

@@ -1,5 +1,6 @@
 import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
+import { Trip } from '@/additional';
 import Link from 'next/link';
 import Loader from '@/components/Loader';
 import PageTitle from '@/components/PageTitle';
@@ -10,7 +11,7 @@ import 'material-symbols';
 export default function Trips() {
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken('/api/trips', session?.access_token);
+  const { data, error, isLoading } = useApiWithToken('/api/trips', session?.access_token || '');
 
   return (
     <>
@@ -45,7 +46,7 @@ export default function Trips() {
         ) : (
           /* Trips list */
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {data.map((trip) => (
+            {data.map((trip: Trip) => (
               <li key={trip.uuid}>
                 <Link href={`/trips/${trip.uuid}`}>
                   <TripCard

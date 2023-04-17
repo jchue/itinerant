@@ -3,7 +3,7 @@ import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import { prismaClient } from './db';
 import HTTPError from './error';
 
-export default async function getTrip(userId, uuid) {
+export default async function getTrip(userId: string, uuid: string) {
   let tripData = null;
 
   try {
@@ -65,6 +65,7 @@ export default async function getTrip(userId, uuid) {
           select: {
             uuid: true,
             name: true,
+            address: true,
             latitude: true,
             longitude: true,
             checkinTimestamp: true,
@@ -83,8 +84,8 @@ export default async function getTrip(userId, uuid) {
   }
 
   // Arrange trip items into distinct events and GeoJSON features
-  const events = [];
-  const features = [];
+  const events: any[] = [];
+  const features: any[] = [];
   tripData.flight.forEach((flight) => {
     events.push({
       uuid: flight.uuid,
@@ -106,11 +107,11 @@ export default async function getTrip(userId, uuid) {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [flight.departureAirport.longitude, flight.departureAirport.latitude],
+          coordinates: [flight.departureAirport?.longitude, flight.departureAirport?.latitude],
         },
         properties: {
-          title: flight.departureAirport.code,
-          description: flight.departureAirport.name,
+          title: flight.departureAirport?.code,
+          description: flight.departureAirport?.name,
           icon: 'airport_15',
         },
       },
@@ -118,11 +119,11 @@ export default async function getTrip(userId, uuid) {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [flight.arrivalAirport.longitude, flight.arrivalAirport.latitude],
+          coordinates: [flight.arrivalAirport?.longitude, flight.arrivalAirport?.latitude],
         },
         properties: {
-          title: flight.arrivalAirport.code,
-          description: flight.arrivalAirport.name,
+          title: flight.arrivalAirport?.code,
+          description: flight.arrivalAirport?.name,
           icon: 'airport_15',
         },
       },

@@ -10,7 +10,7 @@ import Loader from './Loader';
 import PrimaryButton from './PrimaryButton';
 import TertiaryButton from './TertiaryButton';
 
-export default function TripForm({ initialName = '', initialDestination, tripUuid }) {
+export default function TripForm({ initialName = '', initialDestination, tripUuid }: { initialName?: string, initialDestination?: string, tripUuid?: string }) {
   // Get current session
   const session = supabase.auth.session();
 
@@ -24,7 +24,7 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
   const [name, setName] = useState(initialName);
   const [destination, setDestination] = useState(initialDestination);
 
-  async function selectDestination(selected) {
+  async function selectDestination(selected: any) {
     if (selected) {
       const city = selected.properties.name ? `${selected.properties.name}` : '';
       const state = selected.properties.state ? `, ${selected.properties.state}` : '';
@@ -44,7 +44,7 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
    * Handle form
    */
 
-  async function updateTrip(e) {
+  async function updateTrip(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // Check required fields
@@ -61,7 +61,7 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
     };
   
     const headers = {
-      Authorization: `Bearer ${session.access_token}`,
+      Authorization: `Bearer ${session?.access_token}`,
     };
   
     let nextPath = null;
@@ -110,7 +110,7 @@ export default function TripForm({ initialName = '', initialDestination, tripUui
 
       <form onChange={() => setIsEdited(true)} onSubmit={updateTrip}>
         <div className="mb-4">
-          <Input label="Name" type="text" addClass="w-full" value={name} onChange={e => setName(e.target.value)} required />
+          <Input label="Name" type="text" addClass="w-full" value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} required />
         </div>
         <div className="mb-6">
           <label className="block mb-1 text-xs uppercase">Primary Destination City</label>

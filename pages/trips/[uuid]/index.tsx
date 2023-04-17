@@ -13,7 +13,6 @@ import IconButton from '@/components/IconButton';
 import Loader from '@/components/Loader';
 import Map from '@/components/Map';
 import NotFound from '@/components/NotFound';
-import PageTitle from '@/components/PageTitle';
 import SecondaryButton from '@/components/SecondaryButton';
 import SectionTag from '@/components/SectionTag';
 import StayCard from '@/components/StayCard';
@@ -29,7 +28,7 @@ export default function Trip() {
 
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken(`/api/trips/${router.query.uuid}`, session?.access_token);
+  const { data, error, isLoading } = useApiWithToken(`/api/trips/${router.query.uuid}`, session?.access_token || '');
 
   const [image, setImage] = useState('');
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -91,7 +90,7 @@ export default function Trip() {
               <DeleteButton
                 title="Delete trip"
                 itemType="trip"
-                itemUuid={router.query.uuid}
+                itemUuid={typeof router.query.uuid === 'object' ? router.query.uuid[0] : router.query.uuid}
                 addClass="flex items-center text-gray-500 text-sm uppercase hover:text-gray-600"
               >
                 <span className="material-symbols-sharp material-symbols-extralight mr-1 text-xl">delete</span>
@@ -241,24 +240,24 @@ export default function Trip() {
                   </div>
                 ) : (
                   <ul>
-                    {Object.entries(data.events).map(([date, group]) => (
+                    {Object.entries(data.events).map(([date, group]: [string, any]) => (
                       <li key={date}>
                         <SectionTag>
                           {format(utcToZonedTime(date, group[0].indexTimezoneName), 'EEEE, LLLL d, yyyy')}
                         </SectionTag>
 
                         <ul>
-                          {group.map((event) => (
+                          {group.map((event: any) => (
                             <li key={event.uuid} className="my-8">
                               {event.type === 'flight' &&
                                 <Link href={`/flights/${event.uuid}`}>
                                   <FlightCard
                                     airline={event.airline}
                                     flightNumber={event.flightNumber}
-                                    departureAirport={event.departureAirport.code}
+                                    departureAirportCode={event.departureAirport.code}
                                     departureTimestamp={event.departureTimestamp}
                                     departureTimezoneName={event.departureTimezoneName}
-                                    arrivalAirport={event.arrivalAirport.code}
+                                    arrivalAirportCode={event.arrivalAirport.code}
                                     arrivalTimestamp={event.arrivalTimestamp}
                                     arrivalTimezoneName={event.arrivalTimezoneName}
                                   />
@@ -269,7 +268,6 @@ export default function Trip() {
                                   <StayCard
                                     type={event.type}
                                     name={event.name}
-                                    address={event.address}
                                     timestamp={event.indexTimestamp}
                                     timezoneName={event.indexTimezoneName}
                                   />

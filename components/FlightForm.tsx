@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import zonedTimeToUtc from 'date-fns-tz/zonedTimeToUtc';
 import supabase from '@/lib/supabase';
+import { Airline, Airport } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime';
 import AirlineSelect from './AirlineSelect';
 import AirportSelect from './AirportSelect';
 import Alert from './Alert';
@@ -28,6 +30,18 @@ export default function FlightForm({
   initialArrivalTimestamp,
   initialArrivalTimezoneName,
   initialConfirmationNumber,
+}: {
+  flightUuid?: string,
+  initialTripUuid: string,
+  initialAirline?: Airline,
+  initialFlightNumber?: number,
+  initialDepartureAirport?: Airport,
+  initialDepartureTimestamp?: Date,
+  initialDepartureTimezoneName?: string,
+  initialArrivalAirport?: Airport,
+  initialArrivalTimestamp?: Date,
+  initialArrivalTimezoneName?: string,
+  initialConfirmationNumber?: string,
 }) {
   const session = supabase.auth.session();
 
@@ -40,13 +54,13 @@ export default function FlightForm({
 
   const [tripUuid, setTripUuid] = useState(initialTripUuid);
   const [airline, setAirline] = useState(initialAirline);
-  const [flightNumber, setFlightNumber]  = useState(initialFlightNumber);
+  const [flightNumber, setFlightNumber]  = useState(initialFlightNumber?.toString());
   const [departureAirport, setDepartureAirport] = useState(initialDepartureAirport);
   const [departureTimestamp, setDepartureTimestamp] = useState(initialDepartureTimestamp);
-  const [departureTimezoneName, setDepartureTimezoneName] = useState(initialDepartureTimezoneName);
+  const [departureTimezoneName, setDepartureTimezoneName] = useState(initialDepartureTimezoneName || 'Etc/UTC');
   const [arrivalAirport, setArrivalAirport] = useState(initialArrivalAirport);
   const [arrivalTimestamp, setArrivalTimestamp] = useState(initialArrivalTimestamp);
-  const [arrivalTimezoneName, setArrivalTimezoneName] = useState(initialArrivalTimezoneName);
+  const [arrivalTimezoneName, setArrivalTimezoneName] = useState(initialArrivalTimezoneName || 'Etc/UTC');
   const [confirmationNumber, setConfirmationNumber] = useState(initialConfirmationNumber);
 
   // Account for delay of router query param from main page component
@@ -58,17 +72,17 @@ export default function FlightForm({
    * Calculate dates and times
    */
 
-  const [departureDate, setDepartureDate] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'yyyy-MM-dd') : null);
-  const [departureTime, setDepartureTime] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'HH:mm') : null);
+  const [departureDate, setDepartureDate] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'yyyy-MM-dd') : undefined);
+  const [departureTime, setDepartureTime] = useState(departureTimestamp ? format(utcToZonedTime(departureTimestamp, departureTimezoneName), 'HH:mm') : undefined);
 
-  const [arrivalDate, setArrivalDate] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'yyyy-MM-dd') : null);
-  const [arrivalTime, setArrivalTime] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'HH:mm') : null);
+  const [arrivalDate, setArrivalDate] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'yyyy-MM-dd') : undefined);
+  const [arrivalTime, setArrivalTime] = useState(arrivalTimestamp ? format(utcToZonedTime(arrivalTimestamp, arrivalTimezoneName), 'HH:mm') : undefined);
 
   /**
    * Automatically set timezones
    */
 
-  async function getTimezone(latitude, longitude) {
+  async function getTimezone(latitude: Decimal | null, longitude: Decimal | null) {
     const { data } = await axios(`/api/timezones?lat=${latitude}&lon=${longitude}`);
     return data[0];
   }
@@ -83,7 +97,7 @@ export default function FlightForm({
    * Handle form
    */
 
-  async function updateFlight(e) {
+  async function updateFlight(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // Check required fields
@@ -127,7 +141,7 @@ export default function FlightForm({
       confirmationNumber,
     };
 
-    const headers = { Authorization: `Bearer ${session.access_token}` };
+    const headers = { Authorization: `Bearer ${session?.access_token}` };
 
     let nextPath = null;
 
@@ -177,31 +191,31 @@ export default function FlightForm({
         <fieldset className="mb-6">
           <div className="flex gap-4 mb-4">
             <div className="flex-1">
-              <TripSelect label="Assigned Trip" value={tripUuid} onChange={e => setTripUuid(e.target.value)} />
+              <TripSelect label="Assigned Trip" value={tripUuid} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTripUuid(e.target.value)} />
             </div>
             <div className="flex-none">
               <Input
                 label="Confirmation Number"
                 type="text"
-                size="6"
+                size={6}
                 value={confirmationNumber}
-                onChange={e => setConfirmationNumber(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmationNumber(e.target.value)}
               />
             </div>
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1">
-              <AirlineSelect label="Airline" value={airline} onChange={selected => setAirline(selected)} />
+              <AirlineSelect label="Airline" value={airline} onChange={(selected: Airline) => setAirline(selected)} />
             </div>
             <div className="flex-none">
               <Input
                 label="Flight Number"
                 type="text"
-                size="6"
+                size={6}
                 addClass="w-auto"
-                value={flightNumber}
-                onChange={e => setFlightNumber(e.target.value)}
+                value={flightNumber?.toString()}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFlightNumber(e.target.value)}
                 required
               />
             </div>
@@ -211,28 +225,28 @@ export default function FlightForm({
         <fieldset className="mb-6">
           <Legend addClass="mb-4">Departure</Legend>
 
-          <AirportSelect label="Airport" value={departureAirport} onChange={selected => { setDepartureAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setDepartureTimezoneName(timezone))}} addClass="mb-4" />
+          <AirportSelect label="Airport" value={departureAirport} onChange={(selected: Airport) => { setDepartureAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setDepartureTimezoneName(timezone))}} addClass="mb-4" />
 
           <div className="flex gap-4">
-            <Input label="Date" type="date" value={departureDate} onChange={e => setDepartureDate(e.target.value)} required />
+            <Input label="Date" type="date" value={departureDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDepartureDate(e.target.value)} required />
 
-            <Input label="Time" type="time" value={departureTime} onChange={e => setDepartureTime(e.target.value)} required />
+            <Input label="Time" type="time" value={departureTime} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDepartureTime(e.target.value)} required />
 
-            <Input label="Timezone" value={departureTimezoneName} onChange={e => setDepartureTimezoneName(e.target.value)} required disabled addClass="flex-1" />
+            <Input label="Timezone" value={departureTimezoneName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDepartureTimezoneName(e.target.value)} required disabled addClass="flex-1" />
           </div>
         </fieldset>
 
         <fieldset className="mb-6">
           <Legend addClass="mb-4">Arrival</Legend>
 
-          <AirportSelect label="Airport" value={arrivalAirport} onChange={selected => { setArrivalAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setArrivalTimezoneName(timezone))}} addClass="mb-4" />
+          <AirportSelect label="Airport" value={arrivalAirport} onChange={(selected: Airport) => { setArrivalAirport(selected); getTimezone(selected.latitude, selected.longitude).then((timezone) => setArrivalTimezoneName(timezone))}} addClass="mb-4" />
 
           <div className="flex gap-4">
-            <Input label="Date" type="date" value={arrivalDate} onChange={e => setArrivalDate(e.target.value)} required />
+            <Input label="Date" type="date" value={arrivalDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setArrivalDate(e.target.value)} required />
 
-            <Input label="Time" type="time" value={arrivalTime} onChange={e =>setArrivalTime(e.target.value)} required />
+            <Input label="Time" type="time" value={arrivalTime} onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setArrivalTime(e.target.value)} required />
 
-            <Input label="Timezone" value={arrivalTimezoneName} onChange={e => setArrivalTimezoneName(e.target.value)} required disabled addClass="flex-1" />
+            <Input label="Timezone" value={arrivalTimezoneName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setArrivalTimezoneName(e.target.value)} required disabled addClass="flex-1" />
           </div>
         </fieldset>
 

@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-export function useHashParam() {
+interface Parameter {
+  [key: string]: string
+}
+
+export function useHashParam(): Parameter {
   const router = useRouter();
-  const [hashParam, setHashParam] = useState();
+  const [hashParam, setHashParam] = useState<Parameter>({});
 
   useEffect(() => {
     const query = router.asPath.split('#')[1];
@@ -12,15 +16,15 @@ export function useHashParam() {
 
     const params = query.split('&');
 
-    const parsed = {};
+    const parsed: { [key: string]: string } = {};
     params.forEach((param) => {
       const parsedParam = param.split('=');
 
       // Replace all + with spaces
       const regex = /\++/g;
 
-      const key = parsedParam[0].replace(regex, ' ');
-      const value = parsedParam[1] ? parsedParam[1].replace(regex, ' ') : '';
+      const key: string = parsedParam[0].replace(regex, ' ');
+      const value: string = parsedParam[1] ? parsedParam[1].replace(regex, ' ') : '';
 
       parsed[key] = value;
     });

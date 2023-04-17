@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function LocationSearch({ addClass, initialValue = '', onSelect }) {
+export default function LocationSearch({ addClass, initialValue = '', onSelect }: { addClass?: string, initialValue?: string, onSelect: any }) {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState(initialValue);
@@ -28,7 +28,7 @@ export default function LocationSearch({ addClass, initialValue = '', onSelect }
     }
   }, [query]);
 
-  async function suggest(term) {
+  async function suggest(term: string) {
     const suggestions = (await axios(`https://photon.komoot.io/api/?q=${term}&layer=city`)).data.features;
     setSuggestions(suggestions);
   }
@@ -41,7 +41,7 @@ export default function LocationSearch({ addClass, initialValue = '', onSelect }
   }
 
   // Generate hierarchy string (i.e., "City, State, Country")
-  function generateGeoHierarchy(location) {
+  function generateGeoHierarchy(location: any) {
     const cityString = location.properties.name;
     const stateString = location.properties.state ? `, ${location.properties.state}` : '';
     const countryString = `, ${location.properties.country}`;
@@ -50,7 +50,7 @@ export default function LocationSearch({ addClass, initialValue = '', onSelect }
   }
 
   // Upon selection, update field value and emit selection
-  function select(selected) {
+  function select(selected: any) {
     setQuery(generateGeoHierarchy(selected));
     onSelect(selected);
   }
@@ -59,7 +59,7 @@ export default function LocationSearch({ addClass, initialValue = '', onSelect }
     <div className="relative">
       <input
         value={query}
-        onInput={e => setQuery(e.target.value)}
+        onInput={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={loseFocus}
         type="text"
@@ -79,7 +79,7 @@ export default function LocationSearch({ addClass, initialValue = '', onSelect }
             </li>
           }
 
-          {suggestions.map((suggestion) => (
+          {suggestions.map((suggestion: any) => (
             <li
               key={suggestion.properties.osm_id}
               onClick={() => select(suggestion)}

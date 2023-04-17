@@ -1,15 +1,16 @@
 import { useApiWithToken } from '@/lib/fetcher';
 import supabase from '@/lib/supabase';
 import tripRange from '@/lib/tripRange';
+import { Trip } from '@/additional';
 import Select from './Select';
 
-export default function TripSelect({ label, value, onChange, addClass }) {
+export default function TripSelect({ label, value, onChange, addClass }: { label: string, value: string, onChange: any, addClass?: string }) {
   // Get current session
   const session = supabase.auth.session();
 
-  const { data, error, isLoading } = useApiWithToken('/api/trips', session?.access_token);
+  const { data, error, isLoading } = useApiWithToken('/api/trips', session?.access_token || '');
 
-  function displayRange(dateRange) {
+  function displayRange(dateRange: string) {
     return dateRange ? `(${dateRange})` : '';
   }
 
@@ -25,7 +26,7 @@ export default function TripSelect({ label, value, onChange, addClass }) {
       {isLoading ? (
         <option>Loading...</option>
       ) : (
-        data.map((trip) => (
+        data.map((trip: Trip) => (
           <option key={trip.uuid} value={trip.uuid}>
             {trip.name} {displayRange(tripRange(trip.start, trip.end))}
           </option>

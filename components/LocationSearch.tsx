@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function LocationSearch({ addClass, initialValue, onSelect, osmTag = {} }) {
+export default function LocationSearch({ addClass, initialValue, onSelect, osmTag }: { addClass?: string, initialValue?: string, onSelect: any, osmTag?: { key: string, value: string }}) {
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState(initialValue);
@@ -30,7 +30,7 @@ export default function LocationSearch({ addClass, initialValue, onSelect, osmTa
 
   const osmTagFilter = osmTag ? (osmTag.key && osmTag.value) ? `&osm_tag=${osmTag.key}:${osmTag.value}` : osmTag.key ? `&osm_tag=${osmTag.key}` : '' : '';
 
-  async function suggest(term) {
+  async function suggest(term: string) {
     const suggestions = (await axios(`https://photon.komoot.io/api/?q=${term}${osmTagFilter}`)).data.features;
     setSuggestions(suggestions);
   }
@@ -43,12 +43,12 @@ export default function LocationSearch({ addClass, initialValue, onSelect, osmTa
   }
 
   // Upon selection, update field value and emit selection
-  function select(selected) {
+  function select(selected: any) {
     setQuery(selected.properties.name);
     onSelect(selected);
   }
 
-  function capitalize(word) {
+  function capitalize(word: string) {
     return word[0].toUpperCase() + word.substring(1);
   }
 
@@ -56,7 +56,7 @@ export default function LocationSearch({ addClass, initialValue, onSelect, osmTa
     <div className="relative">
       <input
         value={query}
-        onInput={e => setQuery(e.target.value)}
+        onInput={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={loseFocus}
         type="text"
@@ -76,7 +76,7 @@ export default function LocationSearch({ addClass, initialValue, onSelect, osmTa
             </li>
           }
 
-          {suggestions.map((suggestion) => (
+          {suggestions.map((suggestion: any) => (
             <li
               key={suggestion.properties.osm_id}
               onClick={() => select(suggestion)}

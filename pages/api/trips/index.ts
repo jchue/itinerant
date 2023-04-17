@@ -1,9 +1,10 @@
-import HTTPError from '@/lib/error';
 import getTrips from '@/lib/getTrips';
 import writeTrip from '@/lib/writeTrip';
+import { NextApiRequest, NextApiResponse } from 'next';
+import HTTPError from '@/lib/error';
 
-export default async function handler(req, res) {
-  const userId = req.headers.userid;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const userId = typeof req.headers.userid === 'object' ? req.headers.userid[0] : req.headers.userid || '';
 
   try {
     if (req.method === 'GET') {
